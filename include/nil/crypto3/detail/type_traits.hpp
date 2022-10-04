@@ -24,8 +24,8 @@
 // SOFTWARE.
 //---------------------------------------------------------------------------//
 
-#ifndef CRYPTO3_TYPE_TRAITS_HPP
-#define CRYPTO3_TYPE_TRAITS_HPP
+#ifndef CRYPTO3_TYPE_TRAITS_ZERG_HPP
+#define CRYPTO3_TYPE_TRAITS_ZERG_HPP
 
 #include <complex>
 
@@ -206,6 +206,25 @@ namespace nil {
             GENERATE_HAS_MEMBER_TYPE(key_schedule_type)
             GENERATE_HAS_MEMBER_TYPE(word_type)
 
+            GENERATE_HAS_MEMBER_TYPE(r)
+            GENERATE_HAS_MEMBER_TYPE(max_degree)
+            GENERATE_HAS_MEMBER_TYPE(D)
+            GENERATE_HAS_MEMBER_TYPE(step_list)
+
+            GENERATE_HAS_MEMBER_TYPE(_private_table)
+            GENERATE_HAS_MEMBER_TYPE(_public_table)
+
+            GENERATE_HAS_MEMBER_TYPE(public_polynomial_table)
+            GENERATE_HAS_MEMBER_TYPE(permutation_polynomials)
+            GENERATE_HAS_MEMBER_TYPE(identity_polynomials)
+            GENERATE_HAS_MEMBER_TYPE(q_last)
+            GENERATE_HAS_MEMBER_TYPE(q_blind)
+            GENERATE_HAS_MEMBER_TYPE(precommitments)
+            GENERATE_HAS_MEMBER_TYPE(common_data)
+
+            GENERATE_HAS_MEMBER_TYPE(basic_domain)
+            GENERATE_HAS_MEMBER_TYPE(private_polynomial_table)
+
             GENERATE_HAS_MEMBER(encoded_value_bits)
             GENERATE_HAS_MEMBER(encoded_block_bits)
             GENERATE_HAS_MEMBER(decoded_value_bits)
@@ -328,6 +347,34 @@ namespace nil {
             template<typename T>
             struct is_passhash {
                 static const bool value = has_generate<T>::value && has_check<T>::value;
+                typedef T type;
+            };
+
+            template<typename T>
+            struct is_fri_params {
+                static const bool value = has_r<T>::value && has_max_degree<T>::value &&
+                                          has_D<T>::value && has_step_list<T>::value;
+                typedef T type;
+            };
+
+            template<typename T>
+            struct is_plonk_table {
+                static const bool value = has__private_table<T>::value && has__public_table<T>::value;
+                typedef T type;
+            };
+
+            template<typename T>
+            struct is_public_preprocessed_data_type {
+                static const bool value = has_public_polynomial_table<T>::value && has_permutation_polynomials<T>::value &&
+                        has_identity_polynomials<T>::value && has_q_last<T>::value &&
+                        has_q_blind<T>::value && has_precommitments<T>::value &&
+                        has_common_data<T>::value;
+                typedef T type;
+            };
+
+            template<typename T>
+            struct is_private_preprocessed_data_type {
+                static const bool value = has_basic_domain<T>::value && has_private_polynomial_table<T>::value;
                 typedef T type;
             };
         }    // namespace detail
