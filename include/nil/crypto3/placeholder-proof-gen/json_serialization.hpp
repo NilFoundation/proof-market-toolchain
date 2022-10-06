@@ -113,7 +113,19 @@ namespace nil {
                     os << "\n";
             }
 
-
+            template <typename BlueprintFieldType, typename ArithmetizationParams>
+            void serialize(std::ostream &os, zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> desc,
+                           zk::blueprint_public_assignment_table<zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>> public_assignment,
+                           zk::blueprint<zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>> bp) {
+                boost::json::value jv = {
+                        {"curve_type", "pallas"},
+                        {"hash", "keccak_1600<256>"},
+                        {"public_assignment",         public_assignment},
+                        {"desc",                      desc},
+                        {"bp",                        bp},
+                };
+                placeholder_proof_gen::pretty_print(os, jv);
+            }
 
         }    // namespace math
     }        // namespace crypto3

@@ -27,6 +27,7 @@
 #define PLACEHOLDER_PROOF_GEN_JSON_DESERIALIZATION_HPP
 
 #include <boost/json/src.hpp>
+#include <nil/crypto3/placeholder-proof-gen/structs_deserialization.hpp>
 
 namespace nil {
     namespace crypto3 {

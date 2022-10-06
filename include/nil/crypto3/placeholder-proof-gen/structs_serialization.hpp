@@ -58,6 +58,15 @@ namespace nil {
 
             template<typename ArithmetizationType>
             void tag_invoke(boost::json::value_from_tag, boost::json::value &jv,
+                            zk::blueprint_private_assignment_table<ArithmetizationType> const &c) {
+                jv = {
+                        {"witness_columns",             c.witnesses()},
+                        {"_table_description", c.table_description()},
+                };
+            }
+
+            template<typename ArithmetizationType>
+            void tag_invoke(boost::json::value_from_tag, boost::json::value &jv,
                             zk::blueprint<ArithmetizationType> const &c) {
                 jv = {
                         {"_gates",             c.gates()},
@@ -101,6 +110,10 @@ namespace nil {
                 void tag_invoke(boost::json::value_from_tag, boost::json::value &jv,
                                 nil::crypto3::zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> const &c) {
                     jv = {
+                            {"witness_columns",        c.witness_columns},
+                            {"public_input_columns",        c.public_input_columns},
+                            {"constant_columns",        c.constant_columns},
+                            {"selector_columns",        c.selector_columns},
                             {"rows_amount",        c.rows_amount},
                             {"usable_rows_amount", c.usable_rows_amount},
                     };
