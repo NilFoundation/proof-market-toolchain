@@ -1,23 +1,66 @@
-# Placeholder Proof Gen
+# =nil; Proof Market (PoC)
+
+# Introduction
+
+This repository serves as a PoC of how a nil foundation supported proof market would operate.
+
+The marketplace consists of the following entities.
+- Proof Requester : This can be an application like a bridge requesting 
+balance or a user interested in cross cluster operation and/or trust-less data access.
+- Proof Generator : This is an entity who will generate the proofs for the requests/orders
+made by the Proof Requester.
+
+Below we will list a set of operations a user can follow along which demonstrates the market 
+operation interaction between the above two entities.
 
 
-## Building
+# Dependencies
 
-This library uses Boost CMake build modules (https://github.com/BoostCMake/cmake_modules.git). To actually include this
-library in a project it is required to:
+- [Boost](https://www.boost.org/) >= 1.74.0
+- [cmake](https://cmake.org/) >= 3.5
+- [clang](https://clang.llvm.org/) >= 14.0.6
 
-1. Add [CMake Modules](https://github.com/BoostCMake/cmake_modules.git) as submodule to target project repository.
-2. Add all the internal dependencies using [CMake Modules](https://github.com/BoostCMake/cmake_modules.git) as
-   submodules to target project repository.
-3. Initialize parent project with [CMake Modules](https://github.com/BoostCMake/cmake_modules.git) (Look
-   at [crypto3](https://github.com/nilfoundation/crypto3.git) for the example)
+On *nix systems, the following dependencies need to be present & can be installed using the following command
 
-## Dependencies
+```
+ sudo apt install build-essential libssl-dev libboost-all-dev cmake clang git
+```
 
-### Internal
 
-* [Algebra](https://github.com/NilFoundation/crypto3-algebra)
+## Installation
 
-### External
+Clone the repository
+```
+git clone git@github.com:NilFoundation/placeholder-proof-gen.git
+cd placeholder-proof-gen.
+```
 
-* [Boost](https://boost.org) (>= 1.76)
+- Clone all submodules recursively
+```
+git submodule update --init --recursive
+```
+
+
+
+
+
+
+
+
+# Common issues
+
+## Compilation Errors
+If you have more than one compiler installed i.e g++ & clang++. The make system might pick up the former. You can explicitly force usage of
+clang++ by finding the path and passing it in the variable below.
+
+```
+`which clang++`  
+cmake .. -DCMAKE_CXX_COMPILER=<path to clang++ from above>
+```
+
+## Submodule management
+Git maintains a few places where submodule details are cached. Sometimes updates do not come through. ex: Deletion , updating
+a url of a previously checked out submodule.It is advisable to check these locations for remains or try a new checkout.
+- .gitmodules
+- .git/config
+- .git/modules/*
