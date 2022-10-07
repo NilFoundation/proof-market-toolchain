@@ -155,13 +155,89 @@ CURL --basic --user “root:” -X POST http://try.dbms.nil.foundation/proposal
 ```
 
 **Response**
+```
+{
+  "proposal_id : unique_proposal_id, TODO : Check , added by HG
+  "sender": pubkey, 
+  "bid": 225, 
+  "order": unique_order_id,
+  "eval_time": 1111,
+}
+```
 
 
+## 5. Proposal Selection
+We move back to the proof requesters' perspective. An order can have more than one proposals.
+These could differ in `bid` price or `eval_time`. The requester then proceeds to select one 
+that meets their need.
+
+**Request**
+```
+CURL --basic --user “root:” -X POST http://try.dbms.nil.foundation/proposal_select
+{
+	"order_id": unique_order_id,
+	"proposal": unique_proposal_id
+}
+
+```
+
+**Response**
+
+```
+{
+  "order_id": unique_order_id,
+  "status": "in_process",
+  "circuit_id": unique_id_of_circuit,
+  "public_input": public_input
+  "sender": pubkey,
+  "wait_period": time
+  "proposal": proposal_id,
+  "proof": Null, 
+}
+```
+The order thus shifts from `registered` to `in_process` and we tag on a new `proposal_id` to data.
+
+# 6. Proof Generation
+Moving back to perspective of Proof generator. The winning bid should now see the database 
+and learn that their bid has won the proof market auction, and they should proceed to build
+a proof for the requested circuit , consuming the specified inputs.
+
+Execute the below to generate a proof (TODO : Update file names)
+```
+PATH_BULD/libs/placeholder-proof-gen/example/crypto3_placeholder_proof_gen_proof_generate_example —circuit=”circuit.json” —public_input=”public_input.json” —proof=“proof.out”
+```
+
+The proof is output in `proof.out`
+
+# 7. Proof Submission
+The proof generator can now submit the proof to the marketplace , where if verified, they will
+get the reward. Invalid proof will incur a penalty.
+
+**Request**
+
+```
+CURL --basic --user “root:” -X POST http://try.dbms.nil.foundation/proof
+{
+  "order_id": unique_order_id,
+  "proof": proof,
+}
+```
 
 
-
-
-
+**Response**
+```
+{
+  "order_id": unique_order_id,
+  "status": "completed",
+  "circuit_id": unique_id_of_circuit,
+  "public_input": public_input
+  "sender": pubkey,
+  "wait_period": time
+  "proposal": proposal_id,
+  "proof": proof, 
+}
+```
+We notice `proof` and `status` attributes are now updated.
 
 
 # Common issues
