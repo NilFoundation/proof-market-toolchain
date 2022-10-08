@@ -1,6 +1,5 @@
 {
     "curve_type" : "pallas",
-    "lambda" : 40,
     "hash" : "keccak_1600<256>",
     "arithmetization_params" : {
         "witness_columns" : 11,

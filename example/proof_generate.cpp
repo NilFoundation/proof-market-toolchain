@@ -26,10 +26,7 @@
 
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
-#include <nil/crypto3/algebra/random_element.hpp>
 
-#include <nil/crypto3/hash/algorithm/hash.hpp>
-#include <nil/crypto3/hash/sha2.hpp>
 #include <nil/crypto3/hash/keccak.hpp>
 
 #include <nil/crypto3/zk/snark/arithmetization/plonk/params.hpp>
@@ -38,16 +35,13 @@
 #include <nil/crypto3/zk/assignment/plonk.hpp>
 #include <nil/crypto3/zk/components/algebra/curves/pasta/plonk/unified_addition.hpp>
 
-#include "test_plonk_component.hpp"
+#include "proof_generate.hpp"
 
 #include <nil/crypto3/zk/snark/arithmetization/plonk/table_description.hpp>
 
 #include <nil/crypto3/placeholder-proof-gen/json_serialization.hpp>
 #include <nil/crypto3/placeholder-proof-gen/json_deserialization.hpp>
 
-#include <nil/crypto3/algebra/curves/ed25519.hpp>
-#include <nil/crypto3/algebra/fields/arithmetic_params/ed25519.hpp>
-#include <nil/crypto3/zk/components/non_native/algebra/fields/plonk/signatures_verification.hpp>
 #include <nil/crypto3/zk/components/non_native/algebra/fields/plonk/ed25519.hpp>
 
 #include <boost/filesystem.hpp>
@@ -102,7 +96,7 @@ int main() {
                     {var(0, 2, false, var::column_type::public_input), var(0, 3, false, var::column_type::public_input)}};
 
 
-            test_component<component_type, BlueprintFieldType, ArithmetizationParams, hash_type, Lambda>(params, public_input, desc, bp, public_assignment);
+            proof_generate<component_type, BlueprintFieldType, ArithmetizationParams, hash_type, Lambda>(params, public_input, desc, bp, public_assignment);
 //        }
 
 }

@@ -50,8 +50,10 @@ macro(define_placeholder_proof_gen_example example)
 endmacro()
 
 set(EXAMPLES_NAMES
-    "circuit_serialization/unified_addition"
-    "public_params_serialization/unified_addition"
+    "serialization/unified_addition"
+    "serialization/field_mul"
+    "serialization/non_native_variable_base"
+    "serialization/solana_state"
     "proof_generate")
 
 foreach(EXAMPLE_NAME ${EXAMPLES_NAMES})
