@@ -25,22 +25,24 @@
 // @file Declaration of interfaces for PLONK unified addition component.
 //---------------------------------------------------------------------------//
 
-#ifndef CRYPTO3_TEST_PLONK_COMPONENT_HPP
-#define CRYPTO3_TEST_PLONK_COMPONENT_HPP
+#ifndef ACTOR_PROOF_GENERATE_HPP
+#define ACTOR_PROOF_GENERATE_HPP
 
 #include <fstream>
 #include <random>
 
-#include <nil/crypto3/zk/snark/arithmetization/plonk/params.hpp>
-#include <nil/crypto3/zk/snark/systems/plonk/placeholder/preprocessor.hpp>
-#include <nil/crypto3/zk/snark/systems/plonk/placeholder/prover.hpp>
-#include <nil/crypto3/zk/snark/systems/plonk/placeholder/verifier.hpp>
-#include <nil/crypto3/zk/snark/systems/plonk/placeholder/params.hpp>
+#include <nil/actor/zk/blueprint/plonk.hpp>
+#include <nil/actor/zk/assignment/plonk.hpp>
+#include <nil/actor/zk/snark/arithmetization/plonk/params.hpp>
+#include <nil/actor/zk/snark/systems/plonk/placeholder/preprocessor.hpp>
+#include <nil/actor/zk/snark/systems/plonk/placeholder/prover.hpp>
+#include <nil/actor/zk/snark/systems/plonk/placeholder/verifier.hpp>
+#include <nil/actor/zk/snark/systems/plonk/placeholder/params.hpp>
 
-#include <nil/crypto3/zk/blueprint/plonk.hpp>
-#include <nil/crypto3/zk/assignment/plonk.hpp>
-#include <nil/crypto3/zk/algorithms/allocate.hpp>
-#include <nil/crypto3/zk/algorithms/generate_circuit.hpp>
+#include <nil/actor/zk/blueprint/plonk.hpp>
+#include <nil/actor/zk/assignment/plonk.hpp>
+#include <nil/actor/zk/algorithms/allocate.hpp>
+#include <nil/actor/zk/algorithms/generate_circuit.hpp>
 #include <nil/crypto3/math/algorithms/calculate_domain_set.hpp>
 
 #include <nil/marshalling/status_type.hpp>
@@ -49,7 +51,7 @@
 #include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
 
 namespace nil {
-    namespace crypto3 {
+    namespace actor {
         template<typename TIter>
         void print_hex_byteblob(std::ostream &os, TIter iter_begin, TIter iter_end, bool endl) {
             os << "0x" << std::hex;
@@ -63,20 +65,21 @@ namespace nil {
         }
 
         template<typename Endianness, typename Proof>
-        void proof_print(Proof &proof) {
+        void proof_print(Proof &proof, std::string output_file) {
             using namespace nil::crypto3::marshalling;
 
             using TTypeBase = nil::marshalling::field_type<Endianness>;
             using proof_marshalling_type = zk::snark::placeholder_proof<TTypeBase, Proof>;
             auto filled_placeholder_proof = crypto3::marshalling::types::fill_placeholder_proof<Endianness, Proof>(
-                    proof);
+                proof);
 
             std::vector<std::uint8_t> cv;
             cv.resize(filled_placeholder_proof.length(), 0x00);
             auto write_iter = cv.begin();
             nil::marshalling::status_type status = filled_placeholder_proof.write(write_iter, cv.size());
             std::ofstream out;
-            out.open("placeholder_proof.data");
+            std::cout << output_file << std::endl;
+            out.open(output_file);
             print_hex_byteblob(out, cv.cbegin(), cv.cend(), false);
         }
 
@@ -110,8 +113,8 @@ namespace nil {
             constexpr std::size_t expand_factor = 0;
             std::size_t r = degree_log - 1;
 
-            std::vector<std::shared_ptr<math::evaluation_domain<FieldType>>> domain_set =
-                    math::calculate_domain_set<FieldType>(degree_log + expand_factor, r);
+            std::vector<std::shared_ptr<crypto3::math::evaluation_domain<FieldType>>> domain_set =
+                crypto3::math::calculate_domain_set<FieldType>(degree_log + expand_factor, r);
 
             params.r = r;
             params.D = domain_set;
@@ -122,11 +125,11 @@ namespace nil {
         }
 
         template<typename ComponentType, typename BlueprintFieldType, typename ArithmetizationParams, typename Hash,
-                std::size_t Lambda, typename FunctorResultCheck, typename PublicInput,
-                typename std::enable_if<
-                        std::is_same<typename BlueprintFieldType::value_type,
-                                typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
-                        bool>::type = true>
+                 std::size_t Lambda, typename FunctorResultCheck, typename PublicInput,
+                 typename std::enable_if<
+                     std::is_same<typename BlueprintFieldType::value_type,
+                                  typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
+                     bool>::type = true>
         auto prepare_component(typename ComponentType::params_type params, const PublicInput &public_input,
                                const FunctorResultCheck &result_check) {
 
@@ -152,7 +155,7 @@ namespace nil {
 
             zk::components::generate_circuit<component_type>(bp, public_assignment, params, start_row);
             typename component_type::result_type component_result =
-                    component_type::generate_assignments(assignment_bp, params, start_row);
+                component_type::generate_assignments(assignment_bp, params, start_row);
 
             result_check(assignment_bp, component_result);
 
@@ -164,12 +167,12 @@ namespace nil {
                                                                                                      public_assignment);
 
             using placeholder_params =
-                    zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
+                zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
             using types = zk::snark::detail::placeholder_policy<BlueprintFieldType, placeholder_params>;
 
             using fri_type =
-                    typename zk::commitments::fri<BlueprintFieldType, typename placeholder_params::merkle_hash_type,
-                            typename placeholder_params::transcript_hash_type, 2, 1>;
+                typename zk::commitments::fri<BlueprintFieldType, typename placeholder_params::merkle_hash_type,
+                                              typename placeholder_params::transcript_hash_type, 2, 1>;
 
             std::size_t table_rows_log = std::ceil(std::log2(desc.rows_amount));
 
@@ -178,30 +181,30 @@ namespace nil {
             std::size_t permutation_size = desc.witness_columns + desc.public_input_columns + desc.constant_columns;
 
             typename zk::snark::placeholder_public_preprocessor<
-                    BlueprintFieldType, placeholder_params>::preprocessed_data_type public_preprocessed_data =
-                    zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, public_assignment, desc, fri_params, permutation_size);
+                BlueprintFieldType, placeholder_params>::preprocessed_data_type public_preprocessed_data =
+                zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::process(
+                    bp, public_assignment, desc, fri_params, permutation_size);
             typename zk::snark::placeholder_private_preprocessor<
-                    BlueprintFieldType, placeholder_params>::preprocessed_data_type private_preprocessed_data =
-                    zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, private_assignment, desc, fri_params);
+                BlueprintFieldType, placeholder_params>::preprocessed_data_type private_preprocessed_data =
+                zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::process(
+                    bp, private_assignment, desc, fri_params);
 
             return std::make_tuple(desc, bp, fri_params, assignments, public_preprocessed_data,
                                    private_preprocessed_data);
         }
 
         template<typename ComponentType, typename BlueprintFieldType, typename ArithmetizationParams, typename Hash,
-                std::size_t Lambda, typename PublicInput,
-                typename std::enable_if<
-                        std::is_same<typename BlueprintFieldType::value_type,
-                                typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
-                        bool>::type = true>
+                 std::size_t Lambda, typename PublicInput,
+                 typename std::enable_if<
+                     std::is_same<typename BlueprintFieldType::value_type,
+                                  typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
+                     bool>::type = true>
         auto prepare_component_preprocessed(typename ComponentType::params_type params, const PublicInput &public_input,
                                             zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> desc,
                                             zk::blueprint<
-                                                    zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>> bp,
+                                                zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>> bp,
                                             zk::snark::plonk_public_assignment_table<BlueprintFieldType,
-                                                    ArithmetizationParams> public_assignment) {
+                                                                                     ArithmetizationParams> public_assignment) {
 
             using ArithmetizationType = zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
             using component_type = ComponentType;
@@ -221,19 +224,19 @@ namespace nil {
             }
 
             typename component_type::result_type component_result =
-                    component_type::generate_assignments(assignment_bp, params, start_row);
+                component_type::generate_assignments(assignment_bp, params, start_row);
 
 
             zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(private_assignment,
                                                                                                      public_assignment);
 
             using placeholder_params =
-                    zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
+                zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
             using types = zk::snark::detail::placeholder_policy<BlueprintFieldType, placeholder_params>;
 
             using fri_type =
-                    typename zk::commitments::fri<BlueprintFieldType, typename placeholder_params::merkle_hash_type,
-                            typename placeholder_params::transcript_hash_type, 2, 1>;
+                typename zk::commitments::fri<BlueprintFieldType, typename placeholder_params::merkle_hash_type,
+                                              typename placeholder_params::transcript_hash_type, 2, 1>;
 
             std::size_t table_rows_log = std::ceil(std::log2(desc.rows_amount));
 
@@ -242,71 +245,67 @@ namespace nil {
             std::size_t permutation_size = desc.witness_columns + desc.public_input_columns + desc.constant_columns;
 
             typename zk::snark::placeholder_public_preprocessor<
-                    BlueprintFieldType, placeholder_params>::preprocessed_data_type public_preprocessed_data =
-                    zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, public_assignment, desc, fri_params, permutation_size);
+                BlueprintFieldType, placeholder_params>::preprocessed_data_type public_preprocessed_data =
+                zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::process(
+                    bp, public_assignment, desc, fri_params, permutation_size).get();
             typename zk::snark::placeholder_private_preprocessor<
-                    BlueprintFieldType, placeholder_params>::preprocessed_data_type private_preprocessed_data =
-                    zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, private_assignment, desc, fri_params);
+                BlueprintFieldType, placeholder_params>::preprocessed_data_type private_preprocessed_data =
+                zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::process(
+                    bp, private_assignment, desc, fri_params).get();
 
             return std::make_tuple(desc, bp, fri_params, assignments, public_preprocessed_data,
                                    private_preprocessed_data);
         }
 
         template<typename ComponentType, typename BlueprintFieldType, typename ArithmetizationParams, typename Hash,
-                std::size_t Lambda, typename PublicInput>
+                 std::size_t Lambda, typename PublicInput>
         typename std::enable_if<
-                std::is_same<typename BlueprintFieldType::value_type,
-                        typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value>::type
-        test_component(typename ComponentType::params_type params, const PublicInput &public_input,
-                       zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> desc_in,
-                       zk::blueprint<
+            std::is_same<typename BlueprintFieldType::value_type,
+                         typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value>::type
+            proof_generate(typename ComponentType::params_type params, const PublicInput &public_input,
+                           zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> desc_in,
+                           zk::blueprint<
                                zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>> bp_in,
-                       zk::snark::plonk_public_assignment_table<BlueprintFieldType,
-                               ArithmetizationParams> public_assignment_in, bool verification_result = true) {
+                           zk::snark::plonk_public_assignment_table<BlueprintFieldType,
+                                                                    ArithmetizationParams> public_assignment_in, std::string output_file, bool verification_result = true) {
 
             using placeholder_params =
-                    zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
-
-//            auto [desc0, bp0, fri_params0, assignments0, public_preprocessed_data0, private_preprocessed_data0] =
-//                    prepare_component<ComponentType, BlueprintFieldType, ArithmetizationParams, Hash, Lambda,
-//                            FunctorResultCheck>(params, public_input, result_check);
+                zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
 
             auto [desc, bp, fri_params, assignments, public_preprocessed_data, private_preprocessed_data] =
-                    prepare_component_preprocessed<ComponentType, BlueprintFieldType, ArithmetizationParams, Hash, Lambda>(params, public_input,
-                                                desc_in, bp_in, public_assignment_in);
+                prepare_component_preprocessed<ComponentType, BlueprintFieldType, ArithmetizationParams, Hash, Lambda>(params, public_input,
+                                                                                                                       desc_in, bp_in, public_assignment_in);
 
             auto proof = zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
-            proof_print<nil::marshalling::option::big_endian>(proof);
+                public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
+            proof_print<nil::marshalling::option::big_endian>(proof, output_file);
             bool verifier_res = zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, proof, bp, fri_params);
+                public_preprocessed_data, proof, bp, fri_params);
 
-            std::cout << verification_result << std::endl;
+            std::cout << "Ver_result=" << verification_result << std::endl;
         }
 
         template<typename ComponentType, typename BlueprintFieldType, typename ArithmetizationParams, typename Hash,
-                std::size_t Lambda, typename PublicInput, typename FunctorResultCheck,
-                typename std::enable_if<
-                        std::is_same<typename BlueprintFieldType::value_type,
-                                typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
-                        bool>::type = true>
+                 std::size_t Lambda, typename PublicInput, typename FunctorResultCheck,
+                 typename std::enable_if<
+                     std::is_same<typename BlueprintFieldType::value_type,
+                                  typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
+                     bool>::type = true>
         auto create_component_proof(typename ComponentType::params_type params, const PublicInput &public_input,
                                     const FunctorResultCheck &result_check, bool verification_result = true) {
 
             using placeholder_params =
-                    zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
+                zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
 
             auto [desc, bp, fri_params, assignments, public_preprocessed_data, private_preprocessed_data] =
-                    prepare_component<ComponentType, BlueprintFieldType, ArithmetizationParams, Hash, Lambda>(
-                            params, public_input, result_check);
+                prepare_component<ComponentType, BlueprintFieldType, ArithmetizationParams, Hash, Lambda>(
+                    params, public_input, result_check);
 
             auto proof = zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
+                public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
 
             bool verifier_res = zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, proof, bp, fri_params);
+                public_preprocessed_data, proof, bp, fri_params);
 
             std::cout << verifier_res << std::endl;
 
@@ -315,4 +314,4 @@ namespace nil {
     }    // namespace crypto3
 }    // namespace nil
 
-#endif    // CRYPTO3_TEST_PLONK_COMPONENT_HPP
+#endif    // ACTOR_PROOF_GENERATE_HPP
