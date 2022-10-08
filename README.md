@@ -1,8 +1,8 @@
-# =nil; Proof Market (PoC)
+# =nil; Proof Market Proof Generator
 
 # Introduction
 
-This repository serves as a PoC of how a nil foundation supported proof market would operate.
+This repository serves as a PoC of how a =nil; Foundation supported proof market would operate.
 
 The marketplace consists of the following entities.
 - Proof Requester : This can be an application like a bridge requesting 
