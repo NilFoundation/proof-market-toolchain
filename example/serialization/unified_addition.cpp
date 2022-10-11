@@ -36,6 +36,7 @@
 
 #include <nil/crypto3/placeholder-proof-gen/json_serialization.hpp>
 #include <nil/crypto3/zk/algorithms/allocate.hpp>
+#include <fstream>
 
 using namespace nil::crypto3;
 
@@ -98,10 +99,13 @@ int main() {
     zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(private_assignment,
                                                                                              public_assignment);
 
-    placeholder_proof_gen::serialize(std::cout, desc, public_assignment, bp);
-
+    std::ofstream out;
+    std::ofstream out_input;
+    out.open("unified_addition.json");
+    out_input.open("unified_addition_public_input.json");
+    placeholder_proof_gen::serialize(out, desc, public_assignment, bp);
     boost::json::value jv = {
         {"public_input", public_input},
     };
-    placeholder_proof_gen::pretty_print(std::cout, jv);
+    placeholder_proof_gen::pretty_print(out_input, jv);
 }

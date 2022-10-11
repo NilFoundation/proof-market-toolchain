@@ -48,6 +48,7 @@
 
 #include <nil/crypto3/placeholder-proof-gen/json_serialization.hpp>
 #include <nil/crypto3/zk/algorithms/allocate.hpp>
+#include <fstream>
 
 using namespace nil::crypto3;
 
@@ -354,7 +355,7 @@ int main() {
     constexpr std::size_t Lambda = 1;
 
     using var = zk::snark::plonk_variable<BlueprintFieldType>;
-    constexpr const std::size_t k = 13;
+    constexpr const std::size_t k = 1;
     using component_type = zk::components::signatures_verification<ArithmetizationType, curve_type, ed25519_type, k, 0,
                                                                    1, 2, 3, 4, 5, 6, 7, 8>;
     using ed25519_component =
@@ -460,10 +461,13 @@ int main() {
     zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(private_assignment,
                                                                                              public_assignment);
 
-    placeholder_proof_gen::serialize(std::cout, desc, public_assignment, bp);
-
+    std::ofstream out;
+    std::ofstream out_input;
+    out.open("solana_state.json");
+    out_input.open("solana_state_public_input.json");
+    placeholder_proof_gen::serialize(out, desc, public_assignment, bp);
     boost::json::value jv = {
         {"public_input", public_input},
     };
-    placeholder_proof_gen::pretty_print(std::cout, jv);
+    placeholder_proof_gen::pretty_print(out_input, jv);
 }

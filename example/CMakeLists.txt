@@ -53,8 +53,9 @@ set(EXAMPLES_NAMES
     "serialization/unified_addition"
     "serialization/field_mul"
     "serialization/non_native_variable_base"
+    "serialization/mina_aux_state"
     "serialization/solana_state"
-    "proof_generate")
+    "serialization/solana_state_batch")
 
 foreach(EXAMPLE_NAME ${EXAMPLES_NAMES})
     define_placeholder_proof_gen_example(${EXAMPLE_NAME})

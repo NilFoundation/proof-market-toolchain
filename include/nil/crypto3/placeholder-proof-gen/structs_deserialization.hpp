@@ -67,14 +67,14 @@ namespace nil {
                 }
 
                 i = 0;
-                std::array<std::vector<typename BlueprintFieldType::value_type>, ArithmetizationParams::public_input_columns> constant_columns;
+                std::array<std::vector<typename BlueprintFieldType::value_type>, ArithmetizationParams::constant_columns> constant_columns;
                 for (const boost::json::value &val: jv.at("constant_columns").as_array()) {
                     constant_columns[i] = boost::json::value_to<std::vector<typename BlueprintFieldType::value_type>>(val);
                     ++i;
                 }
 
                 i = 0;
-                std::array<std::vector<typename BlueprintFieldType::value_type>, ArithmetizationParams::public_input_columns> selector_columns;
+                std::array<std::vector<typename BlueprintFieldType::value_type>, ArithmetizationParams::selector_columns> selector_columns;
                 for (const boost::json::value &val: jv.at("selector_columns").as_array()) {
                     selector_columns[i] = boost::json::value_to<std::vector<typename BlueprintFieldType::value_type>>(val);
                     ++i;
@@ -179,7 +179,7 @@ namespace nil {
                     }
                     nil::crypto3::zk::snark::plonk_variable<FieldType> tmp(
                             boost::json::value_to<std::size_t>(jv.at("index")),
-                            boost::json::value_to<std::size_t>(jv.at("rotation")),
+                            boost::json::value_to<int>(jv.at("rotation")),
                             boost::json::value_to<bool>(jv.at("relative")),
                             type);
 
