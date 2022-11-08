@@ -8,9 +8,6 @@
 	path = libs/crypto3/zk
     url = git@github.com:nilfoundation/crypto3-zk.git
     branch = 81-blueprint-arch-compatibility
-[submodule "libs/blueprint"]
-	path = libs/blueprint/components
-	url = git@github.com:nilfoundation/crypto3-blueprint.git
 [submodule "libs/algebra"]
 	path = libs/crypto3/algebra
 	url = git@github.com:nilfoundation/crypto3-algebra.git
@@ -105,3 +102,7 @@
 	path = libs/zkllvm
 	url = git@github.com:NilFoundation/zkllvm.git
 	branch = 2-crypto3-backend
+[submodule "blueprint-components"]
+	path = libs/blueprint/components
+	url = git@github.com:NilFoundation/blueprint-components.git
+	branch = 56-debug-instruments
