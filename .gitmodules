@@ -1,9 +1,6 @@
 [submodule "cmake/modules"]
 	path = cmake/modules
 	url = https://github.com/BoostCMake/cmake_modules.git
-[submodule "scripts/dbms-python"]
-	path = scripts/dbms-python
-	url = git@github.com:NilFoundation/dbms-python.git
 [submodule "libs/zk"]
 	path = libs/crypto3/zk
     url = git@github.com:nilfoundation/crypto3-zk.git
