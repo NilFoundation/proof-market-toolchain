@@ -8,7 +8,7 @@ Proof Market version represented here is alpha. We expect constant changes to th
 
 Every market place has a set of instruments. There are buyers and sellers in the market for each of these instruments. Example : London Stock Exchange allows users to buy/sell stocks of companies  or Binance allows users to buy/sell Bitcoin- these are known as spot markets as you own the commodity.&#x20;
 
-Exchanges also allow buying/selling of a future price of the instrument. Example: Binance allows users to buy/sell future values of Bitcoin via perpetuals - these are know as derivative markets.
+Exchanges also allow buying/selling of a future price of the instrument. Example: Binance allows users to buy/sell future values of Bitcoin via perpetuals - these are know as derivative markets as you do not own the underlying instrument, but are just speculating on its price.
 
 \=nil;'s proof market is more on the lines of a Spot Market rather than a speculative value of proof generation.
 
