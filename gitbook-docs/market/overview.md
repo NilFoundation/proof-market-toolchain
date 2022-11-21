@@ -1,5 +1,9 @@
 # Overview
 
+{% hint style="warning" %}
+Proof Market version represented here is alpha. We expect constant changes to the below as per the feedback we receive from participants.
+{% endhint %}
+
 ## Spot vs Futures
 
 Every market place has a set of instruments. There are buyers and sellers in the market for each of these instruments. Example : London Stock Exchange allows users to buy/sell stocks of companies  or Binance allows users to buy/sell Bitcoin- these are known as spot markets as you own the commodity.&#x20;
