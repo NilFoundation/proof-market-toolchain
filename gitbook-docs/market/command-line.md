@@ -18,15 +18,15 @@ We require to setup two projects :&#x20;
 
 We will perform the following steps with the persona represented as `[PR]` or `[PG]`  and the environment in which the commands carried out as `toolchain-env` or `zkllvm-env`
 
-1. `[PR]` [Compile Circuit ](command-line.md#compile-circuit): Build zkLLVM & compile circuit to generate bytecode
-2. `[PR]`[Push order to Proof Market](command-line.md#push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any)
-3. `[PG]` [Match Order & Generate Proof](command-line.md#match-order-and-generate-proof): Accept order from&#x20;
-4. `[PG`] [Push Proof to the Proof Market](command-line.md#push-proof-to-proof-market): Build zkLLVM & compile circuit to generate bytecode
-5. `[PR]`[Verify Proof](command-line.md#push-proof-to-proof-market-1): Build zkLLVM & compile circuit to generate bytecode
+1. [Compile Circuit ](command-line.md#compile-circuit): Build zkLLVM & compile circuit to generate byte-code. _(executed by PR)_
+2. [Push order to Proof Market](command-line.md#push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
+3. &#x20;[Match Order & Generate Proof](command-line.md#match-order-and-generate-proof): Accept order from market and generate proof _(executed by PG)_
+4. [Push Proof to the Proof Market](command-line.md#push-proof-to-proof-market): Build zkLLVM & compile circuit to generate byte-code _(executed by PG)_
+5. [V](command-line.md#push-proof-to-proof-market-1)[erify Proof](command-line.md#push-proof-to-proof-market-1): Build zkLLVM & compile circuit to generate byte-code _(executed by PR)_
 
 
 
-### Proof Requester -  Compile Circuit
+### 1. Proof Requester -  Compile Circuit
 
 We will first compile the circuit from one of the examples.
 
@@ -113,7 +113,7 @@ Please change your active environment to `toolchain-env`
 
 This creates the proof `proof.bin`
 
-### **4. \[PG] Push Proof to Proof Market**
+### **4.  Proof Generator -  Push Proof to Proof Market**
 
 {% hint style="success" %}
 Please change your active environment to `toolchain-env`
@@ -125,7 +125,7 @@ Please change your active environment to `toolchain-env`
 python proof_push.py -o proof.bin
 ```
 
-### **5. \[PR] Verify Proof**
+### **5.  Proof Requester-  Verify Proof**
 
 The proof can now be verified by the Proof Requester&#x20;
 
