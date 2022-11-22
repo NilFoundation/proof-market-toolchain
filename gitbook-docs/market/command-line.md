@@ -16,7 +16,7 @@ We require to setup two projects :&#x20;
 * Proof Market tool-chain  (`toolchain-env`) : Please follow [environment setup](../guides/environment-setup.md) & [installation](../guides/installation.md) guide.
 * zkLLVM (`zkllvm-env`): Please follow [environment setup](https://nil-foundation.gitbook.io/zkllvm/guides/environment-setup) & [installation guide](https://nil-foundation.gitbook.io/zkllvm/guides/installation).
 
-We will perform the following steps with the persona represented as `[PR]` or `[PG]`  and the environment in which the commands carried out as `toolchain-env` or `zkllvm-env`
+We will perform the following steps with the personas above  and the environment in which the commands carried out in `toolchain-env` or `zkllvm-env` environment
 
 1. [Proof Requester - Compile Circuit](command-line.md#1.-pr-compile-circuit) : Compile circuit to generate byte-code. _(executed by PR)_
 2. [Proof Requester - Push order to Proof Market](command-line.md#2.-pr-push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
@@ -46,7 +46,7 @@ cmake -GNinja -B ${CIRCUIT_BUILD:-circuit_build} -DZKLLVM_BUILD=True -DCC=”${Z
 ninja -C ${CIRCUIT_BUILD:-circuit_build} zkllvm_examples_posseidon -j$(nproc)
 ```
 
-This will create the circuit byte-code `circuit.bc`
+This will output the circuit byte-code `circuit.bc`
 
 
 
