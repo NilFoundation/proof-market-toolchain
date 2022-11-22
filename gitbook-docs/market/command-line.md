@@ -18,11 +18,11 @@ We require to setup two projects :&#x20;
 
 We will perform the following steps with the persona represented as `[PR]` or `[PG]`  and the environment in which the commands carried out as `toolchain-env` or `zkllvm-env`
 
-1. [Compile Circuit ](command-line.md#compile-circuit): Build zkLLVM & compile circuit to generate byte-code. _(executed by PR)_
-2. [Push order to Proof Market](command-line.md#push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
-3. &#x20;[Match Order & Generate Proof](command-line.md#match-order-and-generate-proof): Accept order from market and generate proof _(executed by PG)_
-4. [Push Proof to the Proof Market](command-line.md#push-proof-to-proof-market): Build zkLLVM & compile circuit to generate byte-code _(executed by PG)_
-5. [V](command-line.md#push-proof-to-proof-market-1)[erify Proof](command-line.md#push-proof-to-proof-market-1): Build zkLLVM & compile circuit to generate byte-code _(executed by PR)_
+1. [Proof Requester - Compile Circuit](command-line.md#1.-pr-compile-circuit) : Compile circuit to generate byte-code. _(executed by PR)_
+2. [Proof Requester - Push order to Proof Market](command-line.md#2.-pr-push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
+3. [Proof Generator -  Match Order & Generate Proof](command-line.md#3.-pg-match-order-and-generate-proof): Accept order from market and generate proof _(executed by PG)_
+4. [Proof Generator - Push Proof to the Proof Market](command-line.md#4.-pg-push-proof-to-proof-market): Build zkLLVM & compile circuit to generate byte-code _(executed by PG)_
+5. [Proof Requester - Verify Proof](command-line.md#5.-pr-verify-proof): Build zkLLVM & compile circuit to generate byte-code _(executed by PR)_
 
 
 
