@@ -6,7 +6,17 @@ description: Command line guide to proof market
 
 In this guide , we walk through all the steps to interact with the proof market. We will cover everything from compiling a circuit , placing/matching order , generating/verifying proof.
 
-We will use the [personas](overview.md#entities) defined earlier as Proof Generator (PG) and Proof Requester (PR).
+We will use two [personas](overview.md#entities) defined earlier&#x20;
+
+* Proof Generator (PG)&#x20;
+* Proof Requester (PR)
+
+We require to setup two projects :&#x20;
+
+* Proof Market tool-chain  (`toolchain-env`) : Please follow [environment setup](../guides/environment-setup.md) & [installation](../guides/installation.md) guide.
+* zkLLVM (`zkllvm-env`): Please follow [environment setup](https://nil-foundation.gitbook.io/zkllvm/guides/environment-setup) & [installation guide](https://nil-foundation.gitbook.io/zkllvm/guides/installation).
+
+We will perform the following steps with the persona represented as `[PR]` or `[PG]`  and the environment in which the commands carried out as `toolchain-env` or `zkllvm-env`
 
 1. `[PR]` [Compile Circuit ](command-line.md#compile-circuit): Build zkLLVM & compile circuit to generate bytecode
 2. `[PR]`[Push order to Proof Market](command-line.md#push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any)
@@ -16,39 +26,39 @@ We will use the [personas](overview.md#entities) defined earlier as Proof Genera
 
 
 
-### 1. \[PR] Compile Circuit
+### Proof Requester -  Compile Circuit
 
-(TODO - check if its easier to copy steps instead of linking)
+We will first compile the circuit from one of the examples.
 
-In order to compile a circuit, we will first need to build & install the [zkLLM](https://nil-foundation.gitbook.io/zkllvm/) compiler.&#x20;
+{% hint style="success" %}
+Please change your active environment to `zkllvm-env`
+{% endhint %}
 
-Please follow the following steps:
-
-1. [Install Dependencies required by zkLLVM](https://nil-foundation.gitbook.io/zkllvm/guides/environment-setup)
-2. [Build modified zkLLVM clang and assigner.](https://nil-foundation.gitbook.io/zkllvm/guides/installation)
-
-Once the binaries are ready. We will next compile an example in the zkLLVM repository.
-
-* cmake configure the environment.
+* cmake configure&#x20;
 
 ```shell
 cmake -GNinja -B ${CIRCUIT_BUILD:-circuit_build} -DZKLLVM_BUILD=True -DCC=”${ZKLLVM_BUILD:-build}/libs/circifier/llvm/bin/clang”  -DCMAKE_BUILD_TYPE=Release .
 ```
 
-* Generate the bytecode from the circuit
+* Generate the byte-code from the circuit
 
 ```shell
 ninja -C ${CIRCUIT_BUILD:-circuit_build} zkllvm_examples_posseidon -j$(nproc)
 ```
 
+This will create the circuit byte-code `circuit.bc`
 
 
-### **2.\[PR] Push order to Proof Market**
 
-To push this circuit to the proof market , we need scripts which are in the tool-chain. Please follow the steps:
+### **2. Proof Requester -  Push order to Proof Market**
 
-1. [Install dependencies required by Proof Market toolchain](../guides/environment-setup.md)
-2. TODO  - Check if any build step?
+We will take the byte-code from the previous step and create an order and push it to the proof market.
+
+{% hint style="success" %}
+Please change your active environment to `toolchain-env`
+{% endhint %}
+
+* Push order to proof market
 
 ```shell
 python ./scripts/order_push.py -bc ${ZKLLVM_DIR:-../zkllvm}/${CIRCUIT_BUILD:-build}/circuit.bc -pi public_input.inp …(some other params) 
@@ -58,13 +68,17 @@ The response to this step will be the order details
 
 TODO - ADD details
 
-### **3. \[PG] Match Order & Generate Proof**
+### **3. Proof Generator - Match Order & Generate Proof**
 
 {% hint style="info" %}
 In the current version order matching is done via a daemon and no user interaction is required.  (TODO - CHECK)
 {% endhint %}
 
-The proof generator needs retrieve the order matched by executing the following
+{% hint style="success" %}
+Please change your active environment to `toolchain-env`
+{% endhint %}
+
+* The proof generator needs retrieve the order matched by executing the following
 
 ```shell
 python ./scripts/order_get.py …()
@@ -72,16 +86,26 @@ python ./scripts/order_get.py …()
 
 Once the order is retrieved , the proof generator needs to run `assigner` which is part of the zkLLVM project.
 
-TODO - Check&#x20;
+{% hint style="success" %}
+Please change your active environment to `zkllvm-env`
+{% endhint %}
+
+* Run assigner
 
 ```shell
 ${ASSIGNER_BUILD:-build}/bin/assigner/assigner circuit.bc -i public_input.bc
 
 ```
 
-This produces two outputs of an `execution_trace.bin` and `constraints.bin`
+This produces two outputs of `execution_trace.bin` and `constraints.bin`
 
 The proof can be produced using the above two files by executing the following from the tool chain environment (TODO improve doc)
+
+{% hint style="success" %}
+Please change your active environment to `toolchain-env`
+{% endhint %}
+
+* Generate proof&#x20;
 
 ```
  bin/state-proof-gen -cs constraint_system.bin -ex execution_trace.bin -o proof.bin
@@ -91,7 +115,11 @@ This creates the proof `proof.bin`
 
 ### **4. \[PG] Push Proof to Proof Market**
 
-The proof can be pushed to the proof market with the following command. (TODO improve doc)&#x20;
+{% hint style="success" %}
+Please change your active environment to `toolchain-env`
+{% endhint %}
+
+* Push the proof to the proof market
 
 ```
 python proof_push.py -o proof.bin
