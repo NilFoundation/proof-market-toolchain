@@ -13,6 +13,7 @@
 * [Overview](market/overview.md)
 * [Command Line](market/command-line.md)
 * [Front End](market/front-end.md)
+* [API Reference](market/api-reference.md)
 
 ## Misc
 
