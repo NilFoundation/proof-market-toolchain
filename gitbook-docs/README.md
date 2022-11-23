@@ -1,5 +1,5 @@
 ---
-description: Market for zero knowledge proofs.
+description: Market for zero knowledge/non-interactive proofs
 ---
 
 # =nil; Proof Market
