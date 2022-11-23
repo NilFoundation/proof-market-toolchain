@@ -113,8 +113,6 @@ The order book shows the bid and asks on the market place for orders which have 
 
 <figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
-###
-
 ### Trades
 
 The trades component shows all the orders which have been executed on the marketplace.
