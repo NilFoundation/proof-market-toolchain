@@ -291,7 +291,7 @@ namespace nil {
                                   typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
                      bool>::type = true>
         auto create_component_proof(typename ComponentType::params_type params, const PublicInput &public_input,
-                                    const FunctorResultCheck &result_check, bool verification_result = true) {
+                                    const FunctorResultCheck &result_check, std::string output_file, bool verification_result = true) {
 
             using placeholder_params =
                 zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
@@ -303,10 +303,12 @@ namespace nil {
             auto proof = zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
                 public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
 
+            proof_print<nil::marshalling::option::big_endian>(proof, output_file);
+
             bool verifier_res = zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
                 public_preprocessed_data, proof, bp, fri_params);
 
-            std::cout << verifier_res << std::endl;
+            std::cout << "Ver_result=" << verifier_res << std::endl;
 
             return std::make_tuple(proof, fri_params, public_preprocessed_data, bp);
         }
