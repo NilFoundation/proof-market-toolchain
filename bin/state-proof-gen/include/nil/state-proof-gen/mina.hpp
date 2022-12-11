@@ -115,16 +115,13 @@ namespace nil {
             }
 
             template<typename CurveType>
-            void check_coord(multiprecision::cpp_int &x, multiprecision::cpp_int &y) {
+            void check_coord(typename CurveType::base_field_type::value_type &x, typename CurveType::base_field_type::value_type &y) {
                 if (x == 0 && y == 1) {    // circuit uses (0, 0) as point-at-infinity
                     y = 0;
                 }
 
-                typename CurveType::base_field_type::value_type x_field = x;
-                typename CurveType::base_field_type::value_type y_field = y;
-
-                typename CurveType::base_field_type::value_type left_side = y_field * y_field;
-                typename CurveType::base_field_type::value_type right_side = x_field * x_field * x_field;
+                typename CurveType::base_field_type::value_type left_side = y * y;
+                typename CurveType::base_field_type::value_type right_side = x * x * x;
                 right_side += 5;
                 if (left_side != right_side) {
                     x = 0;
@@ -132,226 +129,198 @@ namespace nil {
                 }
             }
 
-            zk::snark::proof_type<curve_type> make_proof(boost::property_tree::ptree root) {
+            zk::snark::proof_type<curve_type> make_proof(boost::json::value public_input) {
+                using curve_type = typename nil::crypto3::algebra::curves::pallas;
+                using scalar_field_type = typename curve_type::scalar_field_type;
+                using base_field_type = typename curve_type::base_field_type;
+
                 typename zk::snark::proof_type<curve_type> proof;
-                size_t i = 0;
-                std::string base_path = "protocolStateProof.json.proof.";
 
-                auto best_chain = *root.get_child("data.bestChain").begin();
-                i = 0;
-                for (auto &row : best_chain.second.get_child(base_path + "messages.w_comm")) {
-                    auto it = row.second.get_child("").begin()->second.get_child("").begin();
-                    auto x = get_cppui256(it);
-                    it++;
-                    auto y = get_cppui256(it);
+                boost::json::array best_chain = public_input.at("data").at("bestChain").as_array();
+                boost::json::value proof_jv = best_chain[0].at("protocolStateProof").at("json").at("proof");
+
+                
+                boost::json::array w_comm_jv = proof_jv.at("messages").at("w_comm").as_array();
+                for (std::size_t i = 0; i < w_comm_jv.size(); i++) {
+                    boost::json::array unshifted = w_comm_jv[i].as_array();
+                    for (std::size_t j = 0; j < unshifted.size(); j++) {
+                        boost::json::array point = unshifted[j].as_array();
+                        auto x = boost::json::value_to<base_field_type::value_type>(point[0]);
+                        auto y = boost::json::value_to<base_field_type::value_type>(point[1]);
+                        check_coord<curve_type>(x, y);
+                        proof.commitments.w_comm[i].unshifted.push_back({x, y});
+                    }
+                }
+                
+                boost::json::array z_comm_jv = proof_jv.at("messages").at("z_comm").as_array();
+                for (std::size_t i = 0; i < z_comm_jv.size(); i++) {
+                    boost::json::array point = z_comm_jv[i].as_array();
+                    auto x = boost::json::value_to<base_field_type::value_type>(point[0]);
+                    auto y = boost::json::value_to<base_field_type::value_type>(point[1]);
                     check_coord<curve_type>(x, y);
-                    proof.commitments.w_comm[i].unshifted.emplace_back(x, y);
-                    ++i;
+                    proof.commitments.z_comm.unshifted.push_back({x, y});
                 }
-                auto it = best_chain.second.get_child(base_path + "messages.z_comm").begin()->second.get_child("").begin();
-                auto x = get_cppui256(it);
-                it++;
-                auto y = get_cppui256(it);
-                check_coord<curve_type>(x, y);
-                proof.commitments.z_comm.unshifted.emplace_back(x, y);
 
-                it = best_chain.second.get_child(base_path + "messages.t_comm").begin()->second.get_child("").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
-                check_coord<curve_type>(x, y);
-                proof.commitments.t_comm.unshifted.emplace_back(x, y);
-                //    proof.commitments.lookup;    // TODO: where it is?
-
-                i = 0;
-                for (auto &row : best_chain.second.get_child(base_path + "openings.proof.lr")) {
-                    auto it0 = row.second.begin()->second.get_child("").begin();
-                    auto x0 = get_cppui256(it0);
-                    it0++;
-                    auto y0 = get_cppui256(it0);
-                    if (x0 == 0 && y0 == 1) {    // circuit uses (0, 0) as point-at-infinity
-                        y0 = 0;
-                    }
-                    auto it1 = row.second.begin();
-                    it1++;
-                    it1 = it1->second.begin();
-                    auto x1 = get_cppui256(it1);
-                    it1++;
-                    auto y1 = get_cppui256(it1);
-                    if (x1 == 0 && y1 == 1) {    // circuit uses (0, 0) as point-at-infinity
-                        y1 = 0;
-                    }
-                    proof.proof.lr.push_back({{x0, y0}, {x1, y1}});
-                    ++i;
+                boost::json::array t_comm_jv = proof_jv.at("messages").at("t_comm").as_array();
+                for (std::size_t i = 0; i < t_comm_jv.size(); i++) {
+                    boost::json::array point = t_comm_jv[i].as_array();
+                    auto x = boost::json::value_to<base_field_type::value_type>(point[0]);
+                    auto y = boost::json::value_to<base_field_type::value_type>(point[1]);
+                    check_coord<curve_type>(x, y);
+                    proof.commitments.t_comm.unshifted.push_back({x, y});
                 }
-                it = best_chain.second.get_child(base_path + "openings.proof.delta").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
-                check_coord<curve_type>(x, y);
-                proof.proof.delta = {x, y};
-                it = best_chain.second.get_child(base_path + "openings.proof.challenge_polynomial_commitment").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
-                check_coord<curve_type>(x, y);
-                proof.proof.sg = {x, y};
 
-                proof.proof.z1 = multiprecision::cpp_int(best_chain.second.get<std::string>(base_path + "openings.proof.z_1"));
-                proof.proof.z2 = multiprecision::cpp_int(best_chain.second.get<std::string>(base_path + "openings.proof.z_2"));
+                // TODO: lookup
 
-                auto evals_it = best_chain.second.get_child(base_path + "openings.evals");
-                i = 0;
-                std::size_t ev_i = 0;
-                for (auto &row : evals_it.get_child("w")) {
-                    ev_i = 0;
-                    for (auto &eval_at_point : row.second) {
-                        for (auto &cell : eval_at_point.second) {
-                            proof.evals[ev_i].w[i].push_back(get_cppui256(&cell));
+                boost::json::value openings_proof_jv = proof_jv.at("openings").at("proof");
+                boost::json::array lr_jv = openings_proof_jv.at("lr").as_array();
+                for (std::size_t i = 0; i < lr_jv.size(); i++) {
+                    boost::json::array points = lr_jv[i].as_array();
+                    boost::json::array point_l = points[0].as_array();
+                    auto x_l = boost::json::value_to<base_field_type::value_type>(point_l[0]);
+                    auto y_l = boost::json::value_to<base_field_type::value_type>(point_l[1]);
+                    check_coord<curve_type>(x_l, y_l);
+                    boost::json::array point_r = points[1].as_array();
+                    auto x_r = boost::json::value_to<base_field_type::value_type>(point_r[0]);
+                    auto y_r = boost::json::value_to<base_field_type::value_type>(point_r[1]);
+                    proof.proof.lr.push_back({{x_l, y_l}, {x_r, y_r}});
+                }
+
+                boost::json::array delta_jv = openings_proof_jv.at("delta").as_array();
+                auto delta_x = boost::json::value_to<base_field_type::value_type>(delta_jv[0]);
+                auto delta_y = boost::json::value_to<base_field_type::value_type>(delta_jv[1]);
+                check_coord<curve_type>(delta_x, delta_y);
+                proof.proof.delta = {delta_x, delta_y};
+                
+                boost::json::array sg_jv = openings_proof_jv.at("sg").as_array();
+                auto sg_x = boost::json::value_to<base_field_type::value_type>(sg_jv[0]);
+                auto sg_y = boost::json::value_to<base_field_type::value_type>(sg_jv[1]);
+                check_coord<curve_type>(sg_x, sg_y);
+                proof.proof.sg = {sg_x, sg_y};
+                
+                proof.proof.z1 = boost::json::value_to<scalar_field_type::value_type>(openings_proof_jv.at("z_1"));
+                proof.proof.z2 = boost::json::value_to<scalar_field_type::value_type>(openings_proof_jv.at("z_2"));
+
+                boost::json::array evals_jv = proof_jv.at("openings").at("evals").as_array();
+                for (std::size_t i = 0; i < evals_jv.size(); i++) {
+                    boost::json::array w_jv = evals_jv[i].at("w").as_array();
+                    for (std::size_t j = 0; j < w_jv.size(); j++) {
+                        boost::json::array eval_at_point_jv = w_jv[j].as_array();
+                        for (std::size_t k = 0; k < eval_at_point_jv.size(); k++) {
+                            proof.evals[i].w[j].push_back(boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
                         }
-                        ev_i++;
                     }
-                    i++;
-                }
 
-                ev_i = 0;
-                for (auto &z_it : evals_it.get_child("z")) {
-                    for (auto &cell : z_it.second) {
-                        proof.evals[ev_i].z.push_back(get_cppui256(&cell));
+                    boost::json::array z_jv = evals_jv[i].at("z").as_array();
+                    for (std::size_t j = 0; j < z_jv.size(); j++) {
+                        proof.evals[i].z.push_back(boost::json::value_to<scalar_field_type::value_type>(z_jv[j]));
                     }
-                    ev_i++;
-                }
 
-                i = 0;
-                for (auto &row : evals_it.get_child("s")) {
-                    ev_i = 0;
-                    for (auto &eval_at_point : row.second) {
-                        for (auto &cell : eval_at_point.second) {
-                            proof.evals[ev_i].s[i].push_back(get_cppui256(&cell));
+                    boost::json::array s_jv = evals_jv[i].at("s").as_array();
+                    for (std::size_t j = 0; j < s_jv.size(); j++) {
+                        boost::json::array eval_at_point_jv = s_jv[j].as_array();
+                        for (std::size_t k = 0; k < eval_at_point_jv.size(); k++) {
+                            proof.evals[i].s[j].push_back(boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
                         }
-                        ev_i++;
                     }
-                    i++;
+
+                    boost::json::array generic_selector_jv = evals_jv[i].at("generic_selector").as_array();
+                    for (std::size_t j = 0; j < generic_selector_jv.size(); j++) {
+                        proof.evals[i].generic_selector.push_back(boost::json::value_to<scalar_field_type::value_type>(generic_selector_jv[j]));
+                    }
+
+                    boost::json::array poseidon_selector_jv = evals_jv[i].at("poseidon_selector").as_array();
+                    for (std::size_t j = 0; j < poseidon_selector_jv.size(); j++) {
+                        proof.evals[i].poseidon_selector.push_back(boost::json::value_to<scalar_field_type::value_type>(poseidon_selector_jv[j]));
+                    }
                 }
 
-                ev_i = 0;
-                for (auto &gs_it : evals_it.get_child("generic_selector")) {
-                    for (auto &cell : gs_it.second) {
-                        proof.evals[ev_i].generic_selector.push_back(get_cppui256(&cell));
-                    }
-                    ev_i++;
-                }
+                std::size_t i = 0;
 
-                ev_i = 0;
-                for (auto &ps_it : evals_it.get_child("poseidon_selector")) {
-                    for (auto &cell : ps_it.second) {
-                        proof.evals[ev_i].poseidon_selector.push_back(get_cppui256(&cell));
-                    }
-                    ev_i++;
-                }
-
-                proof.ft_eval1 = multiprecision::cpp_int(best_chain.second.get<std::string>(base_path + "openings.ft_eval1"));
-                //            // public
-                //            std::vector<typename CurveType::scalar_field_type::value_type> public_p; // TODO: where it is?
-                //
-                //            // Previous challenges
-                //            std::vector<
-                //                std::tuple<std::vector<typename CurveType::scalar_field_type::value_type>, commitment_scheme>>
-                //                prev_challenges; // TODO: where it is?
+                proof.ft_eval1 = boost::json::value_to<scalar_field_type::value_type>(proof_jv.at("openings").at("ft_eval1"));
+                
+                // TODO: public input
+                // TODO: prev challenges
                 return proof;
             }
 
-            pallas_verifier_index_type make_verify_index(boost::property_tree::ptree root, boost::property_tree::ptree const_root) {
+            pallas_verifier_index_type make_verify_index(boost::json::value public_input, boost::json::value const_input) {
                 using curve_type = typename nil::crypto3::algebra::curves::pallas;
+                using scalar_field_type = typename curve_type::scalar_field_type;
+                using base_field_type = typename curve_type::base_field_type;
 
                 pallas_verifier_index_type ver_index;
-                size_t i = 0;
 
                 // TODO Is it right? Is it a good way to set domain generator?
                 // We need to assert, need to check that the input is indeed the root of unity
+                boost::json::value verify_index_input = const_input.at("kimchi_const").at("verify_index");
+                boost::json::value domain = verify_index_input.at("domain");
+                ver_index.domain.omega = boost::json::value_to<scalar_field_type::value_type>(domain.at("group_gen"));
+                std::uint32_t d_size = boost::json::value_to<std::uint32_t>(domain.at("log_size_of_group"));
+                ver_index.domain = nil::crypto3::math::basic_radix2_domain<scalar_field_type>(d_size + 1);
 
-                auto d_gen = multiprecision::cpp_int(const_root.get<std::string>("verify_index.domain.group_gen"));
-                auto d_size = const_root.get<std::size_t>("verify_index.domain.log_size_of_group");
-                // std::cout << d_gen << " " << d_size << std::endl;
-                ver_index.domain = nil::crypto3::math::basic_radix2_domain<typename curve_type::scalar_field_type>(d_size + 1);
-                // std::cout << ver_index.domain.omega.data << std::endl;
-                ver_index.domain.omega = d_gen;
+                boost::json::value vk = public_input.at("data").at("blockchainVerificationKey");
+                ver_index.max_poly_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_poly_size"));
+                ver_index.max_quot_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_quot_size"));
 
-                ver_index.max_poly_size = root.get<std::size_t>("data.blockchainVerificationKey.index.max_poly_size");
-                ver_index.max_quot_size = root.get<std::size_t>("data.blockchainVerificationKey.index.max_quot_size");
-                //    ver_index.srs = root.get<std::string>("data.blockchainVerificationKey.index.srs");    // TODO: null
-                i = 0;
-                for (auto &row : root.get_child("data.blockchainVerificationKey.commitments.sigma_comm")) {
-                    auto it = row.second.begin();
-                    auto x = get_cppui256(it);
-                    it++;
-                    auto y = get_cppui256(it);
+                // TODO srs for ver_index
+
+                boost::json::array sigma_comm_jv = vk.at("commitments").at("sigma_comm").as_array();
+                for (std::size_t i = 0; i < sigma_comm_jv.size(); ++i) {
+                    boost::json::array point = sigma_comm_jv[i].as_array();
+                    auto x = boost::json::value_to<base_field_type::value_type>(point[0]);
+                    auto y = boost::json::value_to<base_field_type::value_type>(point[1]);
                     check_coord<curve_type>(x, y);
                     ver_index.sigma_comm[i].unshifted.emplace_back(x, y);
-                    ++i;
                 }
 
-                i = 0;
-                for (auto &row : root.get_child("data.blockchainVerificationKey.commitments.coefficients_comm")) {
-                    auto it = row.second.begin();
-                    auto x = get_cppui256(it);
-                    it++;
-                    auto y = get_cppui256(it);
+                boost::json::array coefficients_comm_jv = vk.at("commitments").at("coefficients_comm").as_array();
+                for (std::size_t i = 0; i < coefficients_comm_jv.size(); ++i) {
+                    boost::json::array point = coefficients_comm_jv[i].as_array();
+                    auto x = boost::json::value_to<base_field_type::value_type>(point[0]);
+                    auto y = boost::json::value_to<base_field_type::value_type>(point[1]);
                     check_coord<curve_type>(x, y);
                     ver_index.coefficients_comm[i].unshifted.emplace_back(x, y);
-                    ++i;
                 }
-                auto it = root.get_child("data.blockchainVerificationKey.commitments.generic_comm").begin();
-                auto x = get_cppui256(it);
-                it++;
-                auto y = get_cppui256(it);
+
+                boost::json::array generic_comm_jv = vk.at("commitments").at("generic_comm").as_array();
+                auto x = boost::json::value_to<base_field_type::value_type>(generic_comm_jv[0]);
+                auto y = boost::json::value_to<base_field_type::value_type>(generic_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.generic_comm.unshifted.emplace_back(x, y);
 
-                it = root.get_child("data.blockchainVerificationKey.commitments.psm_comm").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
+                boost::json::array psm_comm_jv = vk.at("commitments").at("psm_comm").as_array();
+                x = boost::json::value_to<base_field_type::value_type>(psm_comm_jv[0]);
+                y = boost::json::value_to<base_field_type::value_type>(psm_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.psm_comm.unshifted.emplace_back(x, y);
-                it = root.get_child("data.blockchainVerificationKey.commitments.complete_add_comm").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
+
+                boost::json::array complete_add_comm_jv = vk.at("commitments").at("complete_add_comm").as_array();
+                x = boost::json::value_to<base_field_type::value_type>(complete_add_comm_jv[0]);
+                y = boost::json::value_to<base_field_type::value_type>(complete_add_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.complete_add_comm.unshifted.emplace_back(x, y);
-                it = root.get_child("data.blockchainVerificationKey.commitments.mul_comm").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
+
+                boost::json::array mul_comm_jv = vk.at("commitments").at("mul_comm").as_array();
+                x = boost::json::value_to<base_field_type::value_type>(mul_comm_jv[0]);
+                y = boost::json::value_to<base_field_type::value_type>(mul_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.mul_comm.unshifted.emplace_back(x, y);
-                it = root.get_child("data.blockchainVerificationKey.commitments.emul_comm").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
+
+                boost::json::array emul_comm_jv = vk.at("commitments").at("emul_comm").as_array();
+                x = boost::json::value_to<base_field_type::value_type>(emul_comm_jv[0]);
+                y = boost::json::value_to<base_field_type::value_type>(emul_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.emul_comm.unshifted.emplace_back(x, y);
-                it = root.get_child("data.blockchainVerificationKey.commitments.endomul_scalar_comm").begin();
-                x = get_cppui256(it);
-                it++;
-                y = get_cppui256(it);
+
+                boost::json::array endomul_scalar_comm_jv = vk.at("commitments").at("endomul_scalar_comm").as_array();
+                x = boost::json::value_to<base_field_type::value_type>(endomul_scalar_comm_jv[0]);
+                y = boost::json::value_to<base_field_type::value_type>(endomul_scalar_comm_jv[1]);
                 check_coord<curve_type>(x, y);
                 ver_index.endomul_scalar_comm.unshifted.emplace_back(x, y);
 
-                // TODO: null in example
-                //    i = 0;
-                //    for (auto &row : root.get_child("data.blockchainVerificationKey.commitments.chacha_comm")) {
-                //        auto it = row.second.begin();
-                //        ver_index.chacha_comm[i].unshifted.emplace_back(get_cppui256(it++), get_cppui256(it));
-                //        ++i;
-                //    }
-                // i = 0;
-                // No member shifts
-                // for (auto &row : root.get_child("data.blockchainVerificationKey.index.shifts")) {
-                //    ver_index.shifts[i] = multiprecision::cpp_int(row.second.get_value<std::string>());
-                //    ++i;
-                //}
+                // TODO: chacha_comm
+                // TODO: shifts
 
                 // Polynomial in coefficients form
                 // Const
@@ -359,55 +328,45 @@ namespace nil {
                                 0x1764D9CB4C64EBA9A150920807637D458919CB6948821F4D15EB1994EADF9CE3_cppui256,
                                 0x0140117C8BBC4CE4644A58F7007148577782213065BB9699BF5C391FBE1B3E6D_cppui256,
                                 0x0000000000000000000000000000000000000000000000000000000000000001_cppui256};
-                ver_index.w = multiprecision::cpp_int(const_root.get<std::string>("verify_index.w"));
-                ver_index.endo = multiprecision::cpp_int(const_root.get<std::string>("verify_index.endo"));
+                
+                ver_index.w = boost::json::value_to<scalar_field_type::value_type>(verify_index_input.at("w"));
+                ver_index.endo = boost::json::value_to<scalar_field_type::value_type>(verify_index_input.at("endo"));
 
-                // ver_index.lookup_index = root.get_child("data.blockchainVerificationKey.index.lookup_index"); // TODO: null
-                // ver_index.linearization;       // TODO: where it is?
+                // TODO: lookup_index
                 ver_index.powers_of_alpha.next_power = 24;
 
-                i = 0;
-                ver_index.fr_sponge_params.round_constants.resize(
-                    const_root.get_child("verify_index.fr_sponge_params.round_constants").size());
-                for (auto &row : const_root.get_child("verify_index.fr_sponge_params.round_constants")) {
-                    size_t j = 0;
-                    for (auto cell : row.second) {
-                        ver_index.fr_sponge_params.round_constants[i].push_back(get_cppui256(&cell));
-                        j++;
+                boost::json::array fr_round_constants_jv = verify_index_input.at("fr_sponge_params").at("round_constants").as_array();
+                ver_index.fr_sponge_params.round_constants.resize(fr_round_constants_jv.size());
+                for (std::size_t i = 0; i < fr_round_constants_jv.size(); i++) {
+                    boost::json::array row_jv = fr_round_constants_jv[i].as_array();
+                    for (std::size_t j = 0; j < row_jv.size(); j++) {
+                        ver_index.fr_sponge_params.round_constants[i].push_back(boost::json::value_to<scalar_field_type::value_type>(row_jv[j]));
                     }
-                    i++;
                 }
 
-                i = 0;
-                for (auto &row : const_root.get_child("verify_index.fr_sponge_params.mds")) {
-                    size_t j = 0;
-                    for (auto cell : row.second) {
-                        ver_index.fr_sponge_params.mds[i][j] = get_cppui256(&cell);
-                        j++;
+                boost::json::array fr_mds_jv = verify_index_input.at("fr_sponge_params").at("mds").as_array();
+                for (std::size_t i = 0; i < fr_mds_jv.size(); i++) {
+                    boost::json::array row_jv = fr_mds_jv[i].as_array();
+                    for (std::size_t j = 0; j < row_jv.size(); j++) {
+                        ver_index.fr_sponge_params.mds[i][j] = boost::json::value_to<scalar_field_type::value_type>(row_jv[j]);
                     }
-                    i++;
                 }
 
-                i = 0;
-                ver_index.fq_sponge_params.round_constants.resize(
-                    const_root.get_child("verify_index.fq_sponge_params.round_constants").size());
-                for (auto &row : const_root.get_child("verify_index.fq_sponge_params.round_constants")) {
-                    size_t j = 0;
-                    for (auto cell : row.second) {
-                        ver_index.fq_sponge_params.round_constants[i].push_back(get_cppui256(&cell));
-                        j++;
+                boost::json::array fq_round_constants_jv = verify_index_input.at("fq_sponge_params").at("round_constants").as_array();
+                ver_index.fq_sponge_params.round_constants.resize(fq_round_constants_jv.size());
+                for (std::size_t i = 0; i < fq_round_constants_jv.size(); i++) {
+                    boost::json::array row_jv = fq_round_constants_jv[i].as_array();
+                    for (std::size_t j = 0; j < row_jv.size(); j++) {
+                        ver_index.fq_sponge_params.round_constants[i].push_back(boost::json::value_to<base_field_type::value_type>(row_jv[j]));
                     }
-                    i++;
                 }
 
-                i = 0;
-                for (auto &row : const_root.get_child("verify_index.fq_sponge_params.mds")) {
-                    size_t j = 0;
-                    for (auto cell : row.second) {
-                        ver_index.fr_sponge_params.mds[i][j] = get_cppui256(&cell);
-                        j++;
+                boost::json::array fq_mds_jv = verify_index_input.at("fq_sponge_params").at("mds").as_array();
+                for (std::size_t i = 0; i < fq_mds_jv.size(); i++) {
+                    boost::json::array row_jv = fq_mds_jv[i].as_array();
+                    for (std::size_t j = 0; j < row_jv.size(); j++) {
+                        ver_index.fq_sponge_params.mds[i][j] = boost::json::value_to<base_field_type::value_type>(row_jv[j]);
                     }
-                    i++;
                 }
 
                 // TODO: Add assertions about right size of
@@ -1129,12 +1088,8 @@ namespace nil {
             }
 
             void proof_new(boost::json::value jv, boost::json::value jv_public_input, std::string output_file) {
-                boost::property_tree::ptree root;
-                boost::property_tree::ptree const_root;
-                boost::property_tree::read_json(boost::json::value_to<std::string>(jv.at("mina_state")), root);
-                boost::property_tree::read_json(boost::json::value_to<std::string>(jv.at("kimchi_const")), const_root);
-                zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(root);
-                pallas_verifier_index_type ver_index = make_verify_index(root, const_root);
+                zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(jv_public_input);
+                pallas_verifier_index_type ver_index = make_verify_index(jv_public_input, jv);
 
                 constexpr const std::size_t eval_rounds_scalar = 15;
                 constexpr const std::size_t eval_rounds_base = 10;

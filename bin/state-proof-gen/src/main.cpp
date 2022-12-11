@@ -138,10 +138,10 @@ inline bool configure_aspects(boost::application::context &ctx, Application &app
 
 void proof_new(boost::json::value jv, boost::json::value jv_public_input, std::string output_file) {
     std::size_t proof_number = boost::json::value_to<std::size_t>(jv.at("id"));
-    if (proof_number == 1) {
+    if (proof_number == 0) {
         solana_state_proof::proof_new(jv, jv_public_input, output_file);
     }
-    if (proof_number == 2) {
+    if (proof_number == 1) {
         mina_state_proof::proof_new(jv, jv_public_input, output_file);
     }
 }
