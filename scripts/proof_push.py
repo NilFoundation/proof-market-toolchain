@@ -1,30 +1,29 @@
-import random
-import sys
 import requests
 import logging
 import argparse
-import os.path
-import re
-import importlib  
-import inspect
-import math
+import json
+from constants import DB_NAME, URL, MOUNT
 
-secret = open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r").read()
-user = open(os.path.dirname(os.path.abspath(__file__)) + "/.user", "r").read()
-
-def push(args, data=None):
+def push(data=None, args=None):
     if data is None and args:
-        bid_id = args.bid_id
-        # try read proof from args.file, if not, get exception
         try:
-            proof = open(args.proof, "r").read()
+            proof = open(args.file, "r").read()
         except:
             logging.error(f"Error: proof file not found")
             return
-        data = {"bid_id": bid_id, "proof": proof}
+        data = {
+                "proof": proof,
+                "ask_key" : args.ask_key,
+                "bid_key" : args.bid_key,
+                }
 
-    url = 'http://try.dbms.nil.foundation/market/proof'
-    res = requests.post(url=url, json=data, auth=(user, secret))
+    headers = {}
+    if args.auth:
+        with open(args.auth, 'r') as f:
+            auth = json.load(f)
+        headers.update(auth)
+    url = URL + f'_db/{DB_NAME}/{MOUNT}/proof'
+    res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.json()}")
         return
@@ -35,8 +34,14 @@ def push(args, data=None):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--bid_id', metavar='bid_id', type=int, help='bid_id', required=True)
-    parser.add_argument('-p', '--proof', metavar='proof', type=str, help='path to proof file', required=True)
+    parser.add_argument('-a', '--ask_key', metavar='ask_key', type=str, 
+                        help='ask_key', required=True)
+    parser.add_argument('-b', '--bid_key', metavar='bid_key', type=str, 
+                        help='bid_key', required=True)
+    parser.add_argument('-f', '--file', metavar='file', type=str, 
+                        help='file', required=True)
+    parser.add_argument('--auth', metavar='auth', type=str, default='auth.json',
+                        help='auth')
     args = parser.parse_args()
     push(args=args)
         

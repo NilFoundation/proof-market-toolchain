@@ -1,53 +1,47 @@
-import requests
-import os
 import logging
 import json
 import argparse
-
-secret = open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r").read()
-user = open(os.path.dirname(os.path.abspath(__file__)) + "/.user", "r").read()
-
+import requests
+from constants import DB_NAME, URL, MOUNT
 
 def push(data=None, args=None):
     if data is None and args:
-        f = open(args.public_input, 'r')
-        public_input = json.load(f)
-
-        data = {"circuit_id": args.circuit_id,
-                "sender": args.sender,
-                "wait_period": 1000, 
-                'public_input': public_input,
+        f = open(args.file, 'r')
+        input = json.load(f)
+        data = {
+                "statement_key": args.key,
+                'input': input,
                 "cost": args.cost, 
                 "eval_time": args.generation_time,
                 }
-        if args.file:
-            with open(args.file, 'r') as f:
-                data = json.load(f)
-            data['public_input'] = json.loads(data['public_input'])
-    
-    url = 'http://try.dbms.nil.foundation/market/bid'
-    res = requests.post(url=url, json=data, auth=(user, secret))
-    if res.status_code != 200:
+
+    headers = {}
+    if args.auth:
+        with open(args.auth, 'r') as f:
+            auth = json.load(f)
+        headers.update(auth)
+
+    url = URL + f'_db/{DB_NAME}/{MOUNT}/bid/'
+    res = requests.post(url=url, json=data, headers=headers)
+    if res.status_code!=200:
         logging.error(f"Error: {res.status_code} {res.json()}")
         return
     else:
-        logging.info(f"Limit bid:\t {json.dumps(res.json(), indent=4)}")
+        logging.info(f"Limit bid:\t {res.json()}")
         return res.json()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cost', metavar='cost', type=float,
-                        help='cost', required=True)
-    parser.add_argument('--sender', metavar='sender', type=str,
-                        help='sender', required=True)
-    parser.add_argument('--file', default=None, metavar='file', type=str,
-                        help='load bid description from file')
-    parser.add_argument('--public_input', metavar='public_input', type=str,
-                        help='public_input', required=True)
-    parser.add_argument('--circuit_id', metavar='circuit_id', type=int,
-                        help='circuit_id', required=True)
+    parser.add_argument('-c', '--cost', metavar='cost', type=float, required=True,
+                        help='cost')
+    parser.add_argument('-f', '--file', default=None, metavar='file', type=str,
+                        help='file', required=True)
+    parser.add_argument('-k', '--key', default=0, metavar='statement_key', type=str,
+                        help='key of the statement')
+    parser.add_argument('--auth', metavar='auth', type=str, default='auth.json',
+                        help='auth file')
     parser.add_argument('--generation_time', default=30, metavar='circuit_id', type=int,
                         help='required proof time generation (in mins)')
     args = parser.parse_args()
