@@ -5,7 +5,7 @@ import argparse
 import json
 from constants import DB_NAME, URL, MOUNT
 
-def get(args, status=None):
+def get(args):
     headers = {}
     with open(args.auth, 'r') as f:
         auth = json.load(f)
@@ -13,8 +13,6 @@ def get(args, status=None):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/bid/' 
     if args.key:
         url += args.key
-    elif status:
-        url += f'?status={status}'
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")

@@ -23,7 +23,7 @@ if __name__ == "__main__":
         headers.update(auth)
     url = URL + f'_db/{DB_NAME}/{MOUNT}/proof/'
     if args.bid_key:
-        url += f'?bid_key={args.bid_key}'
+        url += f'?q=[{{"key" : "bid_key", "value" : "{args.bid_key}"}}]'
     elif args.key:
         url += args.key
     else:
