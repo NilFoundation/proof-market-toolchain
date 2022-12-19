@@ -38,7 +38,7 @@ if __name__ == "__main__":
         proof_data = res_json
         if args.file:
             with open(args.file, 'w') as f:
-                f.write(proof_data)
+                f.write(proof_data['proof'])
         logging.info(f"Proof:\t\t {res_json}")
         
 
