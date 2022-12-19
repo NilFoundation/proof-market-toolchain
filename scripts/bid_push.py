@@ -7,7 +7,7 @@ from constants import DB_NAME, URL, MOUNT
 def push(data=None, args=None):
     if data is None and args:
         f = open(args.file, 'r')
-        input = json.load(f)
+        input = f.read()
         data = {
                 "statement_key": args.key,
                 'input': input,
