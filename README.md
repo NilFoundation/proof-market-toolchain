@@ -18,7 +18,7 @@ operation interaction between the above two entities.
 
 ## 0. Prepare zkLLVM (for circuit developers)
 The most productive way to create a circuit definition for Proof Market is [zkLLVM](https://github.com/NilFoundation/zkllvm).
-All dependencies and build instructions are inside zkLLVM repository. 
+All dependencies and build instructions are inside the [zkLLVM's repository](https://github.com/NilFoundation/zkllvm). 
 
 ## 1. Circuit Generation/Publishing (for circuit developers)
 
