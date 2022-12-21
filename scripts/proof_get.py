@@ -35,11 +35,10 @@ if __name__ == "__main__":
         exit(1)
     else:
         res_json = res.json()
-        proof_data = res_json
-        if args.file:
+        if args.file and len(res_json) > 0:
             with open(args.file, 'w') as f:
-                f.write(proof_data['proof'])
-        logging.info(f"Proof:\t\t {res_json}")
+                f.write(res_json[0].pop('proof', ''))
+        logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
         
 
     logging.basicConfig(level=logging.INFO, format='%(message)s')
