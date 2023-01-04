@@ -10,10 +10,11 @@
 
 ## Market
 
-* [Overview](market/overview.md)
+* [Economics](market/economics.md)
 * [Command Line](market/command-line.md)
 * [Front End](market/front-end.md)
 * [API Reference](market/api-reference.md)
+* [Terminology](market/terminology.md)
 
 ## Misc
 

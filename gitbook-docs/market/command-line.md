@@ -6,7 +6,7 @@ description: Command line guide to proof market
 
 In this guide , we walk through all the steps to interact with the proof market. We will cover everything from compiling a circuit , placing/matching order , generating/verifying proof.
 
-We will use two [personas](overview.md#entities) defined earlier&#x20;
+We will use two [personas](terminology.md#entities) defined earlier&#x20;
 
 * Proof Generator (PG)&#x20;
 * Proof Requester (PR)
