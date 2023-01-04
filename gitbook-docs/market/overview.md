@@ -1,4 +1,4 @@
-# Overview
+# Terminology
 
 {% hint style="warning" %}
 Proof Market version represented here is alpha. We expect constant changes to the below as per the feedback we receive from participants.

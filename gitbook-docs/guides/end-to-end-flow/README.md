@@ -2,27 +2,31 @@
 description: Command line guide to proof market
 ---
 
-# Command Line
+# End to End flow
+
+
+
+
 
 In this guide , we walk through all the steps to interact with the proof market. We will cover everything from compiling a circuit , placing/matching order , generating/verifying proof.
 
-We will use two [personas](terminology.md#entities) defined earlier&#x20;
+We will use two [personas](../../market/overview.md#entities) defined earlier&#x20;
 
 * Proof Generator (PG)&#x20;
 * Proof Requester (PR)
 
 We require to setup two projects :&#x20;
 
-* Proof Market tool-chain  (`toolchain-env`) : Please follow [environment setup](../guides/environment-setup.md) & [installation](../guides/installation.md) guide.
+* Proof Market tool-chain  (`toolchain-env`) : Please follow [environment setup](../environment-setup.md) & [installation](../installation/) guide.
 * zkLLVM (`zkllvm-env`): Please follow [environment setup](https://nil-foundation.gitbook.io/zkllvm/guides/environment-setup) & [installation guide](https://nil-foundation.gitbook.io/zkllvm/guides/installation).
 
 We will perform the following steps with the personas above  and the environment in which the commands carried out in `toolchain-env` or `zkllvm-env` environment
 
-1. [Proof Requester - Compile Circuit](command-line.md#1.-pr-compile-circuit) : Compile circuit to generate byte-code. _(executed by PR)_
-2. [Proof Requester - Push order to Proof Market](command-line.md#2.-pr-push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
-3. [Proof Generator -  Match Order & Generate Proof](command-line.md#3.-pg-match-order-and-generate-proof): Accept order from market and generate proof _(executed by PG)_
-4. [Proof Generator - Push Proof to the Proof Market](command-line.md#4.-pg-push-proof-to-proof-market): Build zkLLVM & compile circuit to generate byte-code _(executed by PG)_
-5. [Proof Requester - Verify Proof](command-line.md#5.-pr-verify-proof): Build zkLLVM & compile circuit to generate byte-code _(executed by PR)_
+1. [Proof Requester - Compile Circuit](./#1.-pr-compile-circuit) : Compile circuit to generate byte-code. _(executed by PR)_
+2. [Proof Requester - Push order to Proof Market](./#2.-pr-push-order-to-proof-market): Push order to proof market with bytecode & public inputs (if any) _(executed by PR)_
+3. [Proof Generator -  Match Order & Generate Proof](./#3.-pg-match-order-and-generate-proof): Accept order from market and generate proof _(executed by PG)_
+4. [Proof Generator - Push Proof to the Proof Market](./#4.-pg-push-proof-to-proof-market): Build zkLLVM & compile circuit to generate byte-code _(executed by PG)_
+5. [Proof Requester - Verify Proof](./#5.-pr-verify-proof): Build zkLLVM & compile circuit to generate byte-code _(executed by PR)_
 
 
 
