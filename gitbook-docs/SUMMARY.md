@@ -6,10 +6,8 @@
 
 * [Portal Overview](guides/portal-overview.md)
 * [Environment Setup](guides/environment-setup.md)
-* [Installation](guides/installation/README.md)
-  * [Proof Market tool chain](guides/installation/proof-market-tool-chain.md)
-  * [zkLLVM](guides/installation/zkllvm.md)
-* [End to End flow](guides/end-to-end-flow/README.md)
+* [Installation](guides/installation.md)
+* [End to End flow](market/command-line.md)
   * [Circuit Developer](guides/end-to-end-flow/circuit-developer.md)
   * [Proof Requester](guides/end-to-end-flow/proof-requester.md)
   * [Proof Generator](guides/end-to-end-flow/proof-generator.md)
