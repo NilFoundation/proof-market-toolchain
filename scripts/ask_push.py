@@ -1,43 +1,40 @@
 import requests
-import json
-import os
 import logging
 import json
 import argparse
-import numpy as np
+from constants import DB_NAME, URL, MOUNT
 
-secret = open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r").read()
-user = open(os.path.dirname(os.path.abspath(__file__)) + "/.user", "r").read()
+def push(data=None, args=None):
+    if data is None and args:
+        data = {
+                "statement_key": args.key,
+                "cost": args.cost,
+                }
+    headers = {}
+    if args.auth:
+        with open(args.auth, 'r') as f:
+            auth = json.load(f)
+        headers.update(auth)
 
-def push(args):
-    data = {"circuit_id": args.circuit_id,
-            "sender": args.sender,
-            "wait_period": 1000, 
-            "cost": args.cost, 
-            "eval_time": args.generation_time,
-            }
-    url = 'http://try.dbms.nil.foundation/market/ask'
-    res = requests.post(url=url, json=data, auth=(user, secret))
+    url = URL + f'_db/{DB_NAME}/{MOUNT}/ask/'
+    res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
-        logging.error(f"Error: {res.status_code} {res.json()}")
+        logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Limit ask:\t {json.dumps(res.json(), indent=4)}")
+        logging.info(f"Limit ask:\t {res.json()}")
         return res.json()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cost', metavar='cost', type=float,
-                        help='cost', required=True)
-    parser.add_argument('--sender', metavar='sender', type=str,
-                        help='sender', required=True)
-    parser.add_argument('--file', default=None, metavar='file', type=str,
-                        help='load ask description from file')
-    parser.add_argument('--circuit_id', metavar='circuit_id', type=int,
-                        help='circuit_id', required=True)
-    parser.add_argument('--generation_time', metavar='circuit_id', type=int,
-                        help='proof time generation (in mins)', required=True)
+    parser.add_argument('-c', '--cost', metavar='cost', type=float, required=True,
+                        help='cost')
+    parser.add_argument('-k', '--key', metavar='statement_key', type=str, required=True,
+                        help='key of the statement')
+    parser.add_argument('--auth', metavar='auth', type=str, default='auth.json',
+                        help='auth file')
     args = parser.parse_args()
+
     push(args=args)
