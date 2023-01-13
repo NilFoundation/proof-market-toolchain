@@ -14,11 +14,11 @@ sys.path.insert(0, parentdir)
 def push(data=None, args=None):
     if data is None and args:
         proof = open(args.file, "r").read()
-        data = {
-                "proof": proof,
-                "ask_key" : args.ask_key,
-                "bid_key" : args.bid_key,
-                }
+        data = {"proof": proof}
+        if args.bid_key:
+            data['bid_key'] = args.bid_key
+        if args.ask_key:
+            data['ask_key'] = args.ask_key
 
     headers = get_headers(args)
     url = URL + f'_db/{DB_NAME}/{MOUNT}/proof'
@@ -67,9 +67,9 @@ if __name__ == "__main__":
     parser_push.set_defaults(func=push)
     parser_get = subparsers.add_parser('get', help='get proof')
     parser_get.set_defaults(func=get)
-    parser_push.add_argument('-a', '--ask_key', type=str, required=True,
+    parser_push.add_argument('-a', '--ask_key', type=str, default=None,
                             help='ask_key')
-    parser_push.add_argument('-b', '--bid_key', type=str, required=True,
+    parser_push.add_argument('-b', '--bid_key', type=str, default=None,
                             help='bid_key')
     parser_push.add_argument('-f', '--file', type=str, required=True,
                             help='file with proof')
@@ -78,5 +78,8 @@ if __name__ == "__main__":
     parser_get.add_argument('-f', '--file', type=str,
                             help='file to write proof')
     args = parser.parse_args()
+    if not args.bid_key and not args.ask_key:
+        logging.error("Error: bid_key or ask_key has to be provided")
+        exit(1)
     args.func(args=args)
         

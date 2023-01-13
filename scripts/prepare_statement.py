@@ -6,6 +6,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--circuit', type=str, required=True,
                         help='zkllvm compiler output')
     parser.add_argument('-o', '--output', metavar='output file', type=str, required=True, help='output file')
+    parser.add_argument('-n', '--name', type=str, required=True, help='name')
     args = parser.parse_args()
 
     data = {
@@ -15,13 +16,15 @@ if __name__ == "__main__":
         "input_description": "input_description",
         "type": "type",
         "isPrivate": False,
-        "verification_key": "verification_key",
-        "statement": "statement",
+        "definition": {
+            "verification_key": "verification_key",
+            "proving_key": "proofing_key"
+        }
     }
 
     with open(args.circuit, 'r') as f:
         circuit = f.read()
-        data['statement'] = circuit
+        data['definition']['proving_key'] = circuit
     
     with open(args.output, 'w') as f:
         json.dump(data, f, indent=4)

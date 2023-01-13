@@ -16,7 +16,7 @@ def push(args):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/statement/'
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code!=200:
-        logging.error(f"Error: {res.status_code} {res.json()}")
+        logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
         logging.info(f"Statement:\t {res.json()}")
