@@ -97,3 +97,9 @@
 [submodule "libs/actor/shim/epoll"]
 	path = libs/actor/shim/epoll
 	url = https://github.com/NilFoundation/epoll-shim.git
+[submodule "libs/zkllvm-assigner"]
+	path = libs/zkllvm-assigner
+	url = https://github.com/NilFoundation/zkllvm-assigner
+[submodule "libs/zkllvm-circifier"]
+	path = libs/zkllvm-circifier
+	url = https://github.com/NilFoundation/zkllvm-circifier

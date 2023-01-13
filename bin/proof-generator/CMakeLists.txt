@@ -1,3 +1,13 @@
+#---------------------------------------------------------------------------#
+# Copyright (c) 2022 Mikhail Komarov <nemo@nil.foundation>
+# Copyright (c) 2022 Aleksei Moskvin <alalmoskvin@nil.foundation>
+# Copyright (c) 2023 Ilia Shirobokov <i.shirobokov@nil.foundation>
+#
+# Distributed under the Boost Software License, Version 1.0
+# See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt
+#---------------------------------------------------------------------------#
+
 cmake_minimum_required(VERSION 3.5)
 
 cm_find_package(CM)
@@ -68,6 +78,10 @@ set_target_properties(${CURRENT_PROJECT_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED TRUE)
 
 target_link_libraries(${CURRENT_PROJECT_NAME}
+        LLVMIRReader
+        LLVMCore
+        LLVMSupport
+
         crypto3::algebra
         crypto3::block
         crypto3::codec
@@ -75,6 +89,8 @@ target_link_libraries(${CURRENT_PROJECT_NAME}
         crypto3::pkpad
         crypto3::pubkey
         crypto3::random
+
+        crypto3::assigner
 
         marshalling::core
         marshalling::crypto3_algebra
@@ -89,6 +105,9 @@ target_link_libraries(${CURRENT_PROJECT_NAME}
 target_include_directories(${CURRENT_PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/zkllvm-circifier/llvm/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/zkllvm-circifier/utils/bazel/llvm-project-overlay/llvm/include
+        ${CMAKE_BINARY_DIR}/libs/zkllvm-circifier/llvm/include
 
         $<$<BOOL:${Boost_FOUND}>:${Boost_INCLUDE_DIRS}>)
 

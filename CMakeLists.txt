@@ -37,8 +37,11 @@ macro(cm_find_package NAME)
     endif()
 endmacro()
 
-option(BUILD_TESTS "Build unit tests" TRUE)
+option(BUILD_TESTS "Build unit tests" FALSE)
+option(BUILD_SHARED_LIBS "Build shared library" TRUE)
+option(CIRCUIT_ASSEMBLY_OUTPUT "Emit circuit IR as assembly file" FALSE)
 
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/libs/zkllvm-circifier/llvm")
 add_subdirectories("${CMAKE_CURRENT_LIST_DIR}/libs")
 add_subdirectories("${CMAKE_CURRENT_LIST_DIR}/libs/actor")
 add_subdirectories("${CMAKE_CURRENT_LIST_DIR}/bin")

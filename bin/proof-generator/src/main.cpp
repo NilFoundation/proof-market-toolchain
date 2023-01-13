@@ -38,6 +38,7 @@
 #include <nil/proof-generator/detail/configurable.hpp>
 
 #include <nil/proof-generator/circuits/mina-state/proof.hpp>
+#include <nil/proof-generator/assigner/proof.hpp>
 
 template<typename F, typename First, typename... Rest>
 inline void insert_aspect(F f, First first, Rest... rest) {
@@ -99,6 +100,9 @@ void proof_new(boost::json::value circuit_description, boost::json::value public
             nil::proof_generator::mina_state::proof_new(circuit_description, public_input, output_file);
             break;
         default:
+            std::string bytecode = boost::json::value_to<std::string>(circuit_description.at("statement"));
+            std::string public_input_str = boost::json::value_to<std::string>(public_input.at("input"));
+            nil::proof_generator::assigner::proof_new(bytecode, public_input_str, output_file);
             break;
     }
 }
