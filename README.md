@@ -14,6 +14,15 @@ made by the Proof Requester.
 Below we will list a set of operations a user can follow along which demonstrates the market 
 operation interaction between the above two entities.
 
+# Building
+
+```
+mkdir build
+cd build
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
+cmake --build . -t proof-generator
+```
+
 # Proof Market Interaction
 
 ## 0. Prepare zkLLVM (for circuit developers)
@@ -96,7 +105,7 @@ Now it is time to generate a proof for proof producer.
 
 First of all, the proof producer needs circuit definition:
 ```
-python3 scripts/circuit_get.py --key <statement key for the bid> -o <output file> --auth <json authorization file>
+python3 scripts/statement_get.py --key <statement key for the bid> -o <output file> --auth <json authorization file>
 ```
 
 Next, public input of the bid:
@@ -104,9 +113,10 @@ Next, public input of the bid:
 python3 scripts/public_input_get.py --key <bid key> -o <output file path> --auth <json authorization file>
 ```
 
-Execute the below to generate a proof (using [zkLLVM](https://github.com/NilFoundation/zkllvm)):
+Execute the below to generate a proof:
 ```
-${ZKLLVM_BUILD:-build}/bin/assigner/assigner -b <circuit definition file> -i <input file> -t <assignments table file> -c <proof file>
+cd build
+./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
 ```
 
 

@@ -1,4 +1,10 @@
-{   "id" : 1,
+{   
+    "name": "mina",
+    "type": "placeholder vanilla",
+    "description": "mina state proof",
+    "definition_url": "definition_url",
+    "verification_key": "verification_key",
+    "statement": {
     "kimchi_const": {
         "verify_index": {
             "domain": {
@@ -606,5 +612,6 @@
             ]
             }
         }
+    }
     }
 }

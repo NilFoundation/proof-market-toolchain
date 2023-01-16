@@ -62,7 +62,7 @@ namespace nil {
                 pallas_verifier_index_type ver_index = make_verifier_index(jv_public_input, jv_pickles_constants);
                 nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 1;
+                constexpr const std::size_t eval_rounds_scalar = 15;
                 constexpr const std::size_t eval_rounds_base = 1;
                 constexpr const std::size_t fri_max_step = 1;
 

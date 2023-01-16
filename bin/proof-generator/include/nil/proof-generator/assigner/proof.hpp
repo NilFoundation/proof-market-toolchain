@@ -19,6 +19,9 @@
 #ifndef PROOF_GENERATOR_ASSIGNER_PROOF_HPP
 #define PROOF_GENERATOR_ASSIGNER_PROOF_HPP
 
+#include <sstream>
+#include <fstream>
+
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 
 #include <nil/crypto3/zk/snark/arithmetization/plonk/params.hpp>
@@ -63,13 +66,13 @@ namespace nil {
                 print_hex_byteblob(out, cv.cbegin(), cv.cend(), false);
             }
 
-            void proof_new(std::string bytecode_file_name, std::string public_input_file_name, std::string output_file) {
+            void proof_new(std::string bytecode, std::string public_input_str, std::string output_file) {
                 using curve_type = nil::crypto3::algebra::curves::pallas;
                 using BlueprintFieldType = typename curve_type::base_field_type;
                 constexpr std::size_t WitnessColumns = 15;
                 constexpr std::size_t PublicInputColumns = 5;
                 constexpr std::size_t ConstantColumns = 5;
-                constexpr std::size_t SelectorColumns = 20;
+                constexpr std::size_t SelectorColumns = 50;
 
                 using ArithmetizationParams =
                     nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
@@ -77,17 +80,20 @@ namespace nil {
 
                 std::vector<typename BlueprintFieldType::value_type> public_input;
                 long long number;
-                auto fptr = std::fopen(public_input_file_name.c_str(), "r");
-                if (fptr == NULL) {
-                    std::cerr << "Could not open the file - '" << public_input_file_name << "'" << std::endl;
-                    return;
-                }
+                std::stringstream ss;
+                ss << public_input_str;
 
-                while (!std::feof(fptr)) {
-                    fscanf(fptr, "%lld\n", &number);
+                while (!ss.eof()) {
+                    ss >> number;
                     public_input.push_back(number);
                 }
                 nil::blueprint::parser<BlueprintFieldType, ArithmetizationParams> parser_instance;
+
+                
+                std::string bytecode_file_name = output_file + "_tmp.ll";
+                std::ofstream out(bytecode_file_name);
+                out << bytecode;
+                out.close();
 
                 std::unique_ptr<llvm::Module> module = parser_instance.parseIRFile(bytecode_file_name.c_str());
                 if (module == nullptr) {
@@ -113,7 +119,7 @@ namespace nil {
                 otable.close();
 
                 std::ofstream ocircuit;
-                std::string circuit_file_name = output_file + ".circuit";
+                std::string circuit_file_name = output_file;
                 ocircuit.open(circuit_file_name);
                 if( !ocircuit ){
                     std::cout << "Something wrong with output " << circuit_file_name << std::endl;
@@ -127,6 +133,8 @@ namespace nil {
                 } else {
                     std::cout << "Inner verification failed" << std::endl;
                 }
+
+                std::remove(bytecode_file_name.c_str());
             }
         } // namespace assigner
     } // namespace proof_generator

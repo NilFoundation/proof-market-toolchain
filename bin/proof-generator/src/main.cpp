@@ -94,16 +94,15 @@ inline bool configure_aspects(boost::application::context &ctx, Application &app
 }
 
 void proof_new(boost::json::value circuit_description, boost::json::value public_input, std::string output_file) {
-    std::size_t proof_number = boost::json::value_to<std::size_t>(circuit_description.at("id"));
-    switch(proof_number) {
-        case 1:
-            nil::proof_generator::mina_state::proof_new(circuit_description, public_input, output_file);
-            break;
-        default:
+    std::string statement_type = boost::json::value_to<std::string>(circuit_description.at("type"));
+    if (statement_type == "zkllvm") {
             std::string bytecode = boost::json::value_to<std::string>(circuit_description.at("statement"));
             std::string public_input_str = boost::json::value_to<std::string>(public_input.at("input"));
             nil::proof_generator::assigner::proof_new(bytecode, public_input_str, output_file);
-            break;
+    }
+    else {
+            boost::json::value statement = circuit_description.at("statement");
+            nil::proof_generator::mina_state::proof_new(statement, public_input, output_file);
     }
 }
 
