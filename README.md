@@ -1,4 +1,8 @@
-# =nil; Proof Market Proof Generator
+# =nil; Proof Market Proof Toolchain
+
+[![Discord](https://img.shields.io/discord/969303013749579846.svg?logo=discord&style=flat-square)](https://discord.gg/KmTAEjbmM3)
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=dark)](https://t.me/nilfoundation)
+[![Twitter](https://img.shields.io/twitter/follow/nil_foundation)](https://twitter.com/nil_foundation)
 
 # Introduction
 
@@ -140,6 +144,14 @@ python3 scripts/proof_get.py --bid_key <key of the bid> --auth <json authorizati
 python3 scripts/proof_get.py --key <key of the proof> --auth <json authorization file>
 ```
 
+# Documentation
+
+Documentation portal for proof market is located [here](https://docs.nil.foundation/proof-market).
+Users are encouraged to check [zkLLVM](https://github.com/NilFoundation/zkllvm) project which is tightly coupled to the proof market.
+
+
+
+
 # Common issues
 
 ## Compilation Errors
@@ -157,3 +169,8 @@ a url of a previously checked out submodule.It is advisable to check these locat
 - .gitmodules
 - .git/config
 - .git/modules/*
+
+## Support
+
+Additional support can be obtained by contact the team at [Telegram](https://t.me/nilfoundation) and [Discord](https://discord.gg/KmTAEjbmM3).
+
