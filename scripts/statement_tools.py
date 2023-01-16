@@ -16,7 +16,7 @@ def push(args):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/statement/'
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code!=200:
-        logging.error(f"Error: {res.status_code} {res.json()}")
+        logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
         logging.info(f"Statement:\t {res.json()}")
@@ -33,6 +33,13 @@ def get(args):
         return
     else:
         logging.info(f"Statements:\n {json.dumps(res.json(), indent=4)}")
+        if args.output:
+            with open(args.output, 'w') as f:
+                # if res.json() has filed definition
+                if 'definition' in res.json():
+                    json.dump(res.json()['definition']['proving_key'], f, indent=4)
+                else:
+                    logging.error("Error: no definition in statement")
         return res.json()
 
 def get_headers(args):
@@ -60,6 +67,8 @@ if __name__ == "__main__":
                         help='file')
     parser_get.add_argument('--key', type=str,
                         help='statement key')
+    parser_get.add_argument('-o', '--output', type=str,
+                        help='output file')
     args = parser.parse_args()
     args.func(args=args)
     
