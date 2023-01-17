@@ -3,6 +3,7 @@ import json
 import logging
 import argparse
 from constants import DB_NAME, URL, MOUNT
+from auth_tools import get_headers
 
 def push(args):
     if args.file:
@@ -42,27 +43,18 @@ def get(args):
                     logging.error("Error: no definition in statement")
         return res.json()
 
-def get_headers(args):
-    headers = {}
-    with open(args.auth, 'r') as f:
-        auth = json.load(f)
-        headers.update(auth)
-    return headers
-
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--auth', default='auth.json', type=str,
+    parser.add_argument('--auth', type=str,
                         help='auth')
-    # add subparsers for push and get
     subparsers = parser.add_subparsers(help='sub-command help')
     parser_push = subparsers.add_parser('push', help='push statement')
     parser_push.set_defaults(func=push)
     parser_get = subparsers.add_parser('get', help='get statement')
     parser_get.set_defaults(func=get)
-    # add arguments for push and get
     parser_push.add_argument('--file', type=str, required=True,
                         help='file')
     parser_get.add_argument('--key', type=str,

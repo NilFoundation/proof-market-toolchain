@@ -26,6 +26,16 @@ def update_auth(args):
             }
             json.dump(headers, f)
 
+def get_headers(args):
+    headers = {}
+    if args.auth is None:
+        args.auth = 'auth.json'
+        update_auth(args)
+    with open(args.auth, 'r') as f:
+        auth = json.load(f)
+        headers.update(auth)
+    return headers
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--auth', action='store', default='auth.json',
