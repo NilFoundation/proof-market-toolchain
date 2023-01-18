@@ -24,15 +24,15 @@ If you do not have the credentials, users can still view the exchange, but they 
 
 
 
-## Request Access
+## New user signup
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
-Click on Request credentials & submit the form with your email address.
+Click on Sign up
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
-Credentials will be emailed to users.
+Select your username and password and complete the flow by clicking register.
 
 ## Dashboard
 
@@ -83,11 +83,11 @@ This comprises of two views
 
 
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption><p>Proof Cost</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>Proof Cost</p></figcaption></figure>
 
 * Proof Generation Time - This shows a historical view of how long did proof generation take from the time the order was matched to the time a proof was submitted to the market
 
-<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption><p>Proof Generation time</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption><p>Proof Generation time</p></figcaption></figure>
 
 
 
@@ -95,7 +95,7 @@ This comprises of two views
 
 The order book shows the bid and asks on the market place for orders which have not yet matched.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
 
 You can toggle to see your own orders in the book and group them.
 
@@ -127,7 +127,7 @@ Under manage orders a user can do the following
 
 * **Active Orders :** This view shows all the orders of the users which are currently active and have not been matched yet. A user can cancel an active order from this screen.
 
-<figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * **History :** This view shows all the historical orders a user has placed.
 
