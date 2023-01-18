@@ -48,7 +48,19 @@ cmake --build . -t proof-generator
 
 Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#request-access) to see a guide on how to get access for proof market.
 
-Once you have the credentials
+Once you have the credentials, user needs to create two files in the scripts/ directory  with the following information. 
+-  .user
+ ```
+username
+```
+
+- .secret
+```
+  password
+  ```
+
+
+
 
 # Proof Market Interaction
 
