@@ -1,7 +1,7 @@
 # Installation
 
 {% hint style="info" %}
-Please ensure you have done the [environment](environment-setup.md) setup before progressing.
+Please ensure you have done the [environment](../environment-setup.md) setup before progressing.
 {% endhint %}
 
 The proof market tool chain is a collection of python scripts which allows users to interact with the proof market. These set of scripts are required for all participants.
@@ -30,7 +30,7 @@ Please follow the installation guide for :
 
 * N/A
 
-
+To interact with the proof market , you need to be an authenticated user.
 
 
 

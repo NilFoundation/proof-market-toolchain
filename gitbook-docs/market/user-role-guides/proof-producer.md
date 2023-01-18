@@ -1,7 +1,7 @@
 # Proof Producer
 
 {% hint style="info" %}
-Ensure you have done [Authentication](authentication.md) setup before progressing
+Ensure you have done [Authentication](../../guides/installation/authentication.md) setup before progressing
 {% endhint %}
 
 ## Submit Ask order
