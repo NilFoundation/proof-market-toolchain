@@ -25,7 +25,7 @@ Provide the necessary information listed in the output statement file
 This statement can now be pushed to the Proof market via python script
 
 ```
-python3 scripts/statement_tools.py push --file <json file with statement description> --auth <json authorization file>
+python3 scripts/statement_tools.py push --file <json file with statement description> 
 ```
 
 Authorisation file examples can be found in /example directory.

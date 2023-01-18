@@ -5,7 +5,7 @@
 The Proof producers can submit asks for circuits and specify an accompanying cost.
 
 ```
-python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> --auth <json authorization file>
+python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> 
 ```
 
 ## Order Status/Fetch Inputs
@@ -13,7 +13,7 @@ python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the sta
 The proof producer can check their ask with
 
 ```
-python3 scripts/ask_tools.py get --key <key of the ask> --auth <json authorization file>
+python3 scripts/ask_tools.py get --key <key of the ask> 
 ```
 
 Ask's status 'processing' means that the ask was matched with a bid. Now it is time to generate a proof for the proof producer.
@@ -22,14 +22,14 @@ First of all, the proof producer needs circuit definition:
 
 ```
 
-python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> --auth <json authorization file>
+python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> 
 
 ```
 
 Next, public input of the bid:
 
 ```
-python3 scripts/public_input_get.py --key <bid key> -o <output file path> --auth <json authorization file>
+python3 scripts/public_input_get.py --key <bid key> -o <output file path> 
 ```
 
 ## Proof Generation
@@ -47,9 +47,7 @@ cd build
 The proof generator can now submit the proof to the marketplace, where if verified, they will get the reward.
 
 ```
-python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> --auth <json authorization file>
+python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> 
 ```
 
-You can provide only one of two possible keys
-
-## &#x20;file>
+You can provide only one of two possible keys.&#x20;
