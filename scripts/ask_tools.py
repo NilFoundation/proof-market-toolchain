@@ -4,6 +4,7 @@ import logging
 import json
 import argparse
 from constants import DB_NAME, URL, MOUNT
+from auth_tools import get_headers
 
 def push(data=None, args=None):
     if data is None and args:
@@ -26,6 +27,8 @@ def get(args):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/ask/'
     if args.key:
         url += args.key
+    else:
+        url += '?limit=100'
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
@@ -34,18 +37,12 @@ def get(args):
         logging.info(f"Ask:\n {json.dumps(res.json(), indent=4)}")
         return res.json()
 
-def get_headers(args):
-    headers = {}
-    with open(args.auth, 'r') as f:
-        auth = json.load(f)
-        headers.update(auth)
-    return headers
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--auth', type=str, default='auth.json',
+    parser.add_argument('--auth', type=str,
                         help='auth file')
     subparsers = parser.add_subparsers(help='sub-command help')
     parser_push = subparsers.add_parser('push', help='push ask')
