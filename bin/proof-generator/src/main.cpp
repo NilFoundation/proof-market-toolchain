@@ -102,7 +102,8 @@ void proof_new(boost::json::value circuit_description, boost::json::value public
     }
     else {
             boost::json::value statement = circuit_description.at("statement");
-            nil::proof_generator::mina_state::proof_new(statement, public_input, output_file);
+            boost::json::value public_input_mina = public_input.at("input");
+            nil::proof_generator::mina_state::proof_new(statement, public_input_mina, output_file);
     }
 }
 

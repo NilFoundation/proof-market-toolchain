@@ -44,12 +44,28 @@ namespace nil {
     namespace proof_generator {
         namespace mina_state {
 
+            void concatenate_proofs(std::string output_path) {
+                std::string output_path_scalar = output_path + "scalar_proof.data";
+                std::string output_path_base = output_path + "base_proof.data";
+                std::string output_path_full = output_path;
+                std::ifstream file_scalar(output_path_scalar, std::ios::binary);
+                std::ifstream file_base(output_path_base, std::ios::binary);
+                std::ofstream file_full(output_path_full, std::ios::binary);
+
+                file_scalar.ignore(2);
+
+                file_full << file_base.rdbuf();
+                file_full << file_scalar.rdbuf();
+            }
+
             template<typename VerifierIndexType, std::size_t EvalRoundsScalar, std::size_t EvalRoundsBase>
             void generate_proof_heterogenous(nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
                                             VerifierIndexType &pickles_index, const std::size_t fri_max_step,
                                             std::string output_path) {
 
                 generate_proof_scalar<VerifierIndexType, EvalRoundsScalar>(pickles_proof, pickles_index, fri_max_step, output_path);
+                generate_proof_base<VerifierIndexType, EvalRoundsBase>(pickles_proof, pickles_index, fri_max_step, output_path);
+                concatenate_proofs(output_path);
             }
 
             void proof_new(boost::json::value jv_pickles_constants, boost::json::value jv_public_input, std::string output_file) {

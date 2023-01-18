@@ -1,5 +1,6 @@
-{
-  "data": {
+{   
+"input" :
+  { "data": {
     "blockchainVerificationKey": {
       "commitments": {
         "sigma_comm": [
@@ -1878,4 +1879,5 @@
       }
     ]
   }
+}
 }
