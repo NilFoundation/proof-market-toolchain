@@ -64,7 +64,7 @@ if __name__ == "__main__":
     parser_push.add_argument('--cost', type=float, required=True,
                         help='cost')
     parser_push.add_argument('--file', type=str, required=True,
-                        help='file with public input')
+                        help='json file with public input')
     parser_push.add_argument('--key', type=str, required=True,
                         help='statement key')
     parser_push.add_argument('--generation_time', default=30, type=int,
