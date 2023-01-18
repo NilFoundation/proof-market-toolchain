@@ -11,6 +11,7 @@
 ## Market
 
 * [Economics](market/economics.md)
+* [Supported proof systems](market/supported-proof-systems.md)
 * [End to End flow](market/end-to-end-flow/README.md)
   * [Circuit Developer](market/end-to-end-flow/circuit-developer.md)
   * [Proof Requester](market/end-to-end-flow/proof-requester.md)
