@@ -23,14 +23,12 @@ Please follow the installation guide for :
 
 ## Proof Requester
 
-* Validation artifacts
+* [Lorem Ipsum CLI ](https://github.com/NilFoundation/lorem-ipsum-cli)
   * These could be smart contracts or zkLLVM for local validation.
 
-## Proof Generator
+## Proof Producer
 
-* [zkLLVM](https://docs.nil.foundation/zkllvm/guides/installation)&#x20;
-  * Used to create proofs for the circuits
-  * Validate proofs on client side&#x20;
+* N/A
 
 
 

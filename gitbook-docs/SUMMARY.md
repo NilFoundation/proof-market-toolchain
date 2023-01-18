@@ -14,7 +14,7 @@
 * [End to End flow](market/end-to-end-flow/README.md)
   * [Circuit Developer](market/end-to-end-flow/circuit-developer.md)
   * [Proof Requester](market/end-to-end-flow/proof-requester.md)
-  * [Proof Generator](market/end-to-end-flow/proof-generator.md)
+  * [Proof Producer](market/end-to-end-flow/proof-producer.md)
 * [Front End](market/front-end.md)
 * [API Reference](market/api-reference.md)
 * [Terminology](market/overview.md)
