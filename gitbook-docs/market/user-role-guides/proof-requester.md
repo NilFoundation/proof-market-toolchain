@@ -1,5 +1,9 @@
 # Proof Requester
 
+{% hint style="info" %}
+Ensure you have done [Authentication](authentication.md) setup before progressing
+{% endhint %}
+
 ## Submit Bid Order
 
 The proof requester can create an order. An order has additional details such as who is requesting the proof and what they are willing to pay for it

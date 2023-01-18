@@ -22,7 +22,13 @@ Provide the necessary information listed in the output statement file
 
 ## Publish to Proof Market
 
-This statement can now be pushed to the Proof market via python script
+{% hint style="info" %}
+Ensure you have done [Authentication](authentication.md) setup before progressing
+{% endhint %}
+
+
+
+This statement can now be pushed to the Proof market via python script/
 
 ```
 python3 scripts/statement_tools.py push --file <json file with statement description> 

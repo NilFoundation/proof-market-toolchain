@@ -1,5 +1,9 @@
 # Proof Producer
 
+{% hint style="info" %}
+Ensure you have done [Authentication](authentication.md) setup before progressing
+{% endhint %}
+
 ## Submit Ask order
 
 The Proof producers can submit asks for circuits and specify an accompanying cost.
