@@ -8,23 +8,15 @@ description: Proof Market front end guide
 Please note this product is in beta and expected to change.
 {% endhint %}
 
-Proof Market front end can be accessed at : [proof.market](https://proof.market)
+#### Proof Market front end can be accessed at **:** [**proof.market**](https://proof.market)****
 
-## Login&#x20;
+## New user signup
 
-<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption><p>Login</p></figcaption></figure>
-
-Authenticated users should enter their credentials in the provided fields. &#x20;
-
-
+All users who wish to interact with the proof market need to create an account.
 
 {% hint style="info" %}
 If you do not have the credentials, users can still view the exchange, but they will be unable to post orders to buy/sell proofs.
 {% endhint %}
-
-
-
-## New user signup
 
 <figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
@@ -33,6 +25,14 @@ Click on Sign up
 <figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 Select your username and password and complete the flow by clicking register.
+
+
+
+## Login&#x20;
+
+<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption><p>Login</p></figcaption></figure>
+
+Authenticated users should enter their credentials in the provided fields. &#x20;
 
 ## Dashboard
 
