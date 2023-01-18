@@ -30,7 +30,7 @@ If you do not have the credentials, users can still view the exchange, but they 
 
 Click on Request credentials & submit the form with your email address.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 Credentials will be emailed to users.
 
@@ -45,9 +45,9 @@ The proof market dashboard can be broken down into following components
 * [C : Last Proof Producer](front-end.md#last-proof-producer)
 * [D : Circuit Details](front-end.md#circuit-details)
 * [E : Circuit Price Dashboard](front-end.md#circuit-price-dashboard)
-* F: Order Book
-* G: Create Orders
-* H: Manage Orders
+* [F: Order Book](front-end.md#order-book)
+* [G: Create Orders](front-end.md#create-orders)
+* [H: Manage Orders](front-end.md#manage-orders)
 
 ### Circuit List
 
@@ -59,7 +59,7 @@ The circuit list shows the circuits (instruments) which are available on the pro
 
 ### Trades
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The trades component shows all the orders which have been executed on the marketplace for the selected Circuit.
 
@@ -90,6 +90,14 @@ This comprises of two views
 <figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption><p>Proof Generation time</p></figcaption></figure>
 
 
+
+### Order Book
+
+The order book shows the bid and asks on the market place for orders which have not yet matched.
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+You can toggle to see your own orders in the book and group them.
 
 ### Create Orders
 
@@ -123,11 +131,7 @@ Under manage orders a user can do the following
 
 * **History :** This view shows all the historical orders a user has placed.
 
-### Order Book
-
-The order book shows the bid and asks on the market place for orders which have not yet matched.
-
-<figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+###
 
 
 

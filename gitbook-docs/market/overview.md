@@ -1,7 +1,7 @@
 # Terminology
 
 {% hint style="warning" %}
-Proof Market version represented here is alpha. We expect constant changes to the below as per the feedback we receive from participants.
+Proof Market version represented here is beta. We expect constant changes to the below as per the feedback we receive from participants.
 {% endhint %}
 
 ## Spot vs Futures
@@ -13,7 +13,7 @@ Exchanges also allow buying/selling of a future price of the instrument. Example
 \=nil;'s proof market is more on the lines of a Spot Market rather than a speculative value of proof generation.
 
 {% hint style="info" %}
-The alpha of the proof market is centralised.
+The beta of the proof market is centralised.
 {% endhint %}
 
 
@@ -33,7 +33,7 @@ The instruments will be require approval by =nil; Foundation to trade on Proof M
 The marketplace consists of the following entities.
 
 * **Proof Requester** : This can be an application like a bridge requesting balance or a user interested in cross cluster operation and/or trust-less data access.
-* **Proof Generator** : This is an entity who will generate the proofs for the requests/orders made by the Proof Requester.
+* **Proof Producer** : This is an entity who will generate the proofs for the requests/orders made by the Proof Requester.
 
 ## Orders Types
 
