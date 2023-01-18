@@ -16,8 +16,8 @@
 // <https://github.com/NilFoundation/dbms/blob/master/LICENSE_1_0.txt>.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_DETAIL_CONFIGURABLE_HPP
-#define PROOF_GENERATOR_DETAIL_CONFIGURABLE_HPP
+#ifndef PROOF_GENERATOR_MT_DETAIL_CONFIGURABLE_HPP
+#define PROOF_GENERATOR_MT_DETAIL_CONFIGURABLE_HPP
 
 #include <tuple>
 
@@ -35,7 +35,7 @@ namespace nil {
                 virtual void initialize(configuration_type &options) = 0;
             };
         }    // namespace detail
-    }        // namespace proof_generator_mt
+    }        // namespace proof_generator
 }    // namespace nil
 
 #endif    // PROOF_GENERATOR__DETAIL_CONFIGURABLE_HPP

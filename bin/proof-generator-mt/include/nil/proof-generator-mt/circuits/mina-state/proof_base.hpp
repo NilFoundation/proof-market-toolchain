@@ -16,14 +16,14 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_BASE_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_BASE_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_BASE_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_BASE_HPP
 
-#include <nil/actor/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
 
-#include <nil/blueprint_mc/assignment/plonk.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/verifier_base_field.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/proof_system/circuit_description.hpp>
+#include <nil/actor_blueprint_mc/assignment/plonk.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/verifier_base_field.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/proof_system/circuit_description.hpp>
 
 #include <nil/actor/zk/snark/arithmetization/plonk/params.hpp>
 #include <nil/actor/zk/snark/systems/plonk/placeholder/preprocessor.hpp>
@@ -44,10 +44,10 @@ namespace nil {
         namespace mina_state {
 
             template<typename VerifierIndexType, std::size_t EvalRounds>
-            void generate_proof_base(nil::actor::zk::snark::proof_type<nil::actor::algebra::curves::pallas> &pickles_proof,
+            void generate_proof_base(nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
                                             VerifierIndexType &pickles_index, const std::size_t fri_max_step,
                                             std::string output_path) {
-                using curve_type = nil::actor::algebra::curves::pallas;
+                using curve_type = nil::crypto3::algebra::curves::pallas;
                 using BlueprintFieldType = typename curve_type::base_field_type;
                 constexpr std::size_t WitnessColumns = 15;
                 constexpr std::size_t PublicInputColumns = 1;
@@ -56,8 +56,8 @@ namespace nil {
                 using ArithmetizationParams =
                     nil::actor::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
                 using ArithmetizationType = nil::actor::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
-                using AssignmentType = nil::blueprint_mc::blueprint_assignment_table<ArithmetizationType>;
-                using hash_type = nil::actor::hashes::keccak_1600<256>;
+                using AssignmentType = nil::actor_blueprint_mc::blueprint_assignment_table<ArithmetizationType>;
+                using hash_type = nil::crypto3::hashes::keccak_1600<256>;
                 constexpr std::size_t Lambda = 1;
 
                 using var = nil::actor::zk::snark::plonk_variable<BlueprintFieldType>;
@@ -76,31 +76,31 @@ namespace nil {
 
                 constexpr static const std::size_t prev_chal_size = 0;
 
-                using commitment_params = nil::blueprint_mc::components::kimchi_commitment_params_type<eval_rounds, max_poly_size, srs_len>;
-                using index_terms_list = nil::blueprint_mc::components::index_terms_scalars_list<ArithmetizationType>;
+                using commitment_params = nil::actor_blueprint_mc::components::kimchi_commitment_params_type<eval_rounds, max_poly_size, srs_len>;
+                using index_terms_list = nil::actor_blueprint_mc::components::index_terms_scalars_list<ArithmetizationType>;
                 using circuit_description =
-                    nil::blueprint_mc::components::kimchi_circuit_description<index_terms_list, witness_columns, perm_size>;
-                using kimchi_params = nil::blueprint_mc::components::kimchi_params_type<curve_type, commitment_params, circuit_description,
+                    nil::actor_blueprint_mc::components::kimchi_circuit_description<index_terms_list, witness_columns, perm_size>;
+                using kimchi_params = nil::actor_blueprint_mc::components::kimchi_params_type<curve_type, commitment_params, circuit_description,
                                                                         public_input_size, prev_chal_size>;
 
-                using component_type = nil::blueprint_mc::components::base_field<ArithmetizationType, curve_type, kimchi_params, commitment_params,
+                using component_type = nil::actor_blueprint_mc::components::base_field<ArithmetizationType, curve_type, kimchi_params, commitment_params,
                                                                 batch_size, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14>;
 
                 using fq_output_type =
-                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::fq_sponge_output;
+                    typename nil::actor_blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::fq_sponge_output;
 
-                using fr_data_type = typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
+                using fr_data_type = typename nil::actor_blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
                                                                     kimchi_params>::template fr_data<var, batch_size>;
 
                 using fq_data_type =
-                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::template fq_data<var>;
+                    typename nil::actor_blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::template fq_data<var>;
 
                 std::vector<typename BlueprintFieldType::value_type> public_input = {};
 
-                std::array<nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params>, batch_size> proofs;
+                std::array<nil::actor_blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params>, batch_size> proofs;
 
                 for (std::size_t batch_id = 0; batch_id < batch_size; batch_id++) {
-                    nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params> proof;
+                    nil::actor_blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params> proof;
 
                     prepare_proof_base<curve_type, BlueprintFieldType, kimchi_params, eval_rounds>(pickles_proof, proof,
                                                                                                 public_input);
@@ -108,8 +108,8 @@ namespace nil {
                     proofs[batch_id] = proof;
                 }
 
-                nil::blueprint_mc::components::kimchi_verifier_index_base<curve_type, kimchi_params> verifier_index;
-                prepare_index_base<curve_type, BlueprintFieldType, kimchi_params>(pickles_index, verifier_index, public_input);
+                nil::actor_blueprint_mc::components::kimchi_verifier_index_base<curve_type, kimchi_params> verifier_index;
+                prepare_index_base<VerifierIndexType, curve_type, BlueprintFieldType, kimchi_params>(pickles_index, verifier_index, public_input);
 
                 fr_data_type fr_data_public;
                 fq_data_type fq_data_public;
@@ -149,7 +149,7 @@ namespace nil {
                 proof_print<nil::marshalling::option::big_endian>(proof, output_path_full);
             }
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 } // namespace nil
 
-#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_BASE_HPP
+#endif    // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_BASE_HPP

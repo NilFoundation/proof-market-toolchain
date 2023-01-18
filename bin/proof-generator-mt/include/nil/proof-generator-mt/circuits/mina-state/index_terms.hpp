@@ -22,18 +22,18 @@
 // SOFTWARE.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP
 
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/detail/constraints/rpn_expression.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/detail/constraints/rpn_string_literal.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/types/alpha_argument_type.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/detail/constraints/rpn_expression.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/detail/constraints/rpn_string_literal.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/types/alpha_argument_type.hpp>
 
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/types/index_term_type.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/types/column_type.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/types/index_term_type.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/types/column_type.hpp>
 
 namespace nil {
-    namespace blueprint_mc {
+    namespace actor_blueprint_mc {
         namespace components {
 
             template<typename ArithmetizationType>
@@ -193,7 +193,7 @@ namespace nil {
                 }};
             };
         }    // namespace components
-    }            // namespace blueprint_mc
+    }            // namespace actor_blueprint_mc
 }    // namespace nil
 
-#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP
+#endif    // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_INDEX_TERM_LIST_HPP

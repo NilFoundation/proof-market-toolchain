@@ -16,10 +16,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
 
-#include <nil/actor/multiprecision/cpp_int.hpp>
+#include <nil/crypto3/multiprecision/cpp_int.hpp>
 
 #include <nil/proof-generator-mt/circuits/mina-state/deserialization/fp_element.hpp>
 
@@ -28,9 +28,9 @@ namespace nil {
         namespace mina_state {
 
             template<typename Iterator>
-            nil::actor::multiprecision::cpp_int get_cppui256(Iterator it) {
+            nil::crypto3::multiprecision::cpp_int get_cppui256(Iterator it) {
                 BOOST_ASSERT(it->second.template get_value<std::string>() != "");
-                return nil::actor::multiprecision::cpp_int(it->second.template get_value<std::string>());
+                return nil::crypto3::multiprecision::cpp_int(it->second.template get_value<std::string>());
             }
 
             template<typename CurveType>
@@ -49,7 +49,7 @@ namespace nil {
             }
 
             template<typename CurveType>
-            typename CurveType::template g1_type<nil::actor::algebra::curves::coordinates::affine>::value_type read_point(boost::json::array point) {
+            typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type read_point(boost::json::array point) {
                 using base_field_type = typename CurveType::base_field_type;
                 auto x = boost::json::value_to<typename base_field_type::value_type>(point[0]);
                 auto y = boost::json::value_to<typename base_field_type::value_type>(point[1]);
@@ -59,7 +59,7 @@ namespace nil {
             }
 
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 }   // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
+#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
