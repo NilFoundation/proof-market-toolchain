@@ -6,6 +6,7 @@ import os.path
 import inspect
 import json
 from constants import DB_NAME, URL, MOUNT
+from auth_tools import get_headers
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -50,17 +51,10 @@ def get(args):
                 f.write(res_json[0].pop('proof', ''))
         logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
 
-def get_headers(args):
-    headers = {}
-    with open(args.auth, 'r') as f:
-        auth = json.load(f)
-        headers.update(auth)
-    return headers
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     parser = argparse.ArgumentParser()
-    parser.add_argument('--auth', type=str, default='auth.json',
+    parser.add_argument('--auth', type=str,
                         help='auth')
     subparsers = parser.add_subparsers(help='sub-command help')
     parser_push = subparsers.add_parser('push', help='push proof')

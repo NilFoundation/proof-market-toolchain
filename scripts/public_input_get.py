@@ -2,14 +2,11 @@ import requests
 import sys
 import logging
 import argparse
-import json
 from constants import DB_NAME, URL, MOUNT
+from auth_tools import get_headers
 
 def get(args):
-    headers = {}
-    with open(args.auth, 'r') as f:
-        auth = json.load(f)
-        headers.update(auth)
+    headers = get_headers(args)
     url = URL + f'_db/{DB_NAME}/{MOUNT}/bid/' 
     if args.key:
         url += args.key
@@ -26,7 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-k', '--key', metavar='key', type=str,
                         help='key of the bid')
-    parser.add_argument('--auth', metavar='auth', type=str, default='auth.json',
+    parser.add_argument('--auth', metavar='auth', type=str,
                         help='auth')
     parser.add_argument('-o', '--output', metavar='file', type=str, required=True,
                         help='output file')
