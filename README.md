@@ -120,12 +120,12 @@ has additional details such as what are they willing to pay for it and public in
 
 
 ```
-python3 scripts/bid_tools.py push --cost <cost of the bid> --file <json file with public_input> --key <key of the statement> --auth <json authorization file>
+python3 scripts/bid_tools.py push --cost <cost of the bid> --file <json file with public_input> --key <key of the statement> 
 ```
 
 The proof requester can check their bid with
 ```
-python3 scripts/bid_tools.py get --key <key of the bid> --auth <json authorization file>
+python3 scripts/bid_tools.py get --key <key of the bid> 
 ```
 
 
@@ -139,13 +139,13 @@ proof producer. In steps 2-4 , the requester put out a bid. Now the producer can
 observe them in the marketplace and start replying with an ask.
 
 ```
-python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> --auth <json authorization file>
+python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> 
 ```
 
 The proof producer can check their ask with
 
 ```
-python3 scripts/ask_tools.py get --key <key of the ask> --auth <json authorization file>
+python3 scripts/ask_tools.py get --key <key of the ask> 
 ```
 
 
@@ -160,13 +160,13 @@ Now it is time to generate a proof for the proof producer.
 First of all, the proof producer needs circuit definition:
 
 ```
-python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> --auth <json authorization file>
+python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> 
 ```
 
 Next, public input of the bid:
 
 ```
-python3 scripts/public_input_get.py --key <bid key> -o <output file path> --auth <json authorization file>
+python3 scripts/public_input_get.py --key <bid key> -o <output file path> 
 ```
 
 Execute the below to generate a proof:
@@ -181,7 +181,7 @@ The proof generator can now submit the proof to the marketplace, where if verifi
 get the reward.
 
 ```
-python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> --auth <json authorization file>
+python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> 
 ```
 
 You can provide only one of two possible keys
@@ -191,7 +191,7 @@ You can provide only one of two possible keys
 Now the proof requester is able to get their proof either by bid key or proof key.
 
 ```
-python3 scripts/proof_tools.py get --bid_key <key of the bid> --auth <json authorization file>
+python3 scripts/proof_tools.py get --bid_key <key of the bid> 
 ```
 
 Validation of the proof is not part of the tool chain. Validation flow is implemented in the 
