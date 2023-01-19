@@ -35,7 +35,7 @@
 #include <nil/proof-generator-mt/aspects/path.hpp>
 
 namespace nil {
-    namespace proof {
+    namespace proof_generator_mt {
         namespace aspects {
             struct actor
                 : public detail::configurable<dbms::plugin::variables_map, dbms::plugin::cli_options_description,

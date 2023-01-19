@@ -109,7 +109,7 @@ namespace nil {
                 }
 
                 nil::blueprint_mc::components::kimchi_verifier_index_base<curve_type, kimchi_params> verifier_index;
-                prepare_index_base<curve_type, BlueprintFieldType, kimchi_params>(pickles_index, verifier_index, public_input);
+                prepare_index_base<VerifierIndexType, curve_type, BlueprintFieldType, kimchi_params>(pickles_index, verifier_index, public_input);
 
                 fr_data_type fr_data_public;
                 fq_data_type fq_data_public;
