@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------//
 // Copyright (c) 2018-2020 Mikhail Komarov <nemo@nil.foundation>
-// Copyright (c) 2022 Aleksei Moskvin <alalmoskvin@nil.foundation>
+// Copyright (c) 2022-2023 Aleksei Moskvin <alalmoskvin@nil.foundation>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the Server Side Public License, version 1,
@@ -24,7 +24,7 @@
 #include <nil/actor/core/metrics_api.hh>
 
 namespace nil {
-    namespace proof {
+    namespace proof_generator_mt {
         namespace aspects {
             struct config {
                 nil::actor::sstring name = "App";

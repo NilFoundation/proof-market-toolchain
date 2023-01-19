@@ -16,11 +16,11 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_DETAIL_UTILS_HPP
-#define PROOF_GENERATOR_DETAIL_UTILS_HPP
+#ifndef PROOF_GENERATOR_MT_DETAIL_UTILS_HPP
+#define PROOF_GENERATOR_MT_DETAIL_UTILS_HPP
 
 #include <nil/marshalling/endianness.hpp>
-#include <nil/actor/marshalling/zk/types/placeholder/proof.hpp>
+#include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
 #include <nil/marshalling/status_type.hpp>
 
 #include <fstream>
@@ -41,10 +41,10 @@ namespace nil {
 
         template<typename Endianness, typename Proof>
         void proof_print(const Proof &proof, std::string output_file) {
-            using namespace nil::actor::marshalling;
+            using namespace nil::crypto3::marshalling;
 
             using TTypeBase = nil::marshalling::field_type<Endianness>;
-            using proof_marshalling_type = nil::actor::zk::snark::placeholder_proof<TTypeBase, Proof>;
+            using proof_marshalling_type = nil::crypto3::zk::snark::placeholder_proof<TTypeBase, Proof>;
             auto filled_placeholder_proof = crypto3::marshalling::types::fill_placeholder_proof<Endianness, Proof>(proof);
 
             std::vector<std::uint8_t> cv;
@@ -55,7 +55,7 @@ namespace nil {
             out.open(output_file);
             print_hex_byteblob(out, cv.cbegin(), cv.cend(), false);
         }
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 } // namespace nil
 
-#endif    // PROOF_GENERATOR_DETAIL_UTILS_HPP
+#endif    // PROOF_GENERATOR_MT_DETAIL_UTILS_HPP

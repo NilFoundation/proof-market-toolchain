@@ -16,16 +16,16 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_ASSIGNER_PROOF_HPP
-#define PROOF_GENERATOR_ASSIGNER_PROOF_HPP
+#ifndef PROOF_GENERATOR_MT_ASSIGNER_PROOF_HPP
+#define PROOF_GENERATOR_MT_ASSIGNER_PROOF_HPP
 
 #include <sstream>
 #include <fstream>
 
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 
-#include <nil/crypto3/zk/snark/arithmetization/plonk/params.hpp>
-#include <nil/crypto3/zk/snark/arithmetization/plonk/constraint_system.hpp>
+#include <nil/actor/zk/snark/arithmetization/plonk/params.hpp>
+#include <nil/actor/zk/snark/arithmetization/plonk/constraint_system.hpp>
 
 #include <nil/blueprint/parser.hpp>
 #include <nil/blueprint/utils/table_profiling.hpp>
@@ -37,7 +37,7 @@
 #include <nil/crypto3/marshalling/zk/types/plonk/constraint_system.hpp>
 
 namespace nil {
-    namespace proof_generator {
+    namespace proof_generator_mt {
         namespace assigner {
 
             template<typename TIter>
@@ -75,7 +75,7 @@ namespace nil {
                 constexpr std::size_t SelectorColumns = 50;
 
                 using ArithmetizationParams =
-                    nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
+                    nil::actor::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
                 using ConstraintSystemType = nil::crypto3::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
 
                 std::vector<typename BlueprintFieldType::value_type> public_input;
@@ -108,8 +108,6 @@ namespace nil {
                 desc.usable_rows_amount = parser_instance.assignmnt.rows_amount();
                 desc.rows_amount = nil::crypto3::zk::snark::basic_padding(parser_instance.assignmnt);
 
-                std::cout << "generatring zkllvm proof..." << std::endl;
-
                 std::ofstream otable;
                 std::string assignment_table_file_name = output_file + ".table";
                 otable.open(assignment_table_file_name);
@@ -130,8 +128,6 @@ namespace nil {
                 print_circuit<nil::marshalling::option::big_endian, ConstraintSystemType>(parser_instance.bp, ocircuit);
                 ocircuit.close();
 
-                std::cout << "zkllvm proof is generated" << std::endl;
-
                 if (nil::blueprint::is_satisfied(parser_instance.bp, parser_instance.assignmnt)) {
                     std::cout << "Inner verification passed" << std::endl;
                 } else {
@@ -144,4 +140,4 @@ namespace nil {
     } // namespace proof_generator
 } // namespace nil
 
-#endif    // PROOF_GENERATOR_ASSIGNER_PROOF_HPP
+#endif    // PROOF_GENERATOR_MT_ASSIGNER_PROOF_HPP

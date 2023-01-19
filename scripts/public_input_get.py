@@ -2,6 +2,7 @@ import requests
 import sys
 import logging
 import argparse
+import json
 from constants import DB_NAME, URL, MOUNT
 from auth_tools import get_headers
 
@@ -31,4 +32,4 @@ if __name__ == "__main__":
     res = get(args)
     with open(args.output, 'w') as f:
         output = res.json()['input']
-        f.write(output)
+        json.dump(output, f, indent=4)

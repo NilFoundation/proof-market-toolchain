@@ -16,10 +16,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
 
-#include <nil/actor/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
 
 namespace nil {
     namespace proof_generator_mt {
@@ -27,7 +27,7 @@ namespace nil {
 
             template<typename VerifierIndexType, typename CurveType, typename BlueprintFieldType, typename KimchiParamsType>
             void prepare_index_base(VerifierIndexType &original_index,
-                                    nil::blueprint_mc::components::kimchi_verifier_index_base<CurveType, KimchiParamsType> &circuit_index,
+                                    nil::actor_blueprint_mc::components::kimchi_verifier_index_base<CurveType, KimchiParamsType> &circuit_index,
                                     std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::actor::zk::snark::plonk_variable<BlueprintFieldType>;
 
@@ -138,7 +138,7 @@ namespace nil {
                     }
                 }
 
-                typename CurveType::template g1_type<nil::actor::algebra::curves::coordinates::affine>::value_type point =
+                typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type point =
                     original_index.sigma_comm[0].unshifted[0];
 
                 for (std::size_t i = 0; i < circuit_index.comm.selectors.size(); i++) {
@@ -206,7 +206,7 @@ namespace nil {
 
             template<typename VerifierIndexType, typename CurveType, typename BlueprintFieldType, typename KimchiParamsType>
             void prepare_index_scalar(VerifierIndexType &original_index,
-                                    nil::blueprint_mc::components::kimchi_verifier_index_scalar<BlueprintFieldType> &circuit_index,
+                                    nil::actor_blueprint_mc::components::kimchi_verifier_index_scalar<BlueprintFieldType> &circuit_index,
                                     std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::actor::zk::snark::plonk_variable<BlueprintFieldType>;
 
@@ -221,7 +221,7 @@ namespace nil {
                 circuit_index.omega = var(0, public_input.size() - 1, false, var::column_type::public_input);
             }
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 } // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
+#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
