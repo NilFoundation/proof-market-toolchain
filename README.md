@@ -82,6 +82,11 @@ cmake --build . -t proof-generator-mt
 
 Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#new-user-signup) to see a guide on how to get access for proof market.
 
+Or you can use the following command:
+```
+python3 signup.py -u <username> -p <password> -e <e-mail>
+```
+
 Once you have the credentials, user needs to create two files in the `scripts/` directory  with the following information. 
 -  .user
  ```
