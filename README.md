@@ -44,7 +44,6 @@ You need to build the proof generator only if you wish to generate proofs.
 ```
 mkdir build
 cd build
-<<<<<<< HEAD
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
 cmake --build . -t proof-generator
 ```
