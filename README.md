@@ -17,7 +17,7 @@ balance or a user interested in cross cluster operation and/or trust-less data a
 made by the Proof Requester.
 - Circuit Developer : This is an entity who prepare circuits for proof market
 
-# Dependencies
+# Single thread version dependencies
 
 - Boost == 1.76.0
 - cmake >= 3.5
@@ -31,24 +31,7 @@ sudo apt install build-essential libssl-dev libboost-all-dev cmake clang git pyt
 
 **We are aware of a compilation issue with boost libs having version higher than 1.76. Please use version 1.76.**
 
-
-# Installation
-
-- Clone the repo
- ```
-git clone git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
-cd proof-market-toolchain
-```
-You need to build the proof generator only if you wish to generate proofs.
-
-```
-mkdir build
-cd build
-<<<<<<< HEAD
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
-cmake --build . -t proof-generator
-```
-### Multithreaded version
+### Multi-threaded version
 
 #### Dependencies
 ```
@@ -69,7 +52,25 @@ ragel >= 6.10
 boost == 1.76
 ```
 
-#### Building
+# Installation
+
+- Clone the repo
+ ```
+git clone git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
+cd proof-market-toolchain
+```
+You need to build the proof generator only if you wish to generate proofs.
+
+#### Building Single-threaded version
+```
+mkdir build
+cd build
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
+cmake --build . -t proof-generator
+```
+
+
+#### Building Multi-threaded version
 ```
 mkdir build
 cd build
