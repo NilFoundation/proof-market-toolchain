@@ -138,6 +138,7 @@ cd build
 
 ```
 
+Readme for Proof Producer daemon in located [here](./proof_producer/README.md).
 
 ## 7. Proof Submission
 The proof generator can now submit the proof to the marketplace, where if verified, they will
