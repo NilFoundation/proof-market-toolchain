@@ -61,6 +61,7 @@ cd proof-market-toolchain
 ```
 You need to build the proof generator only if you wish to generate proofs.
 
+#### Building Single-threaded version
 ```
 mkdir build
 cd build
@@ -69,7 +70,7 @@ cmake --build . -t proof-generator
 ```
 
 
-#### Building
+#### Building Multi-threaded version
 ```
 mkdir build
 cd build
