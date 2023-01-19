@@ -17,23 +17,10 @@ balance or a user interested in cross cluster operation and/or trust-less data a
 made by the Proof Requester.
 - Circuit Developer : This is an entity who prepare circuits for proof market
 
-# Single thread version dependencies
+# Dependencies
 
-- Boost == 1.76.0
-- cmake >= 3.5
-- clang >= 14.0.6
+On *nix systems, the following dependencies need to be installed
 
-On *nix systems, the following dependencies need to be present & can be installed using the following command
-
-```
-sudo apt install build-essential libssl-dev libboost-all-dev cmake clang git python3.8
-```
-
-**We are aware of a compilation issue with boost libs having version higher than 1.76. Please use version 1.76.**
-
-### Multi-threaded version
-
-#### Dependencies
 ```
 clang-12
 clang++12
@@ -52,6 +39,9 @@ ragel >= 6.10
 boost == 1.76
 ```
 
+**We are aware of compilation issues with boost > 1.76 and clang > 12.0. Please use the versions recommended above**
+   
+
 # Installation
 
 - Clone the repo
@@ -61,20 +51,14 @@ cd proof-market-toolchain
 ```
 You need to build the proof generator only if you wish to generate proofs.
 
-#### Building Single-threaded version
+#### Building 
 ```
 mkdir build
 cd build
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
+# Single-threaded version
 cmake --build . -t proof-generator
-```
-
-
-#### Building Multi-threaded version
-```
-mkdir build
-cd build
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
+# Multi-threaded version
 cmake --build . -t proof-generator-mt
 ```
 
