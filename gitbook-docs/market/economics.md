@@ -16,10 +16,6 @@ Proof Market constants:
 | _app\_dev_ | 0.7   | application developers part of the fee |
 | _cir\_dev_ | 0.3   | circuit developers part of the fee     |
 
-### Currency
-
-For now, main and the only one accepted currency at =nil; Proof Market is the native token of =nil; Cluster.
-
 ### Basic Workflow
 
 1. A proof buyer sends a bid order to the market with a cost _c\_b_;
