@@ -16,18 +16,18 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
 
 
 
-#include <nil/actor/algebra/curves/pallas.hpp>
-#include <nil/actor/algebra/fields/arithmetic_params/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
 #include <nil/actor/zk/snark/systems/plonk/pickles/verifier_index.hpp>
 
 #include <nil/marshalling/endianness.hpp>
-#include <nil/actor/marshalling/zk/types/placeholder/proof.hpp>
+#include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
 #include <nil/marshalling/status_type.hpp>
 #include <nil/marshalling/field_type.hpp>
 
@@ -38,7 +38,7 @@ namespace nil {
     namespace proof_generator_mt {
         namespace mina_state {
 
-            using curve_type = nil::actor::algebra::curves::pallas;
+            using curve_type = nil::crypto3::algebra::curves::pallas;
             using pallas_verifier_index_type = nil::actor::zk::snark::verifier_index<
                 curve_type, nil::actor::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
                 nil::actor::zk::snark::arithmetic_sponge_params<curve_type::base_field_type::value_type>,
@@ -79,7 +79,7 @@ namespace nil {
             }
 
             pallas_verifier_index_type make_verifier_index(boost::json::value public_input, boost::json::value const_input) {
-                using curve_type = typename nil::actor::algebra::curves::pallas;
+                using curve_type = typename nil::crypto3::algebra::curves::pallas;
                 using scalar_field_type = typename curve_type::scalar_field_type;
                 using base_field_type = typename curve_type::base_field_type;
 
@@ -91,7 +91,7 @@ namespace nil {
                 boost::json::value domain = verify_index_input.at("domain");
                 ver_index.domain.omega = boost::json::value_to<scalar_field_type::value_type>(domain.at("group_gen"));
                 std::uint32_t d_size = boost::json::value_to<std::uint32_t>(domain.at("log_size_of_group"));
-                ver_index.domain = nil::actor::math::basic_radix2_domain<scalar_field_type>(d_size + 1);
+                ver_index.domain = nil::crypto3::math::basic_radix2_domain<scalar_field_type>(d_size + 1);
 
                 boost::json::value vk = public_input.at("data").at("blockchainVerificationKey");
                 ver_index.max_poly_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_poly_size"));
@@ -158,7 +158,7 @@ namespace nil {
             }
 
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 }   // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
+#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP

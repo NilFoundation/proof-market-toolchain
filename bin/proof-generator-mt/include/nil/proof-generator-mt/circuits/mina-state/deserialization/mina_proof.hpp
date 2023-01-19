@@ -16,18 +16,18 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
 
 
 
-#include <nil/actor/algebra/curves/pallas.hpp>
-#include <nil/actor/algebra/fields/arithmetic_params/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
-#include <nil/actor/zk/snark/systems/plonk/pickles/verifier_index.hpp>
+#include <nil/actor//zk/snark/systems/plonk/pickles/verifier_index.hpp>
 
 #include <nil/marshalling/endianness.hpp>
-#include <nil/actor/marshalling/zk/types/placeholder/proof.hpp>
+#include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
 #include <nil/marshalling/status_type.hpp>
 #include <nil/marshalling/field_type.hpp>
 
@@ -39,7 +39,7 @@ namespace nil {
         namespace mina_state {
 
             nil::actor::zk::snark::proof_type<curve_type> make_proof(boost::json::value public_input) {
-                using curve_type = typename nil::actor::algebra::curves::pallas;
+                using curve_type = typename nil::crypto3::algebra::curves::pallas;
                 using scalar_field_type = typename curve_type::scalar_field_type;
                 using base_field_type = typename curve_type::base_field_type;
 
@@ -134,7 +134,7 @@ namespace nil {
             }
 
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 }   // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
+#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP

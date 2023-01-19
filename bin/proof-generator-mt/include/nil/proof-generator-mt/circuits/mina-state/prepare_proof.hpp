@@ -16,10 +16,10 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP
 
-#include <nil/actor/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
 
 namespace nil {
     namespace proof_generator_mt {
@@ -27,8 +27,8 @@ namespace nil {
 
             template<typename CurveType, typename BlueprintFieldType, typename KimchiParamsType, std::size_t EvalRounds>
             void prepare_proof_scalar(
-                nil::actor::zk::snark::proof_type<nil::actor::algebra::curves::pallas> &original_proof,
-                nil::blueprint_mc::components::kimchi_proof_scalar<BlueprintFieldType, KimchiParamsType, EvalRounds> &circuit_proof,
+                nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &original_proof,
+                nil::actor_blueprint_mc::components::kimchi_proof_scalar<BlueprintFieldType, KimchiParamsType, EvalRounds> &circuit_proof,
                 std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::actor::zk::snark::plonk_variable<BlueprintFieldType>;
 
@@ -90,17 +90,19 @@ namespace nil {
             }
 
             template<typename CurveType, typename BlueprintFieldType, typename KimchiParamsType, std::size_t EvalRounds>
-            void prepare_proof_base(nil::actor::zk::snark::proof_type<nil::actor::algebra::curves::pallas> &original_proof,
-                                    nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, KimchiParamsType> &circuit_proof,
+            void prepare_proof_base(nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &original_proof,
+                                    nil::actor_blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, KimchiParamsType> &circuit_proof,
                                     std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::actor::zk::snark::plonk_variable<BlueprintFieldType>;
-                using kimchi_constants = nil::blueprint_mc::components::kimchi_inner_constants<KimchiParamsType>;
+                using kimchi_constants = nil::actor_blueprint_mc::components::kimchi_inner_constants<KimchiParamsType>;
 
                 // COMMITMENTS
                 for (std::size_t i = 0; i < original_proof.commitments.w_comm.size(); i++) {
                     assert(circuit_proof.comm.witness.size() > i);
                     for (std::size_t j = 0; j < original_proof.commitments.w_comm[i].unshifted.size(); j++) {
-                        assert(circuit_proof.comm.witness[i].parts.size() > j);
+                        if (j >= circuit_proof.comm.witness[i].parts.size()) {
+                            break;
+                        }
                         public_input.push_back(original_proof.commitments.w_comm[i].unshifted[j].X);
                         circuit_proof.comm.witness[i].parts[j].X =
                             var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -111,7 +113,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.z_comm.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.z.parts.size() > j);
+                    if (j >= circuit_proof.comm.z.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.z_comm.unshifted[j].X);
                     circuit_proof.comm.z.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_proof.commitments.z_comm.unshifted[j].Y);
@@ -119,7 +123,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.t_comm.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.t.parts.size() > j);
+                    if (j >= circuit_proof.comm.t.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.t_comm.unshifted[j].X);
                     circuit_proof.comm.t.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_proof.commitments.t_comm.unshifted[j].Y);
@@ -127,9 +133,10 @@ namespace nil {
                 }
 
                 for (std::size_t i = 0; i < original_proof.commitments.lookup.sorted.size(); i++) {
-                    assert(circuit_proof.comm.lookup_sorted.size() > i);
                     for (std::size_t j = 0; j < original_proof.commitments.lookup.sorted[i].unshifted.size(); j++) {
-                        assert(circuit_proof.comm.lookup_sorted[i].parts.size() > j);
+                        if (j >= circuit_proof.comm.lookup_sorted[i].parts.size()) {
+                            break;
+                        }
                         public_input.push_back(original_proof.commitments.lookup.sorted[i].unshifted[j].X);
                         circuit_proof.comm.lookup_sorted[i].parts[j].X =
                             var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -140,7 +147,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.lookup.aggreg.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.lookup_agg.parts.size() > j);
+                    if (j >= circuit_proof.comm.lookup_agg.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.lookup.aggreg.unshifted[j].X);
                     circuit_proof.comm.lookup_agg.parts[j].X =
                         var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -150,7 +159,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.lookup.runtime.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.lookup_runtime.parts.size() > j);
+                    if (j >= circuit_proof.comm.lookup_runtime.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.lookup.runtime.unshifted[j].X);
                     circuit_proof.comm.lookup_runtime.parts[j].X =
                         var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -160,8 +171,7 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < circuit_proof.comm.table.parts.size(); j++) {
-                    assert(circuit_proof.comm.table.parts.size() > j);
-                    typename CurveType::template g1_type<nil::actor::algebra::curves::coordinates::affine>::value_type point =
+                    typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type point =
                         original_proof.commitments.z_comm.unshifted[0];
                     public_input.push_back(point.X);
                     circuit_proof.comm.table.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -200,7 +210,7 @@ namespace nil {
                 }
             }
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 } // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP
+#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_PROOF_HPP

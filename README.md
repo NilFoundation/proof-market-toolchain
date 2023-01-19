@@ -43,9 +43,39 @@ You need to build the proof generator only if you wish to generate proofs.
 ```
 mkdir build
 cd build
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+<<<<<<< HEAD
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
 cmake --build . -t proof-generator
 ```
+### Multithreaded version
+
+#### Dependencies
+```
+clang-12
+clang++12
+cmake >= 3.22.1
+autoconf >= 2.71
+automake >=  1.16.5
+libc-ares-dev >= 1.18.1
+libfmt-dev >= 8.1.1
+liblz4-dev >= 1.9.3
+gnutls-dev >= 7.81
+libprotobuf-dev >= 3.12.4
+libyaml-cpp-dev >= 0.2.2
+libhwloc-dev >= 2.7.0
+libsctp-dev >= 1.0.19
+ragel >= 6.10
+boost == 1.76
+```
+
+#### Building
+```
+mkdir build
+cd build
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
+cmake --build . -t proof-generator-mt
+```
+
 # Proof Market Beta Access
 
 Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#request-access) to see a guide on how to get access for proof market.
@@ -60,8 +90,6 @@ username
 ```
   password
   ```
-
-
 # Proof Market Interaction
 
 Below we will list a set of operations a user can follow along which demonstrates the market
@@ -174,7 +202,15 @@ Execute the below to generate a proof:
 cd build
 ./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
 ```
+or
+```
 
+cd build
+./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads>
+
+```
+
+Readme for Proof Producer daemon in located [here](./proof_producer/README.md).
 
 ## 8. Proof Submission
 The proof generator can now submit the proof to the marketplace, where if verified, they will

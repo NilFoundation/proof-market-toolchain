@@ -55,9 +55,6 @@ list(APPEND ${CURRENT_PROJECT_NAME}_SOURCES
         src/aspects/prover_vanilla.cpp
         )
 
-set(${CURRENT_PROJECT_NAME}_HEADERS
-        )
-
 add_executable(${CURRENT_PROJECT_NAME}
         ${${CURRENT_PROJECT_NAME}_HEADERS}
         ${${CURRENT_PROJECT_NAME}_SOURCES})
@@ -69,6 +66,10 @@ set_target_properties(${CURRENT_PROJECT_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED TRUE)
 
 target_link_libraries(${CURRENT_PROJECT_NAME}
+        LLVMIRReader
+        LLVMCore
+        LLVMSupport
+
         actor::core
         actor::network
         actor::blueprint
@@ -83,6 +84,7 @@ target_link_libraries(${CURRENT_PROJECT_NAME}
         crypto3::pkpad
         crypto3::pubkey
         crypto3::random
+        crypto3::assigner
 
         marshalling::core
         marshalling::crypto3_algebra
@@ -97,6 +99,9 @@ target_link_libraries(${CURRENT_PROJECT_NAME}
 target_include_directories(${CURRENT_PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/zkllvm-circifier/llvm/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/zkllvm-circifier/utils/bazel/llvm-project-overlay/llvm/include
+        ${CMAKE_BINARY_DIR}/libs/zkllvm-circifier/llvm/include
 
         $<$<BOOL:${Boost_FOUND}>:${Boost_INCLUDE_DIRS}>)
 

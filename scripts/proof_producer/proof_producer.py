@@ -8,6 +8,7 @@ import os
 import random
 from threading import Thread
 from constants import MY_STATEMENTS, DB_NAME, URL, MOUNT, USER, AUTH_FILE, PROOFS_DIR, WAIT_BEFORE_SEND_PROOF, ASK_UPDATE_INTERVAL
+import subprocess
 
 secret = open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r").read()
 user = open(os.path.dirname(os.path.abspath(__file__)) + "/.user", "r").read()
@@ -40,13 +41,17 @@ def getHeaders():
 
 
 def getStatements():
-    url = URL + f'_db/{DB_NAME}/{MOUNT}/statement/'
-    res = requests.get(url=url, headers=getHeaders())
-    if res.status_code != 200:
-        logging.error(f"Error: {res.status_code} {res.text}")
-        sys.exit(1)
-    else:
-        return res.json()
+    keys = MY_STATEMENTS.keys()
+    statements = {}
+    for key in keys:
+        url = URL + f'_db/{DB_NAME}/{MOUNT}/statement/' 
+        url += key
+        res = requests.get(url=url, headers=getHeaders())
+        if res.status_code != 200:
+            logging.error(f"Error: {res.status_code} {res.text}")
+        else:
+            statements[key] = res.json()
+    return statements
 
 
 def getMyAsks(status='processing'):
@@ -60,12 +65,24 @@ def getMyAsks(status='processing'):
     else:
         return res.json()
 
+def getPublicInput(key):
+    url = URL + f'_db/{DB_NAME}/{MOUNT}/bid/' 
+    url = url + key
+    res = requests.get(url=url, headers=getHeaders())
+    if res.status_code != 200:
+        logging.error(f"Error: {res.status_code} {res.text}")
+        sys.exit(1)
+    else:
+        return res.json()['input']
+
 
 def generateAsks():
+    print("asks")
     while True:
         # time.sleep(ASK_UPDATE_INTERVAL)
         createdAsks = getMyAsks('created')
-        statements = MY_STATEMENTS
+        processingAsks = getMyAsks('processing')
+        statements = MY_STATEMENTS.keys()
 
         for st in statements:
             isFound = False
@@ -73,10 +90,14 @@ def generateAsks():
                 if ask['statement_key'] == st:
                     isFound = True
                     next
+            for ask in processingAsks:
+                if ask['statement_key'] == st:
+                    isFound = True
+                    next
             if isFound == False:
                 ask = {
                     "statement_key": st,
-                    "cost": random.randint(0, 9)
+                    "cost": MY_STATEMENTS[st],
                 }
                 pushAsk(ask)
 
@@ -93,12 +114,17 @@ def pushAsk(ask):
         return res.json()
 
 
-def produceProof(ask):
-    try:
-        proof = open(PROOFS_DIR+ask['statement_key']+".txt", "r").read()
-    except:
-        logging.error(f"Error: proof file not found")
-        return
+def produceProof(ask, binary):
+    circuit = "./statements/" + ask['statement_key'] + ".json"
+    input = "/mnt/d/gits/proof-market-toolchain/example/input/arithmetic_example/input.json"
+    input = getPublicInput(ask['bid_key'])
+    input_file = "input.json"
+    with open(input_file, "r") as f:
+        json.dump(res.json(), f, indent=4)
+    output = "proof"
+    generator = subprocess.Popen([binary, "--circuit_input=" + circuit, "--public_input=" + input_file, "--proof_out="+output])
+    generator.communicate()
+    proof = open(output, "r").read()
     data = {
         "proof": proof,
         "ask_key": ask['_key'],
@@ -115,17 +141,39 @@ def produceProof(ask):
         return res.json()
 
 
-def produceProofs():
+def produceProofs(binary_path):
+    print("produce")
     while True:
         matchedAsks = getMyAsks('processing')
         for ask in matchedAsks:
-            time.sleep(WAIT_BEFORE_SEND_PROOF)
-            produceProof(ask)
+            produceProof(ask, binary_path)
 
+def start(args):
+    update_auth()
+
+    Thread(target=generateAsks).start()
+    Thread(target=produceProofs(args.proof_generator)).start()
+
+def prepare(args):
+    update_auth()
+    statements = getStatements()
+    for key in statements:
+        with open(args.directory+key+".json", "w") as f:
+            json.dump(statements[key], f, indent=4)
+    logging.info(f"Statements prepared")
 
 if __name__ == "__main__":
-    update_auth()
     logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-    Thread(target=produceProofs).start()
-    Thread(target=generateAsks).start()
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help='sub-command help')
+    parser_start = subparsers.add_parser('start', help='start Proof Producer daemon  (do not forget to prepare statements first)')
+    parser_start.add_argument("-s", "--statements", help="directory with statements", default="./statements/")
+    parser_start.add_argument("-p", "--proof-generator", help="path to proof generator binaty", required=True)
+    parser_start.set_defaults(func=start)
+    parser_prepare = subparsers.add_parser('prepare', help='download statements from Proof Market (do not forget to setup constants.py first)')
+    parser_prepare.add_argument("-d", "--directory", help="directory with statements", default="./statements/")
+    
+    parser_prepare.set_defaults(func=prepare)
+    args = parser.parse_args()
+    args.func(args)

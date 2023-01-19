@@ -16,15 +16,15 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
 
-#include <nil/actor/math/algorithms/calculate_domain_set.hpp>
+#include <nil/crypto3/math/algorithms/calculate_domain_set.hpp>
 
-#include <nil/actor/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
 
-#include <nil/blueprint_mc/assignment/plonk.hpp>
-#include <nil/blueprint_mc/components/systems/snark/plonk/kimchi/proof_system/circuit_description.hpp>
+#include <nil/actor_blueprint_mc/assignment/plonk.hpp>
+#include <nil/actor_blueprint_mc/components/systems/snark/plonk/kimchi/proof_system/circuit_description.hpp>
 
 #include <nil/actor/zk/snark/arithmetization/plonk/params.hpp>
 
@@ -58,8 +58,8 @@ namespace nil {
                 constexpr std::size_t expand_factor = 0;
                 std::size_t r = degree_log - 1;
 
-                std::vector<std::shared_ptr<nil::actor::math::evaluation_domain<FieldType>>> domain_set =
-                    nil::actor::math::calculate_domain_set<FieldType>(degree_log + expand_factor, r);
+                std::vector<std::shared_ptr<nil::crypto3::math::evaluation_domain<FieldType>>> domain_set =
+                    nil::crypto3::math::calculate_domain_set<FieldType>(degree_log + expand_factor, r);
 
                 params.r = r;
                 params.D = domain_set;
@@ -71,25 +71,28 @@ namespace nil {
             }
 
             template<typename ComponentType, typename BlueprintFieldType, typename ArithmetizationParams, typename Hash,
-                    std::size_t Lambda, typename FunctorResultCheck, typename PublicInput,
-                    typename std::enable_if<
-                        std::is_same<typename BlueprintFieldType::value_type,
-                                    typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
-                        bool>::type = true>
+                     std::size_t Lambda, typename FunctorResultCheck, typename PublicInput,
+                     typename std::enable_if<
+                         std::is_same<typename BlueprintFieldType::value_type,
+                                      typename std::iterator_traits<typename PublicInput::iterator>::value_type>::value,
+                         bool>::type = true>
             auto prepare_component(typename ComponentType::params_type params, const PublicInput &public_input,
-                                const std::size_t max_step, const FunctorResultCheck &result_check) {
+                                   const std::size_t max_step, const FunctorResultCheck &result_check) {
 
-                using ArithmetizationType = nil::actor::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
+                using ArithmetizationType =
+                    nil::actor::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
                 using component_type = ComponentType;
 
                 nil::actor::zk::snark::plonk_table_description<BlueprintFieldType, ArithmetizationParams> desc;
 
-                nil::blueprint_mc::blueprint<ArithmetizationType> bp(desc);
-                nil::blueprint_mc::blueprint_private_assignment_table<ArithmetizationType> private_assignment(desc);
-                nil::blueprint_mc::blueprint_public_assignment_table<ArithmetizationType> public_assignment(desc);
-                nil::blueprint_mc::blueprint_assignment_table<ArithmetizationType> assignment_bp(private_assignment, public_assignment);
+                nil::actor_blueprint_mc::blueprint<ArithmetizationType> bp(desc);
+                nil::actor_blueprint_mc::blueprint_private_assignment_table<ArithmetizationType> private_assignment(
+                    desc);
+                nil::actor_blueprint_mc::blueprint_public_assignment_table<ArithmetizationType> public_assignment(desc);
+                nil::actor_blueprint_mc::blueprint_assignment_table<ArithmetizationType> assignment_bp(
+                    private_assignment, public_assignment);
 
-                std::size_t start_row = nil::blueprint_mc::components::allocate<component_type>(bp);
+                std::size_t start_row = nil::actor_blueprint_mc::components::allocate<component_type>(bp);
                 if (public_input.size() > component_type::rows_amount) {
                     bp.allocate_rows(public_input.size() - component_type::rows_amount);
                 }
@@ -98,7 +101,8 @@ namespace nil {
                     auto allocated_pi = assignment_bp.allocate_public_input(public_input[i]);
                 }
 
-                nil::blueprint_mc::components::generate_circuit<component_type>(bp, public_assignment, params, start_row);
+                nil::actor_blueprint_mc::components::generate_circuit<component_type>(bp, public_assignment, params,
+                                                                                      start_row);
                 typename component_type::result_type component_result =
                     component_type::generate_assignments(assignment_bp, params, start_row);
 
@@ -106,15 +110,18 @@ namespace nil {
 
                 assignment_bp.padding();
 
-                nil::actor::zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(private_assignment,
-                                                                                                        public_assignment);
+                nil::actor::zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(
+                    private_assignment, public_assignment);
 
                 using placeholder_params =
-                    nil::actor::zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash, Lambda>;
+                    nil::actor::zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, Hash, Hash,
+                                                              Lambda>;
                 using types = nil::actor::zk::snark::detail::placeholder_policy<BlueprintFieldType, placeholder_params>;
 
-                using fri_type = typename nil::actor::zk::commitments::fri<BlueprintFieldType, typename placeholder_params::merkle_hash_type,
-                                                            typename placeholder_params::transcript_hash_type, 2, 1>;
+                using fri_type =
+                    typename nil::actor::zk::commitments::fri<BlueprintFieldType,
+                                                              typename placeholder_params::merkle_hash_type,
+                                                              typename placeholder_params::transcript_hash_type, 2, 1>;
 
                 std::size_t table_rows_log = std::ceil(std::log2(desc.rows_amount));
 
@@ -123,19 +130,23 @@ namespace nil {
 
                 std::size_t permutation_size = desc.witness_columns + desc.public_input_columns + desc.constant_columns;
 
-                typename nil::actor::zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::preprocessed_data_type
-                    public_preprocessed_data =
-                        nil::actor::zk::snark::placeholder_public_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, public_assignment, desc, fri_params, permutation_size);
-                typename nil::actor::zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::preprocessed_data_type
-                    private_preprocessed_data =
-                        nil::actor::zk::snark::placeholder_private_preprocessor<BlueprintFieldType, placeholder_params>::process(
-                            bp, private_assignment, desc, fri_params);
+                typename nil::actor::zk::snark::placeholder_public_preprocessor<
+                    BlueprintFieldType, placeholder_params>::preprocessed_data_type public_preprocessed_data =
+                    nil::actor::zk::snark::placeholder_public_preprocessor<
+                        BlueprintFieldType, placeholder_params>::process(bp, public_assignment, desc, fri_params,
+                                                                         permutation_size)
+                        .get();
+                typename nil::actor::zk::snark::placeholder_private_preprocessor<
+                    BlueprintFieldType, placeholder_params>::preprocessed_data_type private_preprocessed_data =
+                    nil::actor::zk::snark::placeholder_private_preprocessor<
+                        BlueprintFieldType, placeholder_params>::process(bp, private_assignment, desc, fri_params)
+                        .get();
 
-                return std::make_tuple(desc, bp, fri_params, assignments, public_preprocessed_data, private_preprocessed_data);
+                return std::make_tuple(desc, bp, fri_params, assignments, public_preprocessed_data,
+                                       private_preprocessed_data);
             }
-        } // namespace mina_state
-    } // namespace proof_generator_mt
-} // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator_mt
+}    // namespace nil
 
-#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
+#endif    // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
