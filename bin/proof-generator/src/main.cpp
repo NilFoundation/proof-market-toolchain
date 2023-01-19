@@ -95,15 +95,18 @@ inline bool configure_aspects(boost::application::context &ctx, Application &app
 
 void proof_new(boost::json::value circuit_description, boost::json::value public_input, std::string output_file) {
     std::string statement_type = boost::json::value_to<std::string>(circuit_description.at("type"));
-    if (statement_type == "zkllvm") {
-            std::string bytecode = boost::json::value_to<std::string>(circuit_description.at("statement"));
+    if (statement_type == "placeholder-zkllvm") {
+            std::string bytecode = boost::json::value_to<std::string>(circuit_description.at("definition").at("proving_key"));
             std::string public_input_str = boost::json::value_to<std::string>(public_input.at("input"));
             nil::proof_generator::assigner::proof_new(bytecode, public_input_str, output_file);
     }
-    else {
-            boost::json::value statement = circuit_description.at("statement");
+    else if (statement_type == "placeholder-vanilla") {
+            boost::json::value statement = circuit_description.at("definition").at("proving_key");
             boost::json::value public_input_mina = public_input.at("input");
             nil::proof_generator::mina_state::proof_new(statement, public_input_mina, output_file);
+    }
+    else {
+        std::cout << "Unknown statement type: " << statement_type << "\n";
     }
 }
 

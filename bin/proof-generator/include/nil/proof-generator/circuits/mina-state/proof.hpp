@@ -63,9 +63,11 @@ namespace nil {
                                             VerifierIndexType &pickles_index, const std::size_t fri_max_step,
                                             std::string output_path) {
 
+                std::cout << "generating mina-state proof..." << std::endl;
                 generate_proof_scalar<VerifierIndexType, EvalRoundsScalar>(pickles_proof, pickles_index, fri_max_step, output_path);
                 generate_proof_base<VerifierIndexType, EvalRoundsBase>(pickles_proof, pickles_index, fri_max_step, output_path);
                 concatenate_proofs(output_path);
+                std::cout << "mina-state proof is generated" << std::endl;
             }
 
             void proof_new(boost::json::value jv_pickles_constants, boost::json::value jv_public_input, std::string output_file) {
@@ -78,7 +80,7 @@ namespace nil {
                 pallas_verifier_index_type ver_index = make_verifier_index(jv_public_input, jv_pickles_constants);
                 nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 15;
+                constexpr const std::size_t eval_rounds_scalar = 1;
                 constexpr const std::size_t eval_rounds_base = 1;
                 constexpr const std::size_t fri_max_step = 1;
 

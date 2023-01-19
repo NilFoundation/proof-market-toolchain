@@ -108,6 +108,8 @@ namespace nil {
                 desc.usable_rows_amount = parser_instance.assignmnt.rows_amount();
                 desc.rows_amount = nil::crypto3::zk::snark::basic_padding(parser_instance.assignmnt);
 
+                std::cout << "generatring zkllvm proof..." << std::endl;
+
                 std::ofstream otable;
                 std::string assignment_table_file_name = output_file + ".table";
                 otable.open(assignment_table_file_name);
@@ -127,6 +129,8 @@ namespace nil {
                 }
                 print_circuit<nil::marshalling::option::big_endian, ConstraintSystemType>(parser_instance.bp, ocircuit);
                 ocircuit.close();
+
+                std::cout << "zkllvm proof is generated" << std::endl;
 
                 if (nil::blueprint::is_satisfied(parser_instance.bp, parser_instance.assignmnt)) {
                     std::cout << "Inner verification passed" << std::endl;
