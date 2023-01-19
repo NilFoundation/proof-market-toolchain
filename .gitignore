@@ -651,3 +651,7 @@ callgrind.*
 
 .ycm_extra_config.py
 .color_coded
+
+# auth file
+.auth.json
+auth.json
