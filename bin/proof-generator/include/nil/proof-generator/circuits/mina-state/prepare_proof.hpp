@@ -100,7 +100,9 @@ namespace nil {
                 for (std::size_t i = 0; i < original_proof.commitments.w_comm.size(); i++) {
                     assert(circuit_proof.comm.witness.size() > i);
                     for (std::size_t j = 0; j < original_proof.commitments.w_comm[i].unshifted.size(); j++) {
-                        assert(circuit_proof.comm.witness[i].parts.size() > j);
+                        if (j >= circuit_proof.comm.witness[i].parts.size()) {
+                            break;
+                        }
                         public_input.push_back(original_proof.commitments.w_comm[i].unshifted[j].X);
                         circuit_proof.comm.witness[i].parts[j].X =
                             var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -111,7 +113,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.z_comm.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.z.parts.size() > j);
+                    if (j >= circuit_proof.comm.z.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.z_comm.unshifted[j].X);
                     circuit_proof.comm.z.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_proof.commitments.z_comm.unshifted[j].Y);
@@ -119,17 +123,20 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.t_comm.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.t.parts.size() > j);
+                    if (j >= circuit_proof.comm.t.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.t_comm.unshifted[j].X);
                     circuit_proof.comm.t.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_proof.commitments.t_comm.unshifted[j].Y);
                     circuit_proof.comm.t.parts[j].Y = var(0, public_input.size() - 1, false, var::column_type::public_input);
                 }
 
-                for (std::size_t i = 0; i < original_proof.commitments.lookup.sorted.size(); i++) {
-                    assert(circuit_proof.comm.lookup_sorted.size() > i);
+                for (std::size_t i = 0; i < circuit_proof.comm.lookup_sorted.size(); i++) {
                     for (std::size_t j = 0; j < original_proof.commitments.lookup.sorted[i].unshifted.size(); j++) {
-                        assert(circuit_proof.comm.lookup_sorted[i].parts.size() > j);
+                        if (j >= circuit_proof.comm.lookup_sorted[i].parts.size()) {
+                            break;
+                        }
                         public_input.push_back(original_proof.commitments.lookup.sorted[i].unshifted[j].X);
                         circuit_proof.comm.lookup_sorted[i].parts[j].X =
                             var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -140,7 +147,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.lookup.aggreg.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.lookup_agg.parts.size() > j);
+                    if (j >= circuit_proof.comm.lookup_agg.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.lookup.aggreg.unshifted[j].X);
                     circuit_proof.comm.lookup_agg.parts[j].X =
                         var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -150,7 +159,9 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < original_proof.commitments.lookup.runtime.unshifted.size(); j++) {
-                    assert(circuit_proof.comm.lookup_runtime.parts.size() > j);
+                    if (j >= circuit_proof.comm.lookup_runtime.parts.size()) {
+                        break;
+                    }
                     public_input.push_back(original_proof.commitments.lookup.runtime.unshifted[j].X);
                     circuit_proof.comm.lookup_runtime.parts[j].X =
                         var(0, public_input.size() - 1, false, var::column_type::public_input);
@@ -160,7 +171,6 @@ namespace nil {
                 }
 
                 for (std::size_t j = 0; j < circuit_proof.comm.table.parts.size(); j++) {
-                    assert(circuit_proof.comm.table.parts.size() > j);
                     typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type point =
                         original_proof.commitments.z_comm.unshifted[0];
                     public_input.push_back(point.X);

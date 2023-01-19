@@ -16,8 +16,8 @@
 // limitations under the License.
 //---------------------------------------------------------------------------//
 
-#ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_HPP
-#define PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_HPP
+#ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_HPP
+#define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_HPP
 
 #include <boost/json/src.hpp>
 #include <boost/circular_buffer.hpp>
@@ -29,7 +29,7 @@
 #include <boost/program_options.hpp>
 #endif
 
-#include <nil/actor/algebra/curves/pallas.hpp>
+#include <nil/crypto3/algebra/curves/pallas.hpp>
 
 #include <nil/actor/zk/snark/systems/plonk/pickles/proof.hpp>
 #include <nil/actor/zk/snark/systems/plonk/pickles/verifier_index.hpp>
@@ -44,23 +44,39 @@ namespace nil {
     namespace proof_generator_mt {
         namespace mina_state {
 
+            void concatenate_proofs(std::string output_path) {
+                std::string output_path_scalar = output_path + "scalar_proof.data";
+                std::string output_path_base = output_path + "base_proof.data";
+                std::string output_path_full = output_path;
+                std::ifstream file_scalar(output_path_scalar, std::ios::binary);
+                std::ifstream file_base(output_path_base, std::ios::binary);
+                std::ofstream file_full(output_path_full, std::ios::binary);
+
+                file_scalar.ignore(2);
+
+                file_full << file_base.rdbuf();
+                file_full << file_scalar.rdbuf();
+            }
+
             template<typename VerifierIndexType, std::size_t EvalRoundsScalar, std::size_t EvalRoundsBase>
-            void generate_proof_heterogenous(nil::actor::zk::snark::proof_type<nil::actor::algebra::curves::pallas> &pickles_proof,
+            void generate_proof_heterogenous(nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
                                             VerifierIndexType &pickles_index, const std::size_t fri_max_step,
                                             std::string output_path) {
 
                 generate_proof_scalar<VerifierIndexType, EvalRoundsScalar>(pickles_proof, pickles_index, fri_max_step, output_path);
+                generate_proof_base<VerifierIndexType, EvalRoundsBase>(pickles_proof, pickles_index, fri_max_step, output_path);
+                concatenate_proofs(output_path);
             }
 
             void proof_new(boost::json::value jv_pickles_constants, boost::json::value jv_public_input, std::string output_file) {
-                using curve_type = nil::actor::algebra::curves::pallas;
+                using curve_type = nil::crypto3::algebra::curves::pallas;
                 using pallas_verifier_index_type = nil::actor::zk::snark::verifier_index<
                     curve_type, nil::actor::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
                     nil::actor::zk::snark::arithmetic_sponge_params<curve_type::base_field_type::value_type>,
                     nil::actor::zk::snark::kimchi_constant::COLUMNS, nil::actor::zk::snark::kimchi_constant::PERMUTES>;
 
                 pallas_verifier_index_type ver_index = make_verifier_index(jv_public_input, jv_pickles_constants);
-                nil::actor::zk::snark::proof_type<nil::actor::algebra::curves::pallas> proof = make_proof(jv_public_input);
+                nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(jv_public_input);
 
                 constexpr const std::size_t eval_rounds_scalar = 1;
                 constexpr const std::size_t eval_rounds_base = 1;
@@ -70,7 +86,7 @@ namespace nil {
                     proof, ver_index, fri_max_step, output_file);
             }
         } // namespace mina_state
-    } // namespace proof_generator_mt
+    } // namespace proof_generator
 } // namespace nil
 
-#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_HPP
+#endif    // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PROOF_HPP
