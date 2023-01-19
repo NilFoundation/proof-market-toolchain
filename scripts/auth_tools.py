@@ -17,7 +17,7 @@ def update_auth(args):
 
     response = requests.post(url, json=body)
     if response.status_code != 200:
-        print(f"Error: {response.status_code} {response.json()}")
+        print(f"Error: {response.status_code} {response.text}")
     else:
         print(response.text)
         with open(args.auth, "w") as f:
@@ -25,12 +25,15 @@ def update_auth(args):
                 'Authorization': f'Bearer {response.json()["jwt"]}'
             }
             json.dump(headers, f)
+    return response
 
 def get_headers(args):
     headers = {}
     if args.auth is None:
         args.auth = 'auth.json'
-        update_auth(args)
+        response = update_auth(args)
+        if response.status_code != 200:
+            return
     with open(args.auth, 'r') as f:
         auth = json.load(f)
         headers.update(auth)
