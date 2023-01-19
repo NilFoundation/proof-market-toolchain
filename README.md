@@ -31,6 +31,7 @@ sudo apt install build-essential libssl-dev libboost-all-dev cmake clang git pyt
 
 **We are aware of a compilation issue with boost libs having version higher than 1.76. Please use version 1.76.**
 
+
 # Installation
 
 - Clone the repo
@@ -78,7 +79,7 @@ cmake --build . -t proof-generator-mt
 
 # Proof Market Beta Access
 
-Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#request-access) to see a guide on how to get access for proof market.
+Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#new-user-signup) to see a guide on how to get access for proof market.
 
 Once you have the credentials, user needs to create two files in the `scripts/` directory  with the following information. 
 -  .user
@@ -253,6 +254,13 @@ a url of a previously checked out submodule.It is advisable to check these locat
 ## Compilation errors for Proof generator
 Please ensure you are using 1.76 version of boost as the higher versions have an incompatible API which will
 be updated in due course.
+
+## macOS
+On macOS, these dependencies are required for compilation
+```
+fmt gnutls protobuf yaml-cpp ragel hwloc
+```
+
 
 # Documentation
 
