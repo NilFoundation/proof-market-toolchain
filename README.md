@@ -17,6 +17,12 @@ The marketplace consists of the following entities.
   made by the Proof Requester.
 - Circuit Developer : This is an entity who prepare circuits for proof market
 
+# Pre-requisites
+
+Please ensure you have a ssh key [setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+) on [github](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+) as this project uses submodules which will be recursively cloned via ssh.
+
 # Dependencies
 
 On *nix systems, the following dependencies need to be installed:
@@ -49,6 +55,8 @@ libhwloc-dev >= 2.7.0
 libsctp-dev >= 1.0.19
 ragel >= 6.10
 ```
+
+**We are aware of compilation issues with boost > 1.76 and clang > 12.0. Please use the versions recommended above**
 
 # Installation
 
