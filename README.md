@@ -19,11 +19,23 @@ The marketplace consists of the following entities.
 
 # Dependencies
 
-On *nix systems, the following dependencies need to be installed
+On *nix systems, the following dependencies need to be installed:
+
+```
+sudo apt install build-essential libssl-dev cmake clang-12 git autoconf libc-ares-dev libfmt-dev gnutls-dev liblz4-dev libprotobuf-dev libyaml-cpp-dev libhwloc-dev pkg-config xfslibs-dev systemtap-sdt-dev
+```
+
+## Boost
+Users need to install boost either manually or from their distros repository. Please ensure you
+are installing the version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
+manually.
+
+We have tested for the following set of versions of the libraries.
 
 ```
 clang-12
 clang++12
+boost == 1.76
 cmake >= 3.22.1
 autoconf >= 2.71
 automake >=  1.16.5
@@ -36,17 +48,13 @@ libyaml-cpp-dev >= 0.2.2
 libhwloc-dev >= 2.7.0
 libsctp-dev >= 1.0.19
 ragel >= 6.10
-boost == 1.76
 ```
-
-**We are aware of compilation issues with boost > 1.76 and clang > 12.0. Please use the versions recommended above**
-
 
 # Installation
 
 - Clone the repo
  ```
-git clone git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
+git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
 cd proof-market-toolchain
 ```
 You need to build the proof generator only if you wish to generate proofs.
@@ -65,7 +73,10 @@ cmake --build . -t proof-generator-mt
 # Proof Market Beta Access
 
 Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#new-user-signup) to see a guide on how to get access for proof market.
-
+Or you can use the following command (navigate to `scripts/` directory):
+```
+python3 signup.py -u <username> -p <password> -e <e-mail>
+```
 Once you have the credentials, user needs to create two files in the `scripts/` directory  with the following information.
 -  .user
  ```
