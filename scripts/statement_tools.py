@@ -36,11 +36,7 @@ def get(args):
         logging.info(f"Statements:\n {json.dumps(res.json(), indent=4)}")
         if args.output:
             with open(args.output, 'w') as f:
-                # if res.json() has filed definition
-                if 'definition' in res.json():
-                    json.dump(res.json()['definition']['proving_key'], f, indent=4)
-                else:
-                    logging.error("Error: no definition in statement")
+                json.dump(res.json(), f, indent=4)
         return res.json()
 
 

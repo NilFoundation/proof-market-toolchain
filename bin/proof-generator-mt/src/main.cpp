@@ -117,7 +117,7 @@ nil::actor::future<> proof_new(boost::json::value circuit_description, boost::js
             std::string public_input_str = boost::json::value_to<std::string>(public_input.at("input"));
             nil::proof_generator_mt::assigner::proof_new(bytecode, public_input_str, output_file);
         } else if (statement_type == "placeholder-vanilla") {
-                boost::json::value statement = circuit_description.at("statement");
+                boost::json::value statement = circuit_description.at("definition").at("proving_key");
                 boost::json::value public_input_mina = public_input.at("input");
                 nil::proof_generator_mt::mina_state::proof_new(statement, public_input_mina, output_file);
         }
