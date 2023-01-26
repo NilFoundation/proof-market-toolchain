@@ -44,6 +44,9 @@ Execute the below to generate a proof:
 
 cd build
 ./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
+# Or using the multithreaded version
+./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads>
+
 ```
 
 ## Proof Submission
