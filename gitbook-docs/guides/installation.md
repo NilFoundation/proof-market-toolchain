@@ -35,7 +35,7 @@ As a proof producer you need to compile the `proof-generator` binary. Currently 
 ### **Build**
 
 ```
-cd proof-market-toolchain
+cd proof-market-toolchain && mkdir build && cd build
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang-12 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 ..
 # Single-threaded version
 cmake --build . -t proof-generator
