@@ -1,17 +1,25 @@
 # Proof Producer Daemon
 
-Here is PoC for Proof Producer daemon. 
-The main purpose of it is to authomatization of the Proof Producer routine in creating asks and generating proofs. 
-Please, get familiar with [step-by-step](../../README.md) guide firstly. 
+Here is PoC for the Proof Producer daemon. 
+Its primary purpose is to automate the Proof Producer routine in creating asks and generating proofs. 
+Please, get familiar with the [step-by-step](../../README.md) guide firstly. 
+
+## Setup user
+Prepare `.user` and `.secret` files in the same way as in the [step-by-step](../../README.md) guide.
 
 ## Prepare Statements 
-Firstly, choose statements what are you interested in.
-You can find all statement with our [web interface](proof.market) or using `statement_tools`. 
+Firstly, choose statements about what you are interested in.
+You can find all statements with our [web interface](proof.market) or using `statement_tools`. 
 
 Add the statements' keys to `MY_STATEMENTS` from `constants.py`. 
 
 Run
 ```
-python3 proof_producer.py --prepare_statements -d <statements dierctory>
+python3 proof_producer.py prepare -d <statements dierctory>
 ```
 
+## Start Proof Producer
+
+```
+python3 proof_producer.py start -p <path to proof-generator binary>
+```

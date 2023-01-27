@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/psf/black
+    rev: stable
+    hooks:
+    - id: black
+      language_version: python3.8
+- repo: local
+  hooks:
+    - id: pylint
+      name: pylint
+      entry: pylint
+      language: system
+      types: [python]
+      args:
+        [
+          "-E", 
+          "-sn", # Don't display the score
+          "--rcfile=.pylintrc",
+        ]
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: ''  # Use the sha / tag you want to point at
+    hooks:
+    -   id: clang-format

@@ -39,7 +39,6 @@
 #include <nil/proof-generator/circuits/mina-state/proof_scalar.hpp>
 #include <nil/proof-generator/circuits/mina-state/proof_base.hpp>
 
-
 namespace nil {
     namespace proof_generator {
         namespace mina_state {
@@ -59,36 +58,42 @@ namespace nil {
             }
 
             template<typename VerifierIndexType, std::size_t EvalRoundsScalar, std::size_t EvalRoundsBase>
-            void generate_proof_heterogenous(nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
-                                            VerifierIndexType &pickles_index, const std::size_t fri_max_step,
-                                            std::string output_path) {
+            void generate_proof_heterogenous(
+                nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
+                VerifierIndexType &pickles_index, const std::size_t fri_max_step, std::string output_path) {
 
                 std::cout << "generating mina-state proof..." << std::endl;
-                generate_proof_scalar<VerifierIndexType, EvalRoundsScalar>(pickles_proof, pickles_index, fri_max_step, output_path);
-                generate_proof_base<VerifierIndexType, EvalRoundsBase>(pickles_proof, pickles_index, fri_max_step, output_path);
+                generate_proof_scalar<VerifierIndexType, EvalRoundsScalar>(pickles_proof, pickles_index, fri_max_step,
+                                                                           output_path);
+                generate_proof_base<VerifierIndexType, EvalRoundsBase>(pickles_proof, pickles_index, fri_max_step,
+                                                                       output_path);
                 concatenate_proofs(output_path);
                 std::cout << "mina-state proof is generated" << std::endl;
             }
 
-            void proof_new(boost::json::value jv_pickles_constants, boost::json::value jv_public_input, std::string output_file) {
+            void proof_new(boost::json::value jv_pickles_constants, boost::json::value jv_public_input,
+                           std::string output_file) {
                 using curve_type = nil::crypto3::algebra::curves::pallas;
                 using pallas_verifier_index_type = nil::crypto3::zk::snark::verifier_index<
-                    curve_type, nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
+                    curve_type,
+                    nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
                     nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::base_field_type::value_type>,
-                    nil::crypto3::zk::snark::kimchi_constant::COLUMNS, nil::crypto3::zk::snark::kimchi_constant::PERMUTES>;
+                    nil::crypto3::zk::snark::kimchi_constant::COLUMNS,
+                    nil::crypto3::zk::snark::kimchi_constant::PERMUTES>;
 
                 pallas_verifier_index_type ver_index = make_verifier_index(jv_public_input, jv_pickles_constants);
-                nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof = make_proof(jv_public_input);
+                nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof =
+                    make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 1;
-                constexpr const std::size_t eval_rounds_base = 1;
+                constexpr const std::size_t eval_rounds_scalar = 15;
+                constexpr const std::size_t eval_rounds_base = 10;
                 constexpr const std::size_t fri_max_step = 1;
 
                 generate_proof_heterogenous<pallas_verifier_index_type, eval_rounds_scalar, eval_rounds_base>(
                     proof, ver_index, fri_max_step, output_file);
             }
-        } // namespace mina_state
-    } // namespace proof_generator
-} // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator
+}    // namespace nil
 
 #endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_HPP
