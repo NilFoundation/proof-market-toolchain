@@ -14,3 +14,4 @@ MY_STATEMENTS = {
     "32326": {"cost": 5, "asks_limit": 10},
 }
 USER = ""
+REQUEST_TIMEOUT = 100

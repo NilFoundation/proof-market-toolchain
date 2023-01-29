@@ -104,7 +104,7 @@ Circuits are stored as a *statement* structure on Proof Market.
 Statement description example can be found in `example/statements/` directory
 
 ```
-python3 scripts/prepare_statement.py -c <zkllvm output> -o <statement description file>
+python3 scripts/prepare_statement.py -c <zkllvm output> -o <statement description file> -n <statement name> -t <statement type>
 ```
 
 Provide the necessary information listed in the output statement file

@@ -28,7 +28,7 @@ def push(auth, file, bid_key=None, ask_key=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        return res.json()
+        return
 
 
 def get(auth, bid_key=None, proof_key=None, file=None):

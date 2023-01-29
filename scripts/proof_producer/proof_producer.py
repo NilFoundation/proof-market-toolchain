@@ -44,8 +44,7 @@ def get_statements(auth):
     statements = {}
     for key in keys:
         try:
-            res = get_statement(auth, key, None)
-            statements[key] = res.json()
+            statements[key] = get_statement(auth, key, None)
         except:
             logging.error(f"Get statement error")
             continue

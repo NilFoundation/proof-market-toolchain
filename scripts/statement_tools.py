@@ -21,8 +21,8 @@ def push(auth, file):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Statement:\t {res.json()}")
-        return res.json()
+        logging.info(f"Statement from {file} was pushed")
+        return res
 
 
 def push_parser(args):
