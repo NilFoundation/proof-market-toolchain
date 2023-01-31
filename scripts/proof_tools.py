@@ -28,6 +28,9 @@ def push(auth, file, bid_key=None, ask_key=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
+        res_json = res.json()
+        res_json.pop("proof", "")
+        logging.info(f"Proof:\t\t {res_json}")
         return
 
 
@@ -35,18 +38,19 @@ def get(auth, bid_key=None, proof_key=None, file=None):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/proof/"
     if bid_key:
-        url += f'?q=[{{"key" : "bid_key", "value" : "{bid_key}"}}]'
+        url += f'?q=[{{"key" : "bid_key", "value" : "{bid_key}"}}]&full=true'
     elif proof_key:
-        url += proof_key
+        url += proof_key + "?full=true"
+    print(url)
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.reason}")
         exit(1)
     else:
         res_json = res.json()
-        if file and len(res_json) > 0:
+        if file:
             with open(file, "w") as f:
-                f.write(res_json[0].pop("proof", ""))
+                f.write(res_json[0].pop("proof"))
         logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
 
 
@@ -63,19 +67,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--auth", type=str, help="auth")
     subparsers = parser.add_subparsers(help="sub-command help")
+
     parser_push = subparsers.add_parser("push", help="push proof")
     parser_push.set_defaults(func=push_parser)
     parser_get = subparsers.add_parser("get", help="get proof")
     parser_get.set_defaults(func=get_parser)
+
     parser_push.add_argument("-a", "--ask_key", type=str, default=None, help="ask_key")
     parser_push.add_argument("-b", "--bid_key", type=str, default=None, help="bid_key")
     parser_push.add_argument(
         "-f", "--file", type=str, required=True, help="file with proof"
     )
-    parser_get.add_argument("-k", "--key", type=str, help="key of the proof")
+    parser_get.add_argument("-p", "--proof_key", type=str, help="key of the proof")
     parser_get.add_argument("-f", "--file", type=str, help="file to write proof")
+    parser_get.add_argument("-b", "--bid_key", type=str, help="bid_key")
     args = parser.parse_args()
-    if not args.bid_key and not args.ask_key:
-        logging.error("Error: bid_key or ask_key has to be provided")
-        exit(1)
     args.func(args=args)
