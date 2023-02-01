@@ -11,11 +11,13 @@ Prepare `.user` and `.secret` files in the same way as in the [step-by-step](../
 Firstly, choose statements about what you are interested in.
 You can find all statements with our [web interface](proof.market) or using `statement_tools`. 
 
-Add the statements' keys to `MY_STATEMENTS` from `constants.py`. 
+Add the statements' keys to `MY_STATEMENTS` from `constants.py`.
+
+Prepare a directory for statements `<statements_dir>`.
 
 Run
 ```
-python3 proof_producer.py prepare -d <statements dierctory>
+python3 proof_producer.py prepare -d <statements_dir>
 ```
 
 ## Start Proof Producer

@@ -28,9 +28,7 @@ def push(auth, file, bid_key=None, ask_key=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        res_json = res.json()
-        res_json.pop("proof", "")
-        logging.info(f"Proof:\t\t {res_json}")
+        logging.info(f"Proof for {bid_key} is pushed")
         return
 
 
@@ -41,7 +39,6 @@ def get(auth, bid_key=None, proof_key=None, file=None):
         url += f'?q=[{{"key" : "bid_key", "value" : "{bid_key}"}}]&full=true'
     elif proof_key:
         url += proof_key + "?full=true"
-    print(url)
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.reason}")
@@ -51,7 +48,8 @@ def get(auth, bid_key=None, proof_key=None, file=None):
         if file:
             with open(file, "w") as f:
                 f.write(res_json[0].pop("proof"))
-        logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
+        else:
+            logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
 
 
 def push_parser(args):

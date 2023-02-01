@@ -90,7 +90,7 @@ inline bool configure_aspects(boost::application::context &ctx, Application &app
 
     for (boost::shared_ptr<void> itr : ctx) {
         boost::static_pointer_cast<configurable_aspect_type>(itr)->set_options(cfg->cli());
-        boost::static_pointer_cast<configurable_aspect_type>(itr)->set_options(cfg->cfg());
+        // boost::static_pointer_cast<configurable_aspect_type>(itr)->set_options(cfg->cfg());
     }
 
     try {
@@ -117,11 +117,10 @@ nil::actor::future<> proof_new(boost::json::value circuit_description, boost::js
             std::string public_input_str = boost::json::value_to<std::string>(public_input.at("input"));
             nil::proof_generator_mt::assigner::proof_new(bytecode, public_input_str, output_file);
         } else if (statement_type == "placeholder-vanilla") {
-                boost::json::value statement = circuit_description.at("definition").at("proving_key");
-                boost::json::value public_input_mina = public_input.at("input");
-                nil::proof_generator_mt::mina_state::proof_new(statement, public_input_mina, output_file);
-        }
-        else {
+            boost::json::value statement = circuit_description.at("definition").at("proving_key");
+            boost::json::value public_input_mina = public_input.at("input");
+            nil::proof_generator_mt::mina_state::proof_new(statement, public_input_mina, output_file);
+        } else {
             std::cout << "Unknown statement type: " << statement_type << "\n";
         }
     });

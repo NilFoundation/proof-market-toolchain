@@ -20,7 +20,7 @@ from constants import (
 )
 import subprocess
 
-sys.path.append("../")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 from public_input_get import get as get_public_input
 from auth_tools import update_auth, get_headers
 from statement_tools import get as get_statement
@@ -61,10 +61,11 @@ def get_my_asks(status="processing"):
         sys.exit(1)
     else:
         asks = res.json()
-        for (i, ask) in enumerate(asks):
-            if ask["statement_key"] not in MY_STATEMENTS:
-                asks.pop(i)
-        return asks
+        my_statements_asks = []
+        for ask in asks:
+            if ask["statement_key"] in MY_STATEMENTS:
+                my_statements_asks.append(ask)
+        return my_statements_asks
 
 
 def asks_loop():
