@@ -35,6 +35,7 @@
 #include <nil/marshalling/field_type.hpp>
 #include <nil/marshalling/endianness.hpp>
 #include <nil/crypto3/marshalling/zk/types/plonk/constraint_system.hpp>
+#include <nil/crypto3/multiprecision/cpp_int.hpp>
 
 namespace nil {
     namespace proof_generator {
@@ -57,7 +58,8 @@ namespace nil {
 
                 using TTypeBase = nil::marshalling::field_type<Endianness>;
                 auto filled_val =
-                    nil::crypto3::marshalling::types::fill_plonk_constraint_system<ConstraintSystemType, Endianness>(circuit);
+                    nil::crypto3::marshalling::types::fill_plonk_constraint_system<ConstraintSystemType, Endianness>(
+                        circuit);
 
                 std::vector<std::uint8_t> cv;
                 cv.resize(filled_val.length(), 0x00);
@@ -75,11 +77,13 @@ namespace nil {
                 constexpr std::size_t SelectorColumns = 50;
 
                 using ArithmetizationParams =
-                    nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
-                using ConstraintSystemType = nil::crypto3::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
+                    nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns,
+                                                                          ConstantColumns, SelectorColumns>;
+                using ConstraintSystemType =
+                    nil::crypto3::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
 
                 std::vector<typename BlueprintFieldType::value_type> public_input;
-                long long number;
+                nil::crypto3::multiprecision::cpp_int number;
                 std::stringstream ss;
                 ss << public_input_str;
 
@@ -89,7 +93,6 @@ namespace nil {
                 }
                 nil::blueprint::parser<BlueprintFieldType, ArithmetizationParams> parser_instance;
 
-                
                 std::string bytecode_file_name = output_file + "_tmp.ll";
                 std::ofstream out(bytecode_file_name);
                 out << bytecode;
@@ -113,7 +116,7 @@ namespace nil {
                 std::ofstream otable;
                 std::string assignment_table_file_name = output_file + ".table";
                 otable.open(assignment_table_file_name);
-                if( !otable ){
+                if (!otable) {
                     std::cout << "Something wrong with output " << assignment_table_file_name << std::endl;
                     return;
                 }
@@ -123,7 +126,7 @@ namespace nil {
                 std::ofstream ocircuit;
                 std::string circuit_file_name = output_file;
                 ocircuit.open(circuit_file_name);
-                if( !ocircuit ){
+                if (!ocircuit) {
                     std::cout << "Something wrong with output " << circuit_file_name << std::endl;
                     return;
                 }
@@ -140,8 +143,8 @@ namespace nil {
 
                 std::remove(bytecode_file_name.c_str());
             }
-        } // namespace assigner
-    } // namespace proof_generator
-} // namespace nil
+        }    // namespace assigner
+    }        // namespace proof_generator
+}    // namespace nil
 
 #endif    // PROOF_GENERATOR_ASSIGNER_PROOF_HPP
