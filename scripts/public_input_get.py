@@ -35,5 +35,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     public_input = get(args.key, args.auth)
     with open(args.output, "w") as f:
-        output = public_input.json()["input"]
+        output = public_input.json()
         json.dump(output, f, indent=4)
