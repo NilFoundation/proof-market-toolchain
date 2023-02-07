@@ -18,7 +18,12 @@
   * [Proof Requester](market/user-guides/proof-requester.md)
   * [Proof Producer](market/user-guides/proof-producer.md)
 * [Front End](market/front-end.md)
-* [API Reference](market/api-reference.md)
+* [CMD Reference](market/cmd-reference/README.md)
+  * [user](market/cmd-reference/user.md)
+  * [statement](market/cmd-reference/statement.md)
+  * [bid](market/cmd-reference/bid.md)
+  * [ask](market/cmd-reference/ask.md)
+  * [proof](market/cmd-reference/proof.md)
 * [Terminology](market/overview.md)
 
 ## Misc
