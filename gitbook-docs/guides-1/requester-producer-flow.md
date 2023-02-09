@@ -21,7 +21,7 @@ Let's start as a Proof Requester. A proof requester needs to put in a bid for a 
 We do this by getting all statements on the proof market.
 
 ```
-python3 statement_tools.py get
+python3 scripts/statement_tools.py get
 ```
 
 {% hint style="info" %}
