@@ -300,7 +300,7 @@ Ask:
 
 In both bid/ask orders we can now see the following.
 
-* `retrievestatus` updated from `processing` to `completed` : This implies the proof is submitted
+* `status` updated from `processing` to `completed` : This implies the proof is submitted
 * `proof_key` : This attribute has the `key` of the proof that the proof requester can use to retrieve the submitted proof by the proof producer.
 
 Congratulations! If you have made it this far, you have managed a full interaction between the proof producer and a proof requester.
