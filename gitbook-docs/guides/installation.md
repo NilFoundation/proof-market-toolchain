@@ -4,7 +4,7 @@
 Please ensure you have done the [environment](environment-setup.md) setup before progressing.
 {% endhint %}
 
-The proof market tool chain is a collection of python scripts which allows users to interact with the proof market. These set of scripts are required for all participants.
+The proof market tool chain is a collection of python scripts which allows users to interact with the proof market. These sets of scripts are required for all participants.
 
 Clone the repository
 
@@ -12,7 +12,7 @@ Clone the repository
 git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
 ```
 
-Based on the users role ,they need to install additional binaries/scripts to interact with the market.
+Based on the user's role ,they need to install additional binaries/scripts to interact with the market.
 
 ## Circuit Developer
 
@@ -20,7 +20,7 @@ Please follow the installation guide for :
 
 * [zkLLVM](https://docs.nil.foundation/zkllvm/guides/installation)&#x20;
   * &#x20;Used to compile your circuit and generate a binary to be hosted on proof market
-* Setup [Authentication](../market/user-guides/sign-up.md) and follow the user guide for [circuit developers](../market/user-guides/).&#x20;
+* Set up [Authentication](../market/user-guides/sign-up.md) and follow the user guide for [circuit developers](../market/user-guides/).&#x20;
 
 ## Proof Requester
 
@@ -30,7 +30,7 @@ Please follow the installation guide for :
 
 ## Proof Producer
 
-As a proof producer you need to compile the `proof-generator` binary. Currently there are two variants, a single threaded one (low performance) and a multi threaded.
+As a proof producer, you need to compile the `proof-generator` binary. Currently, there are two variants, a single-threaded one (low performance) and a multi-threaded one.
 
 ### **Build**
 

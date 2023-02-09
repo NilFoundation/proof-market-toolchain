@@ -26,6 +26,10 @@
   * [proof](market/cmd-reference/proof.md)
 * [Terminology](market/overview.md)
 
+## Guides
+
+* [Requester/Producer Flow](guides-1/requester-producer-flow.md)
+
 ## Misc
 
 * [Contributing](misc/contributing.md)
