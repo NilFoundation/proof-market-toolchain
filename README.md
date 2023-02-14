@@ -32,7 +32,7 @@ sudo apt install build-essential libssl-dev cmake clang-12 git autoconf libc-are
 ```
 
 ## Boost
-Users need to install boost either manually or from their distros repository. Please ensure you
+Users need to install boost either manually or from their distros' repository. Please ensure you
 are installing the version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
 manually.
 
@@ -135,7 +135,7 @@ Provide the necessary information listed in the output statement file
 This statement can now be pushed to the Proof market via python script
 
 ```
-python3 scripts/statement_tools.py push --file <json file with statement description> --auth <json authorization file>
+python3 scripts/statement_tools.py push --file <json file with statement description>
 ```
 
 You will be returned an object containing a *_key* filed -- unique descriptor of the statement
@@ -210,12 +210,30 @@ cd build
 ./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
 ```
 or
-```
 
+For multithreaded versions, the following flags warrant discussion as the computation of proof requires temporary space. This is always allocated to core0/shard0.
+- smp : Number of threads. This is ideally the number of CPU cores on the system. ex: If you have a 16 core CPU &  16 GB RAM & set smp to 16. Each core gets access to 1 GB of RAM. Thus core0/shard0 will have access to 1 GB of RAM.
+- shard0-mem-scale: Weighted parameter (weight) to reserve memory for shard0.This is a natural number which allows for shard0 to have more access to RAM in comparison to others. ex: If you have a 16 core CPU &  16 GB RAM & set smp to 8 and set shard0-mem-scale to 9.
+
+We first compute  ram_per_shard variable as follows:
+```
+ram_per_shard = TOTAL_RAM / (smp + shard0-mem-scale -1)
+= 16 / (8 + 8)
+= 1
+```
+This equates to:
+- `shard0` =`shard0-mem-scale` * `ram_per_shard` = 9 GB 
+- `shard1 .... shard7` = `ram_per_shard` = 1 GB  = 7 GB
+
+These two variables need to be tuned as per the architecture/circuit for which the proof is being generated.
+
+```
 cd build
-./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads>
-
+./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads> --shard0-mem-scale=<scaling factor>
 ```
+
+
+
 
 Readme for Proof Producer daemon in located [here](./proof_producer/README.md).
 
