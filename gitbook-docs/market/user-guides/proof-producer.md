@@ -64,8 +64,12 @@ ram_per_shard = TOTAL_RAM / (smp + shard0-mem-scale -1)
 
 This equates to:&#x20;
 
-* `shard0` RAM =`shard0-mem-scale` = 9 GB
+* `shard0` RAM =`shard0-mem-scale` \* `ram_per_shard` = 9 GB
 * `shard1` .... `shard7` = `ram_per_shard` = 1 GB/per core= 7 GB
+
+These two variables need to be tuned as per the architecture/circuit for which the proof is being generated.
+
+
 
 ## Proof Submission
 
