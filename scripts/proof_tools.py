@@ -28,7 +28,10 @@ def push(auth, file, bid_key=None, ask_key=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Proof for {bid_key} is pushed")
+        if bid_key:
+            logging.info(f"Proof for bid {bid_key} is pushed")
+        else:
+            logging.info(f"Proof for ask {ask_key} is pushed")
         return
 
 
