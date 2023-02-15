@@ -21,10 +21,7 @@ def signup(args):
 def register_producer(args):
     headers = get_headers(None)
     url = URL + f'_db/{DB_NAME}/{MOUNT}/producer/register'
-    body = {
-        'description': 'test producer',
-    }
-
+    body = {}
     response = requests.post(url, json=body, headers=headers)
     if response.status_code != 200:
         print(f"Error: {response.status_code} {response.text}")
