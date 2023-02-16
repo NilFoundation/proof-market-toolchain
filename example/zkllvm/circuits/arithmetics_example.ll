@@ -1,5 +1,5 @@
-; ModuleID = '/mnt/d/gits/zkllvm/examples/arithmetics.cpp'
-source_filename = "/mnt/d/gits/zkllvm/examples/arithmetics.cpp"
+; ModuleID = '/root/tmp/zkllvm/examples/arithmetics.cpp'
+source_filename = "/root/tmp/zkllvm/examples/arithmetics.cpp"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
@@ -48,40 +48,83 @@ define dso_local noundef i64 @_ZN3nil7crypto314multiprecision8backends11window_b
   br label %2
 
 2:                                                ; preds = %2, %1
-  %3 = phi i64 [ 5, %1 ], [ %7, %2 ]
+  %3 = phi i64 [ 5, %1 ], [ %8, %2 ]
   %4 = getelementptr inbounds [6 x [2 x i64]], ptr @_ZZN3nil7crypto314multiprecision8backends11window_bitsEmE5wsize, i64 0, i64 %3
-  %5 = load i64, ptr %4, align 16, !tbaa !5
-  %6 = icmp ugt i64 %5, %0
-  %7 = add i64 %3, -1
-  br i1 %6, label %2, label %8, !llvm.loop !9
+  %5 = getelementptr inbounds [2 x i64], ptr %4, i64 0, i64 0
+  %6 = load i64, ptr %5, align 16, !tbaa !5
+  %7 = icmp ugt i64 %6, %0
+  %8 = add i64 %3, -1
+  br i1 %7, label %2, label %9, !llvm.loop !9
 
-8:                                                ; preds = %2
-  %9 = getelementptr inbounds [2 x i64], ptr %4, i64 0, i64 1
-  %10 = load i64, ptr %9, align 8, !tbaa !5
-  %11 = add i64 1, %10
-  ret i64 %11
+9:                                                ; preds = %2
+  %10 = phi i64 [ %3, %2 ]
+  %11 = getelementptr inbounds [6 x [2 x i64]], ptr @_ZZN3nil7crypto314multiprecision8backends11window_bitsEmE5wsize, i64 0, i64 %10
+  %12 = getelementptr inbounds [2 x i64], ptr %11, i64 0, i64 1
+  %13 = load i64, ptr %12, align 8, !tbaa !5
+  %14 = add i64 1, %13
+  ret i64 %14
 }
 
 ; Function Attrs: mustprogress nounwind uwtable
-define dso_local field_pallasb @_Z6squareu13field_pallasb(field_pallasb %0) local_unnamed_addr #4 {
-  %2 = mul field_pallasb %0, %0
-  ret field_pallasb %2
+define dso_local noundef __zkllvm_field_pallas_base @_Z3powu26__zkllvm_field_pallas_basei(__zkllvm_field_pallas_base noundef %0, i32 noundef %1) local_unnamed_addr #4 {
+  %3 = icmp eq i32 %1, 0
+  br i1 %3, label %4, label %5
+
+4:                                                ; preds = %2
+  br label %21
+
+5:                                                ; preds = %2
+  %6 = icmp slt i32 0, %1
+  br i1 %6, label %7, label %11
+
+7:                                                ; preds = %5
+  br label %13
+
+8:                                                ; preds = %17
+  %9 = phi __zkllvm_field_pallas_base [ %15, %17 ]
+  %10 = mul __zkllvm_field_pallas_base %9, %0
+  br label %11
+
+11:                                               ; preds = %8, %5
+  %12 = phi __zkllvm_field_pallas_base [ %10, %8 ], [ f0x1, %5 ]
+  br label %20
+
+13:                                               ; preds = %7, %17
+  %14 = phi i32 [ 0, %7 ], [ %18, %17 ]
+  %15 = phi __zkllvm_field_pallas_base [ f0x1, %7 ], [ %16, %17 ]
+  %16 = mul __zkllvm_field_pallas_base %15, %0
+  br label %17
+
+17:                                               ; preds = %13
+  %18 = add nsw i32 %14, 1
+  %19 = icmp slt i32 %18, %1
+  br i1 %19, label %13, label %8, !llvm.loop !12
+
+20:                                               ; preds = %11
+  br label %21
+
+21:                                               ; preds = %20, %4
+  %22 = phi __zkllvm_field_pallas_base [ f0x1, %4 ], [ %12, %20 ]
+  ret __zkllvm_field_pallas_base %22
 }
 
 ; Function Attrs: circuit mustprogress nounwind uwtable
-define dso_local field_pallasb @_Z24field_arithmetic_exampleu13field_pallasbu13field_pallasb(field_pallasb %0, field_pallasb %1) local_unnamed_addr #5 {
-  %3 = add field_pallasb %0, %1
-  %4 = mul field_pallasb %3, %0
-  %5 = mul field_pallasb %1, %3
-  %6 = mul field_pallasb %5, %3
-  %7 = add field_pallasb %4, %6
-  %8 = mul field_pallasb %7, %7
-  %9 = mul field_pallasb %8, %7
-  %10 = sub field_pallasb %1, %0
-  %11 = sdiv field_pallasb %9, %10
-  %12 = tail call field_pallasb @_Z6squareu13field_pallasb(field_pallasb %0)
-  %13 = add field_pallasb %11, %12
-  ret field_pallasb %13
+define dso_local noundef __zkllvm_field_pallas_base @_Z24field_arithmetic_exampleu26__zkllvm_field_pallas_baseu26__zkllvm_field_pallas_base(__zkllvm_field_pallas_base noundef %0, __zkllvm_field_pallas_base noundef %1) local_unnamed_addr #5 {
+  %3 = add __zkllvm_field_pallas_base %0, %1
+  %4 = mul __zkllvm_field_pallas_base %3, %0
+  %5 = add __zkllvm_field_pallas_base %0, %1
+  %6 = mul __zkllvm_field_pallas_base %1, %5
+  %7 = add __zkllvm_field_pallas_base %0, %1
+  %8 = mul __zkllvm_field_pallas_base %6, %7
+  %9 = add __zkllvm_field_pallas_base %4, %8
+  %10 = mul __zkllvm_field_pallas_base %9, %9
+  %11 = mul __zkllvm_field_pallas_base %10, %9
+  %12 = sub __zkllvm_field_pallas_base %1, %0
+  %13 = sdiv __zkllvm_field_pallas_base %11, %12
+  %14 = tail call noundef __zkllvm_field_pallas_base @_Z3powu26__zkllvm_field_pallas_basei(__zkllvm_field_pallas_base noundef %0, i32 noundef 2)
+  %15 = add __zkllvm_field_pallas_base %13, %14
+  %16 = add __zkllvm_field_pallas_base %15, f0x12345678901234567890
+  ret __zkllvm_field_pallas_base %16
 }
 
 ; Function Attrs: uwtable
@@ -106,7 +149,7 @@ attributes #6 = { nounwind }
 !1 = !{i32 8, !"PIC Level", i32 2}
 !2 = !{i32 7, !"PIE Level", i32 2}
 !3 = !{i32 7, !"uwtable", i32 2}
-!4 = !{!"clang version 16.0.0 (git@github.com:NilFoundation/zkllvm-circifier.git 1c14c036ee135e06c9bc2584a70b5f0c6c9a6dca)"}
+!4 = !{!"clang version 16.0.0 (git@github.com:NilFoundation/zkllvm-circifier.git 1af967026adc4c18933fa4e20db3324043912242)"}
 !5 = !{!6, !6, i64 0}
 !6 = !{!"long", !7, i64 0}
 !7 = !{!"omnipotent char", !8, i64 0}
@@ -114,3 +157,4 @@ attributes #6 = { nounwind }
 !9 = distinct !{!9, !10, !11}
 !10 = !{!"llvm.loop.mustprogress"}
 !11 = !{!"llvm.loop.unroll.disable"}
+!12 = distinct !{!12, !10, !11}

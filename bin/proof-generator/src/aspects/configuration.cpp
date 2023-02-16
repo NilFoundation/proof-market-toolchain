@@ -60,23 +60,23 @@ namespace nil {
                     std::cout << cliv << std::endl;
                     return;
                 }
-                // std::vector<std::string> confs = vm["configuration-files"].as<std::vector<std::string>>();
-                // std::size_t corrupted_files = 0;
-                // for (const std::string &file : confs) {
-                //     try {
-                //         boost::program_options::store(boost::program_options::parse_config_file(file.c_str(), cfgv),
-                //                                       vm);
-                //     } catch (const boost::program_options::reading_file &e) {
-                //         std::cout << e.what() << std::endl;
-                //         corrupted_files++;
-                //     } catch (const boost::program_options::error &e) {
-                //     }
-                // }
+                 std::vector<std::string> confs = vm["configuration-files"].as<std::vector<std::string>>();
+                 std::size_t corrupted_files = 0;
+                 for (const std::string &file : confs) {
+                     try {
+                         boost::program_options::store(boost::program_options::parse_config_file(file.c_str(), cfgv),
+                                                       vm);
+                     } catch (const boost::program_options::reading_file &e) {
+                         std::cout << e.what() << std::endl;
+                         corrupted_files++;
+                     } catch (const boost::program_options::error &e) {
+                     }
+                 }
 
-                // if (corrupted_files == confs.size()) {
-                //     write_default_config(default_config_path());
-                // }
-                // write_default_config(default_config_path());
+                 if (corrupted_files == confs.size()) {
+                     write_default_config(default_config_path());
+                 }
+                 write_default_config(default_config_path());
             }
 
             //            boost::program_options::variables_map &configuration::vm() {
