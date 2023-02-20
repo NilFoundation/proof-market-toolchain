@@ -19,12 +19,10 @@
 #ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
 #define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
 
-
-
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
-#include <nil/actor//zk/snark/systems/plonk/pickles/verifier_index.hpp>
+#include <nil/actor    //zk/snark/systems/plonk/pickles/verifier_index.hpp>
 
 #include <nil/marshalling/endianness.hpp>
 #include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
@@ -48,7 +46,6 @@ namespace nil {
                 boost::json::array best_chain = public_input.at("data").at("bestChain").as_array();
                 boost::json::value proof_jv = best_chain[0].at("protocolStateProof").at("json").at("proof");
 
-                
                 boost::json::array w_comm_jv = proof_jv.at("messages").at("w_comm").as_array();
                 for (std::size_t i = 0; i < w_comm_jv.size(); i++) {
                     boost::json::array unshifted = w_comm_jv[i].as_array();
@@ -57,7 +54,7 @@ namespace nil {
                         proof.commitments.w_comm[i].unshifted.push_back(read_point<curve_type>(point));
                     }
                 }
-                
+
                 boost::json::array z_comm_jv = proof_jv.at("messages").at("z_comm").as_array();
                 for (std::size_t i = 0; i < z_comm_jv.size(); i++) {
                     boost::json::array point = z_comm_jv[i].as_array();
@@ -83,58 +80,75 @@ namespace nil {
 
                 boost::json::array delta_jv = openings_proof_jv.at("delta").as_array();
                 proof.proof.delta = read_point<curve_type>(delta_jv);
-                
-                boost::json::array sg_jv = openings_proof_jv.at("sg").as_array();
+
+                boost::json::array sg_jv = openings_proof_jv.at("challenge_polynomial_commitment").as_array();
                 proof.proof.sg = read_point<curve_type>(sg_jv);
-                
+
                 proof.proof.z1 = boost::json::value_to<scalar_field_type::value_type>(openings_proof_jv.at("z_1"));
                 proof.proof.z2 = boost::json::value_to<scalar_field_type::value_type>(openings_proof_jv.at("z_2"));
 
-                boost::json::array evals_jv = proof_jv.at("openings").at("evals").as_array();
-                for (std::size_t i = 0; i < evals_jv.size(); i++) {
-                    boost::json::array w_jv = evals_jv[i].at("w").as_array();
-                    for (std::size_t j = 0; j < w_jv.size(); j++) {
-                        boost::json::array eval_at_point_jv = w_jv[j].as_array();
+                boost::json::object evals_jv = proof_jv.at("openings").at("evals").as_object();
+
+                boost::json::array w_jv = evals_jv.at("w").as_array();
+                for (std::size_t j = 0; j < w_jv.size(); j++) {
+                    boost::json::array eval_at_point_jv_arr = w_jv[j].as_array();
+                    for (std::size_t i = 0; i < eval_at_point_jv_arr.size(); i++) {
+                        boost::json::array eval_at_point_jv = eval_at_point_jv_arr[i].as_array();
                         for (std::size_t k = 0; k < eval_at_point_jv.size(); k++) {
-                            proof.evals[i].w[j].push_back(boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
+                            proof.evals[i].w[j].push_back(
+                                boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
                         }
                     }
+                }
 
-                    boost::json::array z_jv = evals_jv[i].at("z").as_array();
+                boost::json::array z_jv_arr = evals_jv.at("z").as_array();
+                for (std::size_t i = 0; i < z_jv_arr.size(); i++) {
+                    boost::json::array z_jv = z_jv_arr[i].as_array();
                     for (std::size_t j = 0; j < z_jv.size(); j++) {
                         proof.evals[i].z.push_back(boost::json::value_to<scalar_field_type::value_type>(z_jv[j]));
                     }
-
-                    boost::json::array s_jv = evals_jv[i].at("s").as_array();
-                    for (std::size_t j = 0; j < s_jv.size(); j++) {
-                        boost::json::array eval_at_point_jv = s_jv[j].as_array();
+                }
+                boost::json::array s_jv = evals_jv.at("s").as_array();
+                for (std::size_t j = 0; j < s_jv.size(); j++) {
+                    boost::json::array eval_at_point_jv_arr = s_jv[j].as_array();
+                    for (std::size_t i = 0; i < eval_at_point_jv_arr.size(); i++) {
+                        boost::json::array eval_at_point_jv = eval_at_point_jv_arr[i].as_array();
                         for (std::size_t k = 0; k < eval_at_point_jv.size(); k++) {
-                            proof.evals[i].s[j].push_back(boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
+                            proof.evals[i].s[j].push_back(
+                                boost::json::value_to<scalar_field_type::value_type>(eval_at_point_jv[k]));
                         }
                     }
+                }
 
-                    boost::json::array generic_selector_jv = evals_jv[i].at("generic_selector").as_array();
+                boost::json::array generic_selector_jv_arr = evals_jv.at("generic_selector").as_array();
+                for (std::size_t i = 0; i < z_jv_arr.size(); i++) {
+                    boost::json::array generic_selector_jv = generic_selector_jv_arr[i].as_array();
                     for (std::size_t j = 0; j < generic_selector_jv.size(); j++) {
-                        proof.evals[i].generic_selector.push_back(boost::json::value_to<scalar_field_type::value_type>(generic_selector_jv[j]));
+                        proof.evals[i].generic_selector.push_back(
+                            boost::json::value_to<scalar_field_type::value_type>(generic_selector_jv[j]));
                     }
+                }
 
-                    boost::json::array poseidon_selector_jv = evals_jv[i].at("poseidon_selector").as_array();
+                boost::json::array poseidon_selector_jv_arr = evals_jv.at("poseidon_selector").as_array();
+                for (std::size_t i = 0; i < z_jv_arr.size(); i++) {
+                    boost::json::array poseidon_selector_jv = poseidon_selector_jv_arr[i].as_array();
                     for (std::size_t j = 0; j < poseidon_selector_jv.size(); j++) {
-                        proof.evals[i].poseidon_selector.push_back(boost::json::value_to<scalar_field_type::value_type>(poseidon_selector_jv[j]));
+                        proof.evals[i].poseidon_selector.push_back(
+                            boost::json::value_to<scalar_field_type::value_type>(poseidon_selector_jv[j]));
                     }
                 }
 
                 std::size_t i = 0;
+                proof.ft_eval1 =
+                    boost::json::value_to<scalar_field_type::value_type>(proof_jv.at("openings").at("ft_eval1"));
 
-                proof.ft_eval1 = boost::json::value_to<scalar_field_type::value_type>(proof_jv.at("openings").at("ft_eval1"));
-                
                 // TODO: public input
                 // TODO: prev challenges
                 return proof;
             }
 
-        } // namespace mina_state
-    } // namespace proof_generator
-}   // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator_mt
+}    // namespace nil
 
-#endif // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
+#endif    // PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_DESERIALIZATION_MINA_PROOF_HPP
