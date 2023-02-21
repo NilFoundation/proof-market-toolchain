@@ -22,7 +22,7 @@
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
-#include <nil/actor    //zk/snark/systems/plonk/pickles/verifier_index.hpp>
+#include <nil/actor/zk/snark/systems/plonk/pickles/verifier_index.hpp>
 
 #include <nil/marshalling/endianness.hpp>
 #include <nil/crypto3/marshalling/zk/types/placeholder/proof.hpp>
