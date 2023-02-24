@@ -12,4 +12,4 @@ toolchain-build:
 	docker run -it --mount type=bind,src="$(PWD)",target=/proof-market-toolchain proof-market-toolchain-docker  sh ./build.sh
 
 docker-run:
-	docker run -it --mount type=bind,src="$(PWD)",target=/proof-market-toolchain proof-market-toolchain-docker  sh ./build.sh && bash
+	docker run -it --mount type=bind,src="$(PWD)",target=/proof-market-toolchain proof-market-toolchain-docker  bash
