@@ -78,6 +78,11 @@ cmake --build . -t proof-generator
 cmake --build . -t proof-generator-mt
 ```
 
+Building with Docker
+```
+docker build -t proof-market-toolchain-docker .  
+docker run -it --mount type=bind,src="$(PWD)",target=/proof-market-toolchain proof-market-toolchain-docker  sh ./build.sh
+```
 # Proof Market Beta Access
 
 Please navigate [here](https://docs.nil.foundation/proof-market/market/front-end#new-user-signup) to see a guide on how to get access for proof market.
