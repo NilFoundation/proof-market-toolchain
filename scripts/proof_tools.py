@@ -50,7 +50,7 @@ def get(auth, bid_key=None, proof_key=None, file=None):
         res_json = res.json()
         if file:
             with open(file, "w") as f:
-                f.write(res_json[0].pop("proof"))
+                f.write(res_json.pop("proof"))
         else:
             logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
 
