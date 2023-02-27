@@ -23,7 +23,6 @@ def update_auth(auth):
     if response.status_code != 200:
         print(f"Update auth error: {response.status_code} {response.text}")
     else:
-        print(response.text)
         with open(auth, "w") as f:
             headers = {"Authorization": f'Bearer {response.json()["jwt"]}'}
             json.dump(headers, f)
