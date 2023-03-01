@@ -13,6 +13,9 @@ concurrency:
     format('{0}/{1}', github.workflow, github.ref) }}
   cancel-in-progress: true
 
+env:
+  IMAGE_NAME: ghcr.io/nilfoundation/proof-market-toolchain
+
 jobs:
   hadolint:
     runs-on: [ ubuntu-22.04 ]
@@ -23,9 +26,16 @@ jobs:
         with:
           recursive: true
 
-  build:
+  build-image:
     runs-on: [ ubuntu-22.04 ]
+
     steps:
+      - name: Log in to GitHub registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: Pull ${{ env.IMAGE_NAME }}:latest as build cache
+        run: docker pull ${{ env.IMAGE_NAME }}:latest || true
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -33,11 +43,15 @@ jobs:
       - name: Build a Docker image
         run: |
           set -xe
-          docker build -t proof-market-toolchain .
+          docker build -t ${{ env.IMAGE_NAME }}:latest .
+
+      - name: Push ${{ env.IMAGE_NAME }}:latest to GitHub registry
+        if: github.ref == 'refs/heads/master'
+        run: docker push ${{ env.IMAGE_NAME }}:latest
 
       - name: Build proof market in a container
         run: |
           set -xe
           docker run -t \
             -v $(pwd):/proof-market-toolchain \
-            proof-market-toolchain sh ./build.sh
+            ghcr.io/nilfoundation/proof-market-toolchain:latest sh ./build.sh

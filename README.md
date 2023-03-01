@@ -90,11 +90,15 @@ cmake --build . -t proof-generator-mt
 
 ## Building with Docker
 
-First, build the toolchain image with all required dependencies.
+First, get the toolchain image with all required dependencies.
+You can pull it from the GitHub registry or build your own image.
 It can be reused multiple times for building and running proof market
 binaries.
 
 ```
+# pull from registry
+docker pull ghcr.io/nilfoundation/proof-market-toolchain:latest
+# or build from scratch
 docker build -t proof-market-toolchain .
 ```
 
@@ -104,7 +108,7 @@ Next, run a container and build the proof market toolchain in it.
 $ docker run -it \
   -v $(pwd):/proof-market-toolchain \
   --name proof-market \
-  proof-market-toolchain
+  ghcr.io/nilfoundation/proof-market-toolchain
 
 root@...:/proof-market-toolchain# ./build.sh
 ```
