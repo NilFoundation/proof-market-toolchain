@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
 
+env:
+  EXAMPLE: 1
+
 concurrency:
   group: ${{
     ( github.ref == 'refs/heads/master' &&
@@ -16,10 +19,15 @@ concurrency:
 jobs:
   hadolint:
     runs-on: [ ubuntu-22.04 ]
+    env:
+      EXAMPLE: 2
+
     steps:
       - uses: actions/checkout@v3
 
       - uses: hadolint/hadolint-action@v3.1.0
+        env:
+          EXAMPLE: 4
         with:
           recursive: true
 
