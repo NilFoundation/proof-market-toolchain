@@ -44,8 +44,8 @@ namespace nil {
         namespace mina_state {
 
             void concatenate_proofs(std::string output_path) {
-                std::string output_path_scalar = output_path + "scalar_proof.data";
-                std::string output_path_base = output_path + "base_proof.data";
+                std::string output_path_scalar = output_path + "_scalar";
+                std::string output_path_base = output_path + "_base";
                 std::string output_path_full = output_path;
                 std::ifstream file_scalar(output_path_scalar, std::ios::binary);
                 std::ifstream file_base(output_path_base, std::ios::binary);
@@ -85,8 +85,8 @@ namespace nil {
                 nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof =
                     make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 15;
-                constexpr const std::size_t eval_rounds_base = 10;
+                constexpr const std::size_t eval_rounds_scalar = 1;
+                constexpr const std::size_t eval_rounds_base = 1;
                 constexpr const std::size_t fri_max_step = 1;
 
                 generate_proof_heterogenous<pallas_verifier_index_type, eval_rounds_scalar, eval_rounds_base>(

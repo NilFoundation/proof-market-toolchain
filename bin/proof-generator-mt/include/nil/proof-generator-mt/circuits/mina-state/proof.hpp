@@ -44,8 +44,8 @@ namespace nil {
         namespace mina_state {
 
             void concatenate_proofs(std::string output_path) {
-                std::string output_path_scalar = output_path + "scalar_proof.data";
-                std::string output_path_base = output_path + "base_proof.data";
+                std::string output_path_scalar = output_path + "_scalar";
+                std::string output_path_base = output_path + "_base";
                 std::string output_path_full = output_path;
                 std::ifstream file_scalar(output_path_scalar, std::ios::binary);
                 std::ifstream file_base(output_path_base, std::ios::binary);
