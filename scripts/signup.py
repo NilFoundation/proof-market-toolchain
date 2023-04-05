@@ -1,7 +1,7 @@
 import argparse
 from constants import URL, DB_NAME, MOUNT
 import requests
-from auth_tools import get_headers, create_secret_file
+from auth_tools import get_headers, create_credentials_file
 
 def signup(user, password, email):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/user/signup'
@@ -37,8 +37,8 @@ def register_producer(description, url, logo):
 def signup_parser(args):
     response = signup(args.user, args.password, args.email)
     if response.status_code == 200:
-        create_secret_file("secret", args.password)
-        create_secret_file("user", args.user)
+        create_credentials_file("secret", args.password)
+        create_credentials_file("user", args.user)
 
 def register_producer_parser(args):
     register_producer(args.description, args.url, args.logo)

@@ -5,20 +5,20 @@ from constants import URL
 import requests
 
 
-def create_secret_file(file_name: str, value: str):
+def create_credentials_file(file_name: str, value: str):
     with open(os.path.dirname(os.path.abspath(__file__)) + f"/.{file_name}", "w") as f:
         f.write(value)
 
-def read_secret_file(file_name: str) -> str:
-    secret_file_path = os.path.dirname(os.path.abspath(__file__)) + f"/.{file_name}"
+def read_credentials_file(file_name: str) -> str:
+    credentials_file_path = os.path.dirname(os.path.abspath(__file__)) + f"/.{file_name}"
     
-    if not os.path.exists(secret_file_path):
+    if not os.path.exists(credentials_file_path):
         return None
     
-    return open(secret_file_path, "r").read().strip("\n")
+    return open(credentials_file_path, "r").read().strip("\n")
 
-secret = read_secret_file("secret")
-user = read_secret_file("user")
+secret = read_credentials_file("secret")
+user = read_credentials_file("user")
 
 def update_auth(auth):
 
