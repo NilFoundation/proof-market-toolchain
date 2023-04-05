@@ -1,13 +1,13 @@
 import argparse
 from constants import URL, DB_NAME, MOUNT
 import requests
-from auth_tools import get_headers
+from auth_tools import get_headers, create_credentials_file
 
-def signup(user, passwd, email):
+def signup(user, password, email):
     url = URL + f'_db/{DB_NAME}/{MOUNT}/user/signup'
     body = {
             "user": user,
-            "passwd": passwd,
+            "passwd": password,
             "email": email,
             }
 
@@ -16,6 +16,7 @@ def signup(user, passwd, email):
         print(f"Error: {response.status_code} {response.text}")
     else:
         print(response.text)
+    return response
 
 def register_producer(description, url, logo):
     headers = get_headers(None)
@@ -34,7 +35,10 @@ def register_producer(description, url, logo):
         print(response.text)
 
 def signup_parser(args):
-    signup(args.user, args.passwd, args.email)
+    response = signup(args.user, args.password, args.email)
+    if response.status_code == 200:
+        create_credentials_file("secret", args.password)
+        create_credentials_file("user", args.user)
 
 def register_producer_parser(args):
     register_producer(args.description, args.url, args.logo)
@@ -49,7 +53,7 @@ if __name__ == '__main__':
 
     parser_user.add_argument('-u', '--user', action='store', required=True,
                         help='user name')
-    parser_user.add_argument('-p', '--passwd', action='store', required=True,
+    parser_user.add_argument('-p', '--password', action='store', required=True,
                         help='password')
     parser_user.add_argument('-e', '--email', action='store', required=True,
                         help='email')
