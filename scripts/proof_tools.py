@@ -43,13 +43,17 @@ def get(auth, bid_key=None, ask_key=None, proof_key=None, file=None, verbose=Fal
     elif ask_key:
         url += f'?q=[{{"key" : "ask_key", "value" : "{ask_key}"}}]&full=true'
     elif proof_key:
-        url += f'?q=[{{"key" : "_key", "value" : "{proof_key}"}}]&full=true'
+        # TODO: fix bug with getting old proofs
+        # url += f'?q=[{{"key" : "_key", "value" : "{proof_key}"}}]&full=true'
+        url += f"{proof_key}?full=true"
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.reason}")
         exit(1)
     else:
         res_json = res.json()
+        if type(res_json) == dict:
+            res_json = [res_json]
         if len(res_json) == 0:
             logging.info("No proof found")
             exit(0)
