@@ -29,8 +29,7 @@ def push(auth, key, file, cost, verbose=False):
     else:
         log_data = res.json()
         if not verbose:
-            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
-            log_data = {k: v for k, v in log_data.items() if k in left_keys}
+            log_data.pop("input", None)
         logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
@@ -51,8 +50,7 @@ def get(auth, key=None, bid_status=None, verbose=False):
     else:
         log_data = res.json()
         if not verbose and key:
-            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
-            log_data = {k: v for k, v in log_data.items() if k in left_keys}
+            log_data.pop("input", None)
         logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
