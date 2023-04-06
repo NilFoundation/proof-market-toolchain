@@ -13,7 +13,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 
-def push(auth, file, bid_key=None, ask_key=None):
+def push(auth, file, bid_key=None, ask_key=None, verbose=False):
     proof = open(file, "r").read()
     data = {"proof": proof}
     if bid_key:
@@ -35,39 +35,56 @@ def push(auth, file, bid_key=None, ask_key=None):
         return
 
 
-def get(auth, bid_key=None, proof_key=None, file=None):
+def get(auth, bid_key=None, ask_key=None, proof_key=None, file=None, verbose=False):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/proof/"
     if bid_key:
         url += f'?q=[{{"key" : "bid_key", "value" : "{bid_key}"}}]&full=true'
+    elif ask_key:
+        url += f'?q=[{{"key" : "ask_key", "value" : "{ask_key}"}}]&full=true'
     elif proof_key:
-        url += proof_key + "?full=true"
+        url += f'?q=[{{"key" : "_key", "value" : "{proof_key}"}}]&full=true'
     res = requests.get(url=url, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.reason}")
         exit(1)
     else:
         res_json = res.json()
-        if file and "proof" in res_json:
-            with open(file, "w") as f:
-                f.write(res_json.pop("proof"))
-                logging.info(f"Proof is saved to {file}")
-        else:
-            logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
+        if len(res_json) == 0:
+            logging.info("No proof found")
+            exit(0)
+        if file and len(res_json) > 1:
+            logging.error("Error: multiple proofs found. Please specify proof key")
+            exit(1)
+        if len(res_json) > 1:
+            logging.info(f"Proofs:\t\t {json.dumps(res_json, indent=4)}")
+            exit(0)
+        if len(res_json) == 1:
+            proof_obj = res_json[0]
+            if file and "proof" in proof_obj:
+                with open(file, "w") as f:
+                    f.write(proof_obj.pop("proof"))
+                    logging.info(f"Proof is saved to {file}")
+            if not verbose:
+                proof_obj.pop("proof", None)
+            logging.info(f"Proof:\t\t {json.dumps(proof_obj, indent=4)}")
 
 
 def push_parser(args):
-    push(args.auth, args.file, args.bid_key, args.ask_key)
+    push(args.auth, args.file, args.bid_key, args.ask_key, args.verbose)
 
 
 def get_parser(args):
-    get(args.auth, args.bid_key, args.proof_key, args.file)
+    get(args.auth, args.bid_key, args.ask_key, args.proof_key, args.file, args.verbose)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser()
     parser.add_argument("--auth", type=str, help="auth")
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="increase output verbosity"
+    )
     subparsers = parser.add_subparsers(help="sub-command help")
 
     parser_push = subparsers.add_parser("push", help="push proof")
@@ -83,5 +100,6 @@ if __name__ == "__main__":
     parser_get.add_argument("-p", "--proof_key", type=str, help="key of the proof")
     parser_get.add_argument("-f", "--file", type=str, help="file to write proof")
     parser_get.add_argument("-b", "--bid_key", type=str, help="bid_key")
+    parser_get.add_argument("-a", "--ask_key", type=str, help="ask_key")
     args = parser.parse_args()
     args.func(args=args)
