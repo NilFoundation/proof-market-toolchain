@@ -20,7 +20,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 proof_tools.py push --bid_key=458426 --file=proof.bin
@@ -48,7 +48,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 proof_tools.py get -f tmp_proof.bin -b 458426 

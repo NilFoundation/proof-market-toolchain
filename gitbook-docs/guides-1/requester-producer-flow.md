@@ -1,6 +1,6 @@
 # Requester/Producer Flow
 
-In this guide, we will perform an end-to-end flow of interaction on the proof market between a proof requester and a proof producer for the `arithmetic` circuit. We will use the same user login, but swap the _personas_ as we progress.
+In this guide, we will perform an end-to-end flow of interaction on the proof market between a proof requester and a proof producer for the `arithmetic` circuit. We will use the same user login but swap the _personas_ as we progress.
 
 We do not cover the circuit/statement publishing flow.
 
@@ -25,7 +25,7 @@ python3 scripts/statement_tools.py get
 ```
 
 {% hint style="info" %}
-Please note all outputs are reduced for brevity and only relevant attributes are shown here
+Please note all outputs are reduced for brevity, and only relevant attributes are shown here.
 {% endhint %}
 
 ```
@@ -50,7 +50,7 @@ Statements:
 The key of the arithmetic circuit is `32326`
 
 {% hint style="info" %}
-Please note the id might be different when you execute this flow and you should substitute it as per your output.
+Please note the id might be different when you execute this flow, and you should substitute it as per your output.
 {% endhint %}
 
 ## Send Bid
@@ -83,12 +83,12 @@ Output:
 
 The important attributes in response are:
 
-* _\_key_ : Identifier of the order on the market. This identifier will be used to retrieve the order status and the proof once it is fulfilled.
+* _\_key_: Identifier of the order on the market. This identifier will be used to retrieve the order status and the proof once it is fulfilled.
 * _status_: Status of the order. All orders start with the “_created_” state. It updates to the “_processing_” state when the order is matched & to “_completed_” when the proof is submitted. If the circuit/key combination already has the proof, the status will directly go to the _“completed”_ state.
 
 The key of the bid order here is `16153352.`
 
-This is now visible in the order book and any Proof Producers can offer to pick this job.
+This is now visible in the order book, and any Proof Producers can offer to pick this job.
 
 ### Check Bid Status
 
@@ -142,7 +142,7 @@ Output:
 
 The important attributes in response are:
 
-* _\_key_ : Identifier of the order on the market. This identifier will be used to retrieve order status and the proof once it is fulfilled.
+* _\_key_: Identifier of the order on the market. This identifier will be used to retrieve the order status and the proof once it is fulfilled.
 * _status_: Status of the order. All orders start with the “_created_” state. It updates to the “_processing_” state when the order is matched & to “_completed_” when the proof is submitted. If the circuit/key combination already has the proof, the status will directly go to the _“completed”_ state.
 
 ### Check Ask Status
@@ -171,10 +171,10 @@ Ask:
 
 The matching engine of the proof market will try to match orders based on price (and generation time if provided).
 
-Above we put the bid at 2 Tokens & ask at 2 Tokens, hence these orders should be matched. We need to poll our orders to see if they have been matched. i.e you need to retrieve bid and ask for orders and check the `status` field.&#x20;
+Above we put the bid at 2 Tokens & ask at 2 Tokens. Hence these orders should be matched. We need to poll our orders to see if they have been matched. i.e. you need to retrieve the bid and ask for orders and check the `status` field.&#x20;
 
 {% hint style="info" %}
-Your orders could get matched to different id's and not the ones you posted as it's decided by the matching engine on a number of parameters. For the time being, we assume the match was for the orders we posted.
+Your orders could get matched to different IDs and not the ones you posted, as it's decided by the matching engine on a number of parameters. For the time being, we assume the match was for the orders we posted.
 {% endhint %}
 
 ### Check Bid Status
@@ -223,7 +223,7 @@ We see that `status` has  changed to `processing` (the order has been matched). 
 
 ## Generate Proof
 
-Once the orders have matched, as a proof producer you should now begin the process of creating the proof for the circuit.
+Once the orders have matched, as a proof producer, you should now begin the process of creating the proof for the circuit.
 
 ```
 ./build/bin/proof-generator-mt/proof-generator-mt --proof_out=arithmetic_proof.bin --circuit_input=example/statements/arithmetic_example_statement.json --public_input=example/input/arithmetic_example/input.json --smp=2
@@ -243,7 +243,7 @@ Inner verification passed
 0
 ```
 
-You should now have a `arithmetic_proof.bin` file in your directory assuming no errors were encountered.&#x20;
+You should now have a `arithmetic_proof.bin` file in your directory, assuming no errors were encountered.&#x20;
 
 ## Publish Proof
 
@@ -298,7 +298,7 @@ Ask:
 }
 ```
 
-In both bid/ask orders we can now see the following.
+In both bid/ask orders, we can now see the following.
 
 * `status` updated from `processing` to `completed` : This implies the proof is submitted
 * `proof_key` : This attribute has the `key` of the proof that the proof requester can use to retrieve the submitted proof by the proof producer.

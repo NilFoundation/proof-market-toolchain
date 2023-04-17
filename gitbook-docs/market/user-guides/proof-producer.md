@@ -1,7 +1,7 @@
 # Proof Producer
 
 {% hint style="info" %}
-Ensure you have done [Authentication](sign-up.md) setup before progressing
+Ensure you have done the [Authentication](sign-up.md) setup before progressing
 {% endhint %}
 
 ## Submit Ask order
@@ -62,18 +62,18 @@ ram_per_shard = TOTAL_RAM / (smp + shard0-mem-scale -1)
               = 1
 ```
 
-This equates to:&#x20;
+This equates to the following:&#x20;
 
 * `shard0` RAM =`shard0-mem-scale` \* `ram_per_shard` = 9 GB
 * `shard1` .... `shard7` = `ram_per_shard` = 1 GB/per core= 7 GB
 
-These two variables need to be tuned as per the architecture/circuit for which the proof is being generated.
+These two variables need to be tuned per the architecture/circuit for which the proof is generated.
 
 
 
 ## Proof Submission
 
-The proof generator can now submit the proof to the marketplace, where, they will get the reward if verified.
+The proof generator can now submit the proof to the marketplace, where they will get the reward if verified.
 
 ```
 python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> 

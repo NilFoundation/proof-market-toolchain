@@ -4,7 +4,7 @@
 Please ensure you have done the [environment](environment-setup.md) setup before progressing.
 {% endhint %}
 
-The proof market tool chain is a collection of python scripts which allows users to interact with the proof market. These sets of scripts are required for all participants.
+The proof market toolchain is a collection of Python scripts which allows users to interact with the proof market. These sets of scripts are required for all participants.
 
 Clone the repository
 
@@ -12,7 +12,7 @@ Clone the repository
 git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
 ```
 
-Based on the user's role ,they need to install additional binaries/scripts to interact with the market.
+Based on the user's role , they need to install additional binaries/scripts to interact with the market.
 
 ## Circuit Developer
 

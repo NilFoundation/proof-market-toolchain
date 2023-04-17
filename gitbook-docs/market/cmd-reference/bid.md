@@ -18,7 +18,7 @@ options:
                         required proof time generation (in mins)
 ```
 
-ex
+Ex:
 
 ```
 python3 bid_tools.py push --cost=5 --file=public_inputs.json --key=32292
@@ -87,7 +87,7 @@ Output
 
 ## Retrieve Public inputs
 
-Public inputs for a bid order can be retrieved and used by proof generators.&#x20;
+Proof generators can retrieve and use public inputs for a bid order.&#x20;
 
 ```
 python3 public_input_get.py --h

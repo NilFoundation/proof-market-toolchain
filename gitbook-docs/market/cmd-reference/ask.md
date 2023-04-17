@@ -37,7 +37,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 ask_tools.py push --cost=70 --key=969894
@@ -73,7 +73,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 ask_tools.py get --key=15970719

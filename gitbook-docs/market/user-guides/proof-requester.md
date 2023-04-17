@@ -1,7 +1,7 @@
 # Proof Requester
 
 {% hint style="info" %}
-Ensure you have done [Authentication](sign-up.md) setup before progressing
+Ensure you have done the [Authentication](sign-up.md) setup before progressing
 {% endhint %}
 
 ## Submit Bid Order
@@ -22,7 +22,7 @@ python3 scripts/bid_tools.py get --key <key of the bid>
 
 ## Get Proof
 
-Now the proof requester is able to get their proof either by bid key or proof key.
+Now the proof requester can get their proof either by bid key or proof key.
 
 ```
 python3 scripts/proof_tools.py get --bid_key <key of the bid> 

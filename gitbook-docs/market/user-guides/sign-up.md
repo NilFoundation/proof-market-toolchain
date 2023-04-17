@@ -1,29 +1,24 @@
 # Sign up
 
-All access to market requires authentication. Please ensure you have a valid username/password. If you have not registered , please look at instructions on how to [here](../front-end.md#new-user-signup) via front end .
+Access to the market requires authentication. Please ensure you have a valid username/password. If you have not registered, please look at the instructions on how to do so [here](../front-end.md#new-user-signup) via the front end.
 
-Or , you can use the below command line in the `proof-market-toolchain` repository.
+Or, you can use the below command line in the `proof-market-toolchain` repository.
 
+## User
 
-
-```
-python3 signup.py -u <username> -p <password> -e <e-mail>
-```
-
-
-
-Create a _.user_ and a _.secret_ file and add your username and password to it,&#x20;
-
-You should do this inside the _scripts_ directory in the proof market tool-chain repository.
-
-`.user` file should consist of your username (without newline)
+Users can submit/retrieve orders on the proof market. You cannot generate proofs if you sign up as an ordinary user.
 
 ```
-username
+python3 scripts/signup.py user -u <username> -p <password> -e <e-mail>
 ```
 
-`.secret` file should consist of your password(without newline)
+## Proof Producer
+
+Proof Producers can submit/retrieve orders on the proof market and have the additional ability to submit/generate proofs.&#x20;
 
 ```
-password
+python3 scripts/signup.py producer -u <username> -p <password> -e <e-mail>
 ```
+
+This creates a _.user_ and a _.secret_ file in `scripts/`  directory with your credentials if successful.
+

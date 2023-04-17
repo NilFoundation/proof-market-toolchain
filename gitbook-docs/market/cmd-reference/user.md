@@ -43,7 +43,7 @@ Output:
 {"user":"helloworld","active":true,"extra":{},"error":false,"code":201}
 ```
 
-### **Error#1 : Invalid username format**
+### **Error#1: Invalid username format**
 
 ```
 Error: 400 {"code":409,"error":true,"errorMessage":"Inavlid format for username"}

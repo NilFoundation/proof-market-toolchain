@@ -29,6 +29,11 @@
 ## Guides
 
 * [Requester/Producer Flow](guides-1/requester-producer-flow.md)
+* [Mina Proof pipeline - Example](guides-1/mina-proof-pipeline-example/README.md)
+  * [1. Setup](guides-1/mina-proof-pipeline-example/1.-setup.md)
+  * [2. Deploy zkApp](guides-1/mina-proof-pipeline-example/2.-deploy-zkapp.md)
+  * [3. Proof Request](guides-1/mina-proof-pipeline-example/3.-proof-request.md)
+  * [4. Validate Proof](guides-1/mina-proof-pipeline-example/4.-validate-proof.md)
 
 ## Misc
 
