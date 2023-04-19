@@ -40,14 +40,14 @@ The marketplace consists of the following entities.
 * **Buy Order**: A buy order is posted by a proof requester. Each buy order comprises of following parameters:
   * **Circuit**: The instruments for which this order is placed. ex: MINA state-proof circuit or Solana state-proof circuit.
   * **Cost**: Amount the user is willing to pay for the proof. This is a number represented in USD.
-  * **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.
+  * **Order Time Out**: Once the order enters the marketplace, this defines how long it should stay in the order book. If it times out before being matched, it is purged. This is a number expressed in minutes.
   *   **Generation Time**:  Once the order is matched, this specifies the maximum time the proof generator has to publish the proof. This is an optional parameter. This is a number expressed in minutes.&#x20;
 
 
 * **Sell Order**: A sell order is posted by a proof Generator. Each sell order comprises of following parameters.
   * **Circuit**: The instruments for which a generator is willing to generate a proof.
   * **Cost:** Amount the proof generator is willing to accept to create a proof.
-  * **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.
+  * **Order Time Out**: Once the order enters the marketplace, this defines how long it should stay in the order book. If it times out before being matched, it is purged. This is a number expressed in minutes.
   * **Generation Time:** The upper bound by which the proof will be generated once matched.
 
 ## Order Matching

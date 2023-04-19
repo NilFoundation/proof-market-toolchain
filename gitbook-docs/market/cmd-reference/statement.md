@@ -40,7 +40,7 @@ python3 prepare_statement.py -c arithmetics_example.ll -n arithmetic -t placehol
 
 ### Publish Statement
 
-Statements/Circuits can be published to the proof market once modified into the required format. See [prepare Statement above](statement.md#prepare-statement).
+Statements/Circuits can be published to the proof market once modified into the required format. See [prepare statement above](statement.md#prepare-statement).
 
 #### Usage
 

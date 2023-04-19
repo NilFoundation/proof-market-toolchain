@@ -4,7 +4,7 @@ description: Environment setup for proof market cli
 
 # Environment Setup
 
-In this guide we setup packages/libraries we require in order to interact with the proof market using command line utilities.
+In this guide, we set up the packages/libraries we require in order to interact with the proof market using command-line utilities.
 
 ## Dependencies
 
@@ -16,10 +16,10 @@ sudo apt install build-essential libssl-dev cmake clang-12 git autoconf libc-are
 
 ### Boost
 
-Users need to install boost either manually or from their distros repository. Please ensure you are installing the version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1\_76\_0/more/getting\_started/unix-variants.html) manually
+Users need to install boost either manually or from their distros repository. Please ensure you are installing version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1\_76\_0/more/getting\_started/unix-variants.html) manually
 
 {% hint style="danger" %}
-We are aware of a compilation issues with boost and clang. Please ensure you have&#x20;
+We are aware of compilation issues with boost and clang. Please ensure you have&#x20;
 
 following versions:
 
@@ -27,7 +27,7 @@ following versions:
 * clang == 12
 {% endhint %}
 
-We have tested for the following set of versions of the libraries.
+We have tested the following set of versions of the libraries.
 
 ```
 clang-12

@@ -59,7 +59,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 bid_tools.py get --key=15077121
@@ -102,7 +102,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 public_input_get.py --key=15077121 -o=tmp_input.json

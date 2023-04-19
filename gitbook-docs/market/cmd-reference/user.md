@@ -29,7 +29,7 @@ options:
 
 ```
 
-ex:
+Ex:
 
 ```
 python3 signup.py -u helloworld -p password123 -e hello@test.com

@@ -8,11 +8,11 @@ description: Proof Market front end guide
 Please note this product is in beta and expected to change.
 {% endhint %}
 
-#### Proof Market front end can be accessed at **:** [**proof.market**](https://proof.market)
+#### Proof Market front end can be accessed at [**proof.market**](https://proof.market)
 
 ## New user signup
 
-All users who wish to interact with the proof market need to create an account.
+All users who wish to interact with the proof market must create an account.
 
 {% hint style="info" %}
 If you do not have the credentials, users can still view the exchange, but they will be unable to post orders to buy/sell proofs.
@@ -79,7 +79,7 @@ The circuit details component shows more information about the circuit, Aggregat
 
 This comprises two views.
 
-* Proof Cost: The circuit Price dashboard shows a historical v  ew of the price settlement for this circuit.
+* Proof Cost: The circuit Price dashboard shows a historical view of the price settlement for this circuit.
 
 
 
@@ -103,7 +103,7 @@ You can toggle to see your own orders in the book and group them.
 
 Create Orders  section can be used to place the following orders
 
-1. **Buy Order**: A buy order is posted by a proof requester. Each buy order comprise   of the following parameters:
+1. **Buy Order**: A buy order is posted by a proof requester. Each buy order comprises of the following parameters:
    1. **Cost**: Amount the user is willing to pay for the proof. This is a number represented in USD.
    2. **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.
    3. **Generation Time**:  Once the order is matched, this specifies the maximum time the proof generator has to publish the proof. This is an optional parameter. This is a number expressed in minutes.&#x20;
@@ -113,7 +113,7 @@ Create Orders  section can be used to place the following orders
 
 
 
-2\. **Sell Order**: A sell order is posted by a proof Generator. Each sell order comprises the following parameters
+2\. **Sell Order**: A proof Generator posts a sell order. Each sell order comprises the following parameters
 
 * **Cost:** Amount the proof generator is willing to accept to create a proof.
 * **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.

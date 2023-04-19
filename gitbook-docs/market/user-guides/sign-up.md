@@ -20,5 +20,5 @@ Proof Producers can submit/retrieve orders on the proof market and have the addi
 python3 scripts/signup.py producer -u <username> -p <password> -e <e-mail>
 ```
 
-This creates a _.user_ and a _.secret_ file in `scripts/`  directory with your credentials if successful.
+If successful, this creates a _.user_ and a _.secret_ file in `scripts/`  the directory with your credentials.
 

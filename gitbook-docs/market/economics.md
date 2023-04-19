@@ -54,7 +54,7 @@ Here are the basic rules of order matching for bid with desired time _t\_b_ and 
 When creating a new bid, there may be situations when there is already an equivalent bid in the database. Two bids are considered equivalent if they match in the **statement** and **public\_input** fields. Therefore, when adding a new bid, the application first tries to find an equivalent bid in the system. If such a bid is found and there is already proof for it, the following happens:
 
 * the new bid immediately goes into the **completed** state;
-* the proof requester pays a commission to the proof-market;
+* the proof requester pays a commission to the proof market;
 * the proof requester pays a commission to the proof producer who generated the proof for the existing bid;
 * the proof requester pays a commission to the owner of the existing bid;
 * unspent tokens are returned to the proof requester.
@@ -69,7 +69,7 @@ There is no process of registration for proof buyers. Any =nil; Cluster account 
 
 #### Proof Producer
 
-Account has to register as a Proof Producer to be able to set asks to the marketplace. The process includes locking funds (_deposit_). The number of locked funds reflects the number of orders that can be processed by the proof producer at the moment.
+Account has to register as a Proof Producer to be able to set asks to the marketplace. The process includes locking funds (_deposit_). The number of locked funds reflects the number of orders that the proof producer can process at the moment.
 
 Let _X_ is the number of locked funds by the proof producer. Then they can process bids on the sum of _X/pf_ at once. This restriction is related to the penalties policy described in the next sections.
 
@@ -86,17 +86,17 @@ _c_% of the bid cost goes as the commission but not less than _mc_ tokens. It is
 
 **From the proof requester's perspective:**
 
-Each time a new bid is added, an amount equal to the bid cost is locked on the account. If the bid is successfully closed, the locked amount is debited from the account. If the bid is not closed within the available time, the customer has the opportunity to withdraw the bid. If the bid is successfully withdrawn, the locked amount will be unlocked.
+Each time a new bid is added, an amount equal to the bid cost is locked on the account. The locked amount is debited from the account if the bid is successfully closed. If the bid is not closed within the available time, the customer has the opportunity to withdraw the bid. If the bid is successfully withdrawn, the locked amount will be unlocked.
 
 **From the proof producer perspective:**
 
-At any moment, a proof producer is able to withdraw funds that are not part of the deposit for their active asks. This means that at each moment, the proof producer has pf∗S locked funds where S is the sum of all their asks that are not completed or withdrawn.
+At any moment, a proof producer is able to withdraw funds that are not part of the deposit for their active asks. This means that at each moment, the proof producer has pf∗S locked funds where S is the sum of all their ask orders that are not completed or withdrawn.
 
 ### Ratings
 
 In the system, each proof producer has a rating. Rating is taken into account in many different processes, for example, in matching, ask placement, etc. For simplicity, the conscientious fulfilment of obligations increases the rating. It increases the likelihood of a bid matching, while the producer’s dishonest work can lead to decreased ratings and various restrictions.
 
-**The rating System is in  design/development stage; more details on it will be provided soon**
+**The rating System is in the design/development stage; more details on it will be provided soon**
 
 ### What happens if the proof is not submitted on time
 
@@ -119,6 +119,6 @@ There is no delay between the bid/ask submitting and running the matching algori
 There are two types of penalties to proof producers:
 
 * Rating decreasing. It happens when proof was not provided on time or was not provided at all.
-* Fine on the locked funds. It happens when verification fails for the provided proof, then the proof producer pays _pf \* c_ tokens as a fine where _c_ is the order's cost. It is considered malicious behaviour from the proof producer side.
+* Fine on the locked funds. It happens when verification fails for the provided proof; then the proof producer pays _pf \* c_ tokens as a fine, where _c_ is the order's cost. It is considered malicious behaviour from the proof producer side.
 
 There are no penalties for proof buyers because they use a one-hop pipeline that excludes malicious behaviour from their side.

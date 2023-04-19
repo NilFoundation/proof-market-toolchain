@@ -55,7 +55,7 @@ Please note the id might be different when you execute this flow, and you should
 
 ## Send Bid
 
-Proof Requester next sends a bid. Bid orders can optionally carry public inputs. In our case, we will send two numbers which we would like to be added on the Pallas curve. We will use a sample input attached in the `proof-market-toolchain` repository.
+Proof Requester next sends a bid. Bid orders can optionally carry public inputs. In our case, we will send two numbers which we would like to be added on the Pallas curve. We will use a sample input stored in the `proof-market-toolchain` repository.
 
 ```
 python3 scripts/bid_tools.py push --cost=2 --file=./example/input/arithmetic_example/input.json --key=32326
@@ -171,7 +171,7 @@ Ask:
 
 The matching engine of the proof market will try to match orders based on price (and generation time if provided).
 
-Above we put the bid at 2 Tokens & ask at 2 Tokens. Hence these orders should be matched. We need to poll our orders to see if they have been matched. i.e. you need to retrieve the bid and ask for orders and check the `status` field.&#x20;
+Above we put the bid at 2 Tokens & ask at 2 Tokens. Hence these orders should be matched. We need to poll our orders to see if they have been matched. i.e. you need to retrieve the bid or ask orders and check the `status` field.&#x20;
 
 {% hint style="info" %}
 Your orders could get matched to different IDs and not the ones you posted, as it's decided by the matching engine on a number of parameters. For the time being, we assume the match was for the orders we posted.

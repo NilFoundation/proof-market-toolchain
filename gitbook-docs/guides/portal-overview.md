@@ -6,12 +6,12 @@ description: Navigating the Proof Market documentation portal
 
 ## [Guides](portal-overview.md#guides)
 
-Under guides users can find details regarding setting up environment to interface with proof market.
+Users can find details regarding setting up the environment to interface with the proof market.
 
 ## [Market](portal-overview.md#market)
 
-Under Market , users can find a collection of articles detailing market operations , dynamics, participants & guides to create/sell proofs.
+Users can find a collection of articles detailing market operations, dynamics, participants & guides to create/sell proofs.
 
 ## [Misc](portal-overview.md#misc)
 
-This section covers other miscellaneous guidelines/information regarding contributing to the proof market, code of conduct , feedback and contact details for collaboration.
+This section covers other miscellaneous guidelines/information regarding contributing to the proof market, code of conduct, feedback and contact details for collaboration.
