@@ -3,7 +3,7 @@
 {% hint style="danger" %}
 ### Disclaimer
 
-This is the first version of =nil; Proof Market economics description. The constant values, fees, penalties and rating politics may be changed in the future according to real-life data and community requests.
+This is the first version of =nil;Proof Market economics description. The constant values, fees, penalties and rating politics may be changed in the future according to real-life data and community requests.
 {% endhint %}
 
 Proof Market constants:
@@ -65,7 +65,7 @@ It is assumed that the total amount of all commissions will be significantly low
 
 #### Proof Requester
 
-There is no process of registration for proof buyers. Any =nil; Cluster account is able to send a bid to the marketplace. The only requirement is that the user's account must have enough funds to pay for the order.
+There is no process of registration for proof buyers. Any =nil;Cluster account is able to send a bid to the marketplace. The only requirement is that the user's account must have enough funds to pay for the order.
 
 #### Proof Producer
 

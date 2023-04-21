@@ -1,6 +1,6 @@
 # Table of contents
 
-* [=nil; Proof Market](README.md)
+* [=nil;Proof Market](README.md)
 
 ## Guides
 
