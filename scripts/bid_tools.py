@@ -5,13 +5,18 @@ import requests
 from constants import DB_NAME, URL, MOUNT
 from auth_tools import get_headers
 
-
-def push(auth, key, file, cost):
-    f = open(file, "r")
+def get_prepared_input(input_file):
+    f = open(input_file, "r")
     input = json.load(f)
+    # TODO: check if this structure is necessary
+    if "input" not in input:
+        input = {"input": input}
+    return input
+
+def push(auth, key, file, cost, verbose=False):
     data = {
         "statement_key": key,
-        "input": input,
+        "input": get_prepared_input(file),
         "cost": cost,
     }
 
@@ -22,7 +27,11 @@ def push(auth, key, file, cost):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Limit bid:\t {res.json()}")
+        log_data = res.json()
+        if not verbose:
+            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
+            log_data = {k: v for k, v in log_data.items() if k in left_keys}
+        logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
 
@@ -44,7 +53,7 @@ def get(auth, key=None, bid_status=None):
         return res.json()
 
 def push_parser(args):
-    push(args.auth, args.key, args.file, args.cost)
+    push(args.auth, args.key, args.file, args.cost, args.verbose)
 
 
 def get_parser(args):
@@ -56,6 +65,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--auth", type=str, help="auth file")
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="increase output verbosity"
+    )
     subparsers = parser.add_subparsers(help="sub-command help")
     parser_push = subparsers.add_parser("push", help="push bid")
     parser_push.set_defaults(func=push_parser)

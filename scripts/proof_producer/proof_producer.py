@@ -159,7 +159,7 @@ if __name__ == "__main__":
         "-s", "--statements", help="directory with statements", default="./statements/"
     )
     parser_start.add_argument(
-        "-p", "--proof-generator", help="path to proof generator binaty", required=True
+        "-p", "--proof-generator", help="path to proof generator binary", required=True
     )
     parser_start.set_defaults(func=start)
     parser_prepare = subparsers.add_parser(

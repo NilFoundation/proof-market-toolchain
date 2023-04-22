@@ -28,7 +28,10 @@ def push(auth, file, bid_key=None, ask_key=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Proof for {bid_key} is pushed")
+        if bid_key:
+            logging.info(f"Proof for bid {bid_key} is pushed")
+        else:
+            logging.info(f"Proof for ask {ask_key} is pushed")
         return
 
 
@@ -45,9 +48,10 @@ def get(auth, bid_key=None, proof_key=None, file=None):
         exit(1)
     else:
         res_json = res.json()
-        if file:
+        if file and "proof" in res_json:
             with open(file, "w") as f:
-                f.write(res_json[0].pop("proof"))
+                f.write(res_json.pop("proof"))
+                logging.info(f"Proof is saved to {file}")
         else:
             logging.info(f"Proof:\t\t {json.dumps(res_json, indent=4)}")
 

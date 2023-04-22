@@ -4,15 +4,21 @@ import json
 from constants import URL
 import requests
 
-secret = (
-    open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r")
-    .read()
-    .strip("\n")
-)
-user = (
-    open(os.path.dirname(os.path.abspath(__file__)) + "/.user", "r").read().strip("\n")
-)
 
+def create_credentials_file(file_name: str, value: str):
+    with open(os.path.dirname(os.path.abspath(__file__)) + f"/.{file_name}", "w") as f:
+        f.write(value)
+
+def read_credentials_file(file_name: str) -> str:
+    credentials_file_path = os.path.dirname(os.path.abspath(__file__)) + f"/.{file_name}"
+    
+    if not os.path.exists(credentials_file_path):
+        return None
+    
+    return open(credentials_file_path, "r").read().strip("\n")
+
+secret = read_credentials_file("secret")
+user = read_credentials_file("user")
 
 def update_auth(auth):
 
@@ -23,12 +29,10 @@ def update_auth(auth):
     if response.status_code != 200:
         print(f"Update auth error: {response.status_code} {response.text}")
     else:
-        print(response.text)
         with open(auth, "w") as f:
             headers = {"Authorization": f'Bearer {response.json()["jwt"]}'}
             json.dump(headers, f)
     return response
-
 
 def get_headers(auth):
     headers = {}

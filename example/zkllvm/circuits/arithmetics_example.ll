@@ -141,7 +141,6 @@ attributes #4 = { mustprogress nounwind uwtable "frame-pointer"="none" "min-lega
 attributes #5 = { circuit mustprogress nounwind uwtable "frame-pointer"="none" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #6 = { nounwind }
 
-!llvm.linker.options = !{}
 !llvm.module.flags = !{!0, !1, !2, !3}
 !llvm.ident = !{!4}
 
