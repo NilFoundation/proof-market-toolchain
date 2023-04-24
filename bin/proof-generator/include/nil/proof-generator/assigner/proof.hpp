@@ -37,6 +37,8 @@
 #include <nil/crypto3/marshalling/zk/types/plonk/constraint_system.hpp>
 #include <nil/crypto3/multiprecision/cpp_int.hpp>
 
+#include <llvm/Support/CommandLine.h>
+
 namespace nil {
     namespace proof_generator {
         namespace assigner {
@@ -92,6 +94,9 @@ namespace nil {
                     public_input.push_back(number);
                 }
                 nil::blueprint::parser<BlueprintFieldType, ArithmetizationParams> parser_instance;
+
+                const char *llvm_arguments[2] = {"", "-opaque-pointers=0"};
+                llvm::cl::ParseCommandLineOptions(2, llvm_arguments);
 
                 std::string bytecode_file_name = output_file + "_tmp.ll";
                 std::ofstream out(bytecode_file_name);

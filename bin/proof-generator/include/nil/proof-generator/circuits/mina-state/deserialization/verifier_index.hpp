@@ -95,7 +95,7 @@ namespace nil {
 
                 boost::json::value vk = public_input.at("data").at("blockchainVerificationKey");
                 ver_index.max_poly_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_poly_size"));
-                ver_index.max_quot_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_quot_size"));
+                ver_index.max_quot_size = boost::json::value_to<std::size_t>(vk.at("index").at("max_poly_size"));
 
                 // TODO srs for ver_index
 
