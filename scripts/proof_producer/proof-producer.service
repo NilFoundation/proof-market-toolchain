@@ -1,0 +1,13 @@
+[Unit]
+Description=Proof-producer service
+After=multi-user.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /proof-market-toolchain/scripts/proof_producer/proof_producer.py start -p /proof-market-toolchain/build/bin/proof-generator/proof-generator
+
+[Install]
+WantedBy=multi-user.target
