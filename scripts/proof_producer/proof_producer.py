@@ -53,7 +53,7 @@ def get_statements(auth):
 
 def get_my_asks(status="processing"):
     url = URL + f"_db/{DB_NAME}/{MOUNT}/ask/"
-    url += f'?q=[{{"key" : "sender", "value" : "{USER}"}},{{"key" : "status", "value" : "{status}"}}]'
+    url += f'?q=[{{"key" : "sender", "value" : "{user}"}},{{"key" : "status", "value" : "{status}"}}]'
 
     res = requests.get(url=url, headers=get_headers(AUTH_FILE))
     if res.status_code != 200:
