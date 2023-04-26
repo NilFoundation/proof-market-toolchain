@@ -15,5 +15,5 @@ MY_STATEMENTS = {
     "32292": {"cost": 5, "asks_limit": 10},
     "79169223": {"cost": 5, "asks_limit": 10},
 }
-USER = ""
+USER = "skm"
 REQUEST_TIMEOUT = 100

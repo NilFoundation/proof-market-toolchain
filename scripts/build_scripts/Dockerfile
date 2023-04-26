@@ -47,6 +47,8 @@ WORKDIR /
 COPY proof-market-toolchain /proof-market-toolchain
 COPY .secret /proof-market-toolchain/scripts/.secret
 COPY .user /proof-market-toolchain/scripts/.user
+COPY .secret /proof-market-toolchain/scripts/proof-producer/.secret
+COPY .user /proof-market-toolchain/scripts/proof-producer/.user
 
 WORKDIR /proof-market-toolchain
  RUN sh ./build.sh
