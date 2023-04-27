@@ -9,6 +9,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         build-essential \
         clang-12 \
         cmake \
+        mc \
+        nano \
         git \
         gnutls-dev \
         libc-ares-dev \
@@ -55,4 +57,5 @@ WORKDIR /proof-market-toolchain
  RUN pip3 install requests
 
 WORKDIR /
+ENTRYPOINT [ "python3", "/proof-market-toolchain/scripts/proof_producer/proof_producer.py", "start", "-p", "/proof-market-toolchain/build/bin/proof-generator/proof-generator" ]
 #COPY proof-producer.service /etc/systemd/system/proof-producer.service
