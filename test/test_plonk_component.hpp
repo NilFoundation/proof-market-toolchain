@@ -43,8 +43,8 @@
 #include <nil/crypto3/zk/algorithms/generate_circuit.hpp>
 #include <nil/crypto3/math/algorithms/calculate_domain_set.hpp>
 
-//#include "profiling_plonk_circuit.hpp"
-//#include "profiling.hpp"
+// #include "profiling_plonk_circuit.hpp"
+// #include "profiling.hpp"
 
 #include <nil/marshalling/status_type.hpp>
 #include <nil/marshalling/field_type.hpp>
@@ -130,7 +130,7 @@ namespace nil {
             zk::components::generate_circuit<component_type>(bp, public_assignment, params, start_row);
             typename component_type::result_type component_result =
                 component_type::generate_assignments(assignment_bp, params, start_row);
-            
+
             result_check(assignment_bp, component_result);
 
             assignment_bp.padding();
@@ -185,12 +185,12 @@ namespace nil {
             auto proof = zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
                 public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
             bool verifier_res = zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
-              public_preprocessed_data, proof, bp, fri_params);
+                public_preprocessed_data, proof, bp, fri_params);
 
 #ifdef BLUEPRINT_PLONK_PROFILING_ENABLED
             profiling(assignments);
 #endif
-            if(verification_result) {
+            if (verification_result) {
                 BOOST_CHECK(verifier_res);
             } else {
                 BOOST_CHECK(!verifier_res);

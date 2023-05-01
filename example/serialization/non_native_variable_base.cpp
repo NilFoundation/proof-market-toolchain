@@ -24,7 +24,7 @@
 //---------------------------------------------------------------------------//
 
 #include <nil/crypto3/codec/algorithm/decode.hpp>
-//#include <nil/crypto3/codec/base.hpp>
+// #include <nil/crypto3/codec/base.hpp>
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
@@ -67,8 +67,8 @@ int main() {
 
     using var = zk::snark::plonk_variable<BlueprintFieldType>;
 
-    using component_type = zk::components::variable_base_multiplication<ArithmetizationType, curve_type, ed25519_type,
-                                                                        0, 1, 2, 3, 4, 5, 6, 7, 8>;
+    using component_type = zk::components::
+        variable_base_multiplication<ArithmetizationType, curve_type, ed25519_type, 0, 1, 2, 3, 4, 5, 6, 7, 8>;
 
     std::array<var, 4> input_var_Xa = {
         var(0, 0, false, var::column_type::public_input), var(0, 1, false, var::column_type::public_input),

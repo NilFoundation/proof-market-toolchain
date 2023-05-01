@@ -25,10 +25,14 @@ namespace nil {
     namespace proof_generator {
         namespace mina_state {
 
-            template<typename VerifierIndexType, typename CurveType, typename BlueprintFieldType, typename KimchiParamsType>
-            void prepare_index_base(VerifierIndexType &original_index,
-                                    nil::blueprint_mc::components::kimchi_verifier_index_base<CurveType, KimchiParamsType> &circuit_index,
-                                    std::vector<typename BlueprintFieldType::value_type> &public_input) {
+            template<typename VerifierIndexType,
+                     typename CurveType,
+                     typename BlueprintFieldType,
+                     typename KimchiParamsType>
+            void prepare_index_base(
+                VerifierIndexType &original_index,
+                nil::blueprint_mc::components::kimchi_verifier_index_base<CurveType, KimchiParamsType> &circuit_index,
+                std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::crypto3::zk::snark::plonk_variable<BlueprintFieldType>;
 
                 // COMMITMENTS
@@ -61,17 +65,21 @@ namespace nil {
                 for (std::size_t j = 0; j < original_index.generic_comm.unshifted.size(); j++) {
                     assert(circuit_index.comm.generic.parts.size() > j);
                     public_input.push_back(original_index.generic_comm.unshifted[j].X);
-                    circuit_index.comm.generic.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.generic.parts[j].X =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_index.generic_comm.unshifted[j].Y);
-                    circuit_index.comm.generic.parts[j].Y = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.generic.parts[j].Y =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                 }
 
                 for (std::size_t j = 0; j < original_index.psm_comm.unshifted.size(); j++) {
                     assert(circuit_index.comm.psm.parts.size() > j);
                     public_input.push_back(original_index.psm_comm.unshifted[j].X);
-                    circuit_index.comm.psm.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.psm.parts[j].X =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_index.psm_comm.unshifted[j].Y);
-                    circuit_index.comm.psm.parts[j].Y = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.psm.parts[j].Y =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                 }
 
                 for (std::size_t j = 0; j < original_index.complete_add_comm.unshifted.size(); j++) {
@@ -97,9 +105,11 @@ namespace nil {
                 for (std::size_t j = 0; j < original_index.emul_comm.unshifted.size(); j++) {
                     assert(circuit_index.comm.endo_mul.parts.size() > j);
                     public_input.push_back(original_index.emul_comm.unshifted[j].X);
-                    circuit_index.comm.endo_mul.parts[j].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.endo_mul.parts[j].X =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(original_index.emul_comm.unshifted[j].Y);
-                    circuit_index.comm.endo_mul.parts[j].Y = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.comm.endo_mul.parts[j].Y =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                 }
 
                 for (std::size_t j = 0; j < original_index.endomul_scalar_comm.unshifted.size(); j++) {
@@ -138,8 +148,8 @@ namespace nil {
                     }
                 }
 
-                typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type point =
-                    original_index.sigma_comm[0].unshifted[0];
+                typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type
+                    point = original_index.sigma_comm[0].unshifted[0];
 
                 for (std::size_t i = 0; i < circuit_index.comm.selectors.size(); i++) {
                     for (std::size_t j = 0; j < circuit_index.comm.selectors[i].parts.size(); j++) {
@@ -198,16 +208,22 @@ namespace nil {
 
                 for (std::size_t i = 0; i < KimchiParamsType::public_input_size; i++) {
                     public_input.push_back(point.X);    // todo srs.lagrange_bases is not used during parsing
-                    circuit_index.lagrange_bases[i].X = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.lagrange_bases[i].X =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                     public_input.push_back(point.Y);
-                    circuit_index.lagrange_bases[i].Y = var(0, public_input.size() - 1, false, var::column_type::public_input);
+                    circuit_index.lagrange_bases[i].Y =
+                        var(0, public_input.size() - 1, false, var::column_type::public_input);
                 }
             }
 
-            template<typename VerifierIndexType, typename CurveType, typename BlueprintFieldType, typename KimchiParamsType>
-            void prepare_index_scalar(VerifierIndexType &original_index,
-                                    nil::blueprint_mc::components::kimchi_verifier_index_scalar<BlueprintFieldType> &circuit_index,
-                                    std::vector<typename BlueprintFieldType::value_type> &public_input) {
+            template<typename VerifierIndexType,
+                     typename CurveType,
+                     typename BlueprintFieldType,
+                     typename KimchiParamsType>
+            void prepare_index_scalar(
+                VerifierIndexType &original_index,
+                nil::blueprint_mc::components::kimchi_verifier_index_scalar<BlueprintFieldType> &circuit_index,
+                std::vector<typename BlueprintFieldType::value_type> &public_input) {
                 using var = nil::crypto3::zk::snark::plonk_variable<BlueprintFieldType>;
 
                 circuit_index.domain_size = original_index.domain.m;
@@ -220,8 +236,8 @@ namespace nil {
                 public_input.push_back(original_index.w);
                 circuit_index.omega = var(0, public_input.size() - 1, false, var::column_type::public_input);
             }
-        } // namespace mina_state
-    } // namespace proof_generator
-} // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator
+}    // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP
+#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PREPARE_INDEX_HPP

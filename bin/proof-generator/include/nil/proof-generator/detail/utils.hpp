@@ -45,7 +45,8 @@ namespace nil {
 
             using TTypeBase = nil::marshalling::field_type<Endianness>;
             using proof_marshalling_type = nil::crypto3::zk::snark::placeholder_proof<TTypeBase, Proof>;
-            auto filled_placeholder_proof = crypto3::marshalling::types::fill_placeholder_proof<Endianness, Proof>(proof);
+            auto filled_placeholder_proof =
+                crypto3::marshalling::types::fill_placeholder_proof<Endianness, Proof>(proof);
 
             std::vector<std::uint8_t> cv;
             cv.resize(filled_placeholder_proof.length(), 0x00);
@@ -55,7 +56,7 @@ namespace nil {
             out.open(output_file);
             print_hex_byteblob(out, cv.cbegin(), cv.cend(), false);
         }
-    } // namespace proof_generator
-} // namespace nil
+    }    // namespace proof_generator
+}    // namespace nil
 
 #endif    // PROOF_GENERATOR_DETAIL_UTILS_HPP

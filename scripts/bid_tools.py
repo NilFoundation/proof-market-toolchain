@@ -5,6 +5,7 @@ import requests
 from constants import DB_NAME, URL, MOUNT
 from auth_tools import get_headers
 
+
 def get_prepared_input(input_file):
     f = open(input_file, "r")
     input = json.load(f)
@@ -12,6 +13,7 @@ def get_prepared_input(input_file):
     if "input" not in input:
         input = {"input": input}
     return input
+
 
 def push(auth, key, file, cost, verbose=False):
     data = {
@@ -51,6 +53,7 @@ def get(auth, key=None, bid_status=None):
     else:
         logging.info(f"Bids:\n {json.dumps(res.json(), indent=4)}")
         return res.json()
+
 
 def push_parser(args):
     push(args.auth, args.key, args.file, args.cost, args.verbose)
