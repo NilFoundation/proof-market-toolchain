@@ -19,8 +19,6 @@
 #ifndef PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
 #define PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
 
-
-
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/pallas.hpp>
 
@@ -40,9 +38,11 @@ namespace nil {
 
             using curve_type = nil::crypto3::algebra::curves::pallas;
             using pallas_verifier_index_type = nil::crypto3::zk::snark::verifier_index<
-                curve_type, nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
+                curve_type,
+                nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::scalar_field_type::value_type>,
                 nil::crypto3::zk::snark::arithmetic_sponge_params<curve_type::base_field_type::value_type>,
-                nil::crypto3::zk::snark::kimchi_constant::COLUMNS, nil::crypto3::zk::snark::kimchi_constant::PERMUTES>;
+                nil::crypto3::zk::snark::kimchi_constant::COLUMNS,
+                nil::crypto3::zk::snark::kimchi_constant::PERMUTES>;
 
             void read_commitments(boost::json::value vk, pallas_verifier_index_type &ver_index) {
                 boost::json::array sigma_comm_jv = vk.at("commitments").at("sigma_comm").as_array();
@@ -78,7 +78,8 @@ namespace nil {
                 // TODO: chacha_comm
             }
 
-            pallas_verifier_index_type make_verifier_index(boost::json::value public_input, boost::json::value const_input) {
+            pallas_verifier_index_type make_verifier_index(boost::json::value public_input,
+                                                           boost::json::value const_input) {
                 using curve_type = typename nil::crypto3::algebra::curves::pallas;
                 using scalar_field_type = typename curve_type::scalar_field_type;
                 using base_field_type = typename curve_type::base_field_type;
@@ -106,22 +107,24 @@ namespace nil {
                 // Polynomial in coefficients form
                 // Const
                 ver_index.zkpm = {0x2C46205451F6C3BBEA4BABACBEE609ECF1039A903C42BFF639EDC5BA33356332_cppui256,
-                                0x1764D9CB4C64EBA9A150920807637D458919CB6948821F4D15EB1994EADF9CE3_cppui256,
-                                0x0140117C8BBC4CE4644A58F7007148577782213065BB9699BF5C391FBE1B3E6D_cppui256,
-                                0x0000000000000000000000000000000000000000000000000000000000000001_cppui256};
-                
+                                  0x1764D9CB4C64EBA9A150920807637D458919CB6948821F4D15EB1994EADF9CE3_cppui256,
+                                  0x0140117C8BBC4CE4644A58F7007148577782213065BB9699BF5C391FBE1B3E6D_cppui256,
+                                  0x0000000000000000000000000000000000000000000000000000000000000001_cppui256};
+
                 ver_index.w = boost::json::value_to<scalar_field_type::value_type>(verify_index_input.at("w"));
                 ver_index.endo = boost::json::value_to<scalar_field_type::value_type>(verify_index_input.at("endo"));
 
                 // TODO: lookup_index
                 ver_index.powers_of_alpha.next_power = 24;
 
-                boost::json::array fr_round_constants_jv = verify_index_input.at("fr_sponge_params").at("round_constants").as_array();
+                boost::json::array fr_round_constants_jv =
+                    verify_index_input.at("fr_sponge_params").at("round_constants").as_array();
                 ver_index.fr_sponge_params.round_constants.resize(fr_round_constants_jv.size());
                 for (std::size_t i = 0; i < fr_round_constants_jv.size(); i++) {
                     boost::json::array row_jv = fr_round_constants_jv[i].as_array();
                     for (std::size_t j = 0; j < row_jv.size(); j++) {
-                        ver_index.fr_sponge_params.round_constants[i].push_back(boost::json::value_to<scalar_field_type::value_type>(row_jv[j]));
+                        ver_index.fr_sponge_params.round_constants[i].push_back(
+                            boost::json::value_to<scalar_field_type::value_type>(row_jv[j]));
                     }
                 }
 
@@ -129,16 +132,19 @@ namespace nil {
                 for (std::size_t i = 0; i < fr_mds_jv.size(); i++) {
                     boost::json::array row_jv = fr_mds_jv[i].as_array();
                     for (std::size_t j = 0; j < row_jv.size(); j++) {
-                        ver_index.fr_sponge_params.mds[i][j] = boost::json::value_to<scalar_field_type::value_type>(row_jv[j]);
+                        ver_index.fr_sponge_params.mds[i][j] =
+                            boost::json::value_to<scalar_field_type::value_type>(row_jv[j]);
                     }
                 }
 
-                boost::json::array fq_round_constants_jv = verify_index_input.at("fq_sponge_params").at("round_constants").as_array();
+                boost::json::array fq_round_constants_jv =
+                    verify_index_input.at("fq_sponge_params").at("round_constants").as_array();
                 ver_index.fq_sponge_params.round_constants.resize(fq_round_constants_jv.size());
                 for (std::size_t i = 0; i < fq_round_constants_jv.size(); i++) {
                     boost::json::array row_jv = fq_round_constants_jv[i].as_array();
                     for (std::size_t j = 0; j < row_jv.size(); j++) {
-                        ver_index.fq_sponge_params.round_constants[i].push_back(boost::json::value_to<base_field_type::value_type>(row_jv[j]));
+                        ver_index.fq_sponge_params.round_constants[i].push_back(
+                            boost::json::value_to<base_field_type::value_type>(row_jv[j]));
                     }
                 }
 
@@ -146,7 +152,8 @@ namespace nil {
                 for (std::size_t i = 0; i < fq_mds_jv.size(); i++) {
                     boost::json::array row_jv = fq_mds_jv[i].as_array();
                     for (std::size_t j = 0; j < row_jv.size(); j++) {
-                        ver_index.fq_sponge_params.mds[i][j] = boost::json::value_to<base_field_type::value_type>(row_jv[j]);
+                        ver_index.fq_sponge_params.mds[i][j] =
+                            boost::json::value_to<base_field_type::value_type>(row_jv[j]);
                     }
                 }
 
@@ -157,8 +164,8 @@ namespace nil {
                 return ver_index;
             }
 
-        } // namespace mina_state
-    } // namespace proof_generator
-}   // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator
+}    // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP
+#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_VERIFIER_INDEX_HPP

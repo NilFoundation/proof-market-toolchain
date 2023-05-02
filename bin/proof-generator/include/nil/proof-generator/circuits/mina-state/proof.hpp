@@ -58,17 +58,17 @@ namespace nil {
 
                 std::string line;
 
-                while(getline(file_base, line)) {
+                while (getline(file_base, line)) {
                     file_full << line;
                 }
 
-                while(getline(file_scalar, line)) {
+                while (getline(file_scalar, line)) {
                     file_full << line;
                 }
 
                 file_base.close();
                 file_scalar.close();
-                
+
                 file_full.close();
             }
 
@@ -100,8 +100,8 @@ namespace nil {
                 nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof =
                     make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 1;
-                constexpr const std::size_t eval_rounds_base = 1;
+                constexpr const std::size_t eval_rounds_scalar = 8;
+                constexpr const std::size_t eval_rounds_base = 8;
                 constexpr const std::size_t fri_max_step = 1;
 
                 generate_proof_heterogenous<pallas_verifier_index_type, eval_rounds_scalar, eval_rounds_base>(

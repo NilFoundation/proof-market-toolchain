@@ -38,15 +38,14 @@
 
 #include <nil/proof-generator/detail/utils.hpp>
 
-
 namespace nil {
     namespace proof_generator {
         namespace mina_state {
 
             template<typename VerifierIndexType, std::size_t EvalRounds>
-            void generate_proof_base(nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
-                                            VerifierIndexType &pickles_index, const std::size_t fri_max_step,
-                                            std::string output_path) {
+            void generate_proof_base(
+                nil::crypto3::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> &pickles_proof,
+                VerifierIndexType &pickles_index, const std::size_t fri_max_step, std::string output_path) {
                 using curve_type = nil::crypto3::algebra::curves::pallas;
                 using BlueprintFieldType = typename curve_type::base_field_type;
                 constexpr std::size_t WitnessColumns = 15;
@@ -54,8 +53,10 @@ namespace nil {
                 constexpr std::size_t ConstantColumns = 1;
                 constexpr std::size_t SelectorColumns = 30;
                 using ArithmetizationParams =
-                    nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
-                using ArithmetizationType = nil::crypto3::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
+                    nil::crypto3::zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns,
+                                                                          ConstantColumns, SelectorColumns>;
+                using ArithmetizationType =
+                    nil::crypto3::zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
                 using AssignmentType = nil::blueprint_mc::blueprint_assignment_table<ArithmetizationType>;
                 using hash_type = nil::crypto3::hashes::keccak_1600<256>;
                 constexpr std::size_t Lambda = 1;
@@ -76,40 +77,50 @@ namespace nil {
 
                 constexpr static const std::size_t prev_chal_size = 0;
 
-                using commitment_params = nil::blueprint_mc::components::kimchi_commitment_params_type<eval_rounds, max_poly_size, srs_len>;
+                using commitment_params =
+                    nil::blueprint_mc::components::kimchi_commitment_params_type<eval_rounds, max_poly_size, srs_len>;
                 using index_terms_list = nil::blueprint_mc::components::index_terms_scalars_list<ArithmetizationType>;
                 using circuit_description =
-                    nil::blueprint_mc::components::kimchi_circuit_description<index_terms_list, witness_columns, perm_size>;
-                using kimchi_params = nil::blueprint_mc::components::kimchi_params_type<curve_type, commitment_params, circuit_description,
-                                                                        public_input_size, prev_chal_size>;
+                    nil::blueprint_mc::components::kimchi_circuit_description<index_terms_list, witness_columns,
+                                                                              perm_size>;
+                using kimchi_params = nil::blueprint_mc::components::kimchi_params_type<
+                    curve_type, commitment_params, circuit_description, public_input_size, prev_chal_size>;
 
-                using component_type = nil::blueprint_mc::components::base_field<ArithmetizationType, curve_type, kimchi_params, commitment_params,
-                                                                batch_size, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14>;
+                using component_type =
+                    nil::blueprint_mc::components::base_field<ArithmetizationType, curve_type, kimchi_params,
+                                                              commitment_params, batch_size, 0, 1, 2, 3, 4, 5, 6, 7, 8,
+                                                              9, 10, 11, 12, 13, 14>;
 
                 using fq_output_type =
-                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::fq_sponge_output;
+                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
+                                                                    kimchi_params>::fq_sponge_output;
 
-                using fr_data_type = typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
+                using fr_data_type =
+                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
                                                                     kimchi_params>::template fr_data<var, batch_size>;
 
                 using fq_data_type =
-                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType, kimchi_params>::template fq_data<var>;
+                    typename nil::blueprint_mc::components::binding<ArithmetizationType, BlueprintFieldType,
+                                                                    kimchi_params>::template fq_data<var>;
 
                 std::vector<typename BlueprintFieldType::value_type> public_input = {};
 
-                std::array<nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params>, batch_size> proofs;
+                std::array<nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params>,
+                           batch_size>
+                    proofs;
 
                 for (std::size_t batch_id = 0; batch_id < batch_size; batch_id++) {
                     nil::blueprint_mc::components::kimchi_proof_base<BlueprintFieldType, kimchi_params> proof;
 
                     prepare_proof_base<curve_type, BlueprintFieldType, kimchi_params, eval_rounds>(pickles_proof, proof,
-                                                                                                public_input);
+                                                                                                   public_input);
 
                     proofs[batch_id] = proof;
                 }
 
                 nil::blueprint_mc::components::kimchi_verifier_index_base<curve_type, kimchi_params> verifier_index;
-                prepare_index_base<VerifierIndexType, curve_type, BlueprintFieldType, kimchi_params>(pickles_index, verifier_index, public_input);
+                prepare_index_base<VerifierIndexType, curve_type, BlueprintFieldType, kimchi_params>(
+                    pickles_index, verifier_index, public_input);
 
                 fr_data_type fr_data_public;
                 fq_data_type fq_data_public;
@@ -127,17 +138,20 @@ namespace nil {
                 // using Endianness = nil::marshalling::option::big_endian;
 
                 using placeholder_params =
-                    nil::crypto3::zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, hash_type, hash_type, Lambda>;
+                    nil::crypto3::zk::snark::placeholder_params<BlueprintFieldType, ArithmetizationParams, hash_type,
+                                                                hash_type, Lambda>;
 
                 auto [desc, bp, fri_params, assignments, public_preprocessed_data, private_preprocessed_data] =
                     prepare_component<component_type, BlueprintFieldType, ArithmetizationParams, hash_type, Lambda>(
                         params, public_input, fri_max_step, result_check);
 
-                auto proof = nil::crypto3::zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
+                auto proof =
+                    nil::crypto3::zk::snark::placeholder_prover<BlueprintFieldType, placeholder_params>::process(
+                        public_preprocessed_data, private_preprocessed_data, desc, bp, assignments, fri_params);
 
-                bool verifier_res = nil::crypto3::zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
-                    public_preprocessed_data, proof, bp, fri_params);
+                bool verifier_res =
+                    nil::crypto3::zk::snark::placeholder_verifier<BlueprintFieldType, placeholder_params>::process(
+                        public_preprocessed_data, proof, bp, fri_params);
 
                 if (verifier_res) {
                     std::cout << "Inner verification passed" << std::endl;
@@ -148,8 +162,8 @@ namespace nil {
                 std::string output_path_full = output_path + "_base";
                 proof_print<nil::marshalling::option::big_endian>(proof, output_path_full);
             }
-        } // namespace mina_state
-    } // namespace proof_generator
-} // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator
+}    // namespace nil
 
 #endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_PROOF_BASE_HPP

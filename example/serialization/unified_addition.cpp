@@ -48,7 +48,7 @@ int main() {
     constexpr std::size_t ConstantColumns = 1;
     constexpr std::size_t SelectorColumns = 1;
     using ArithmetizationParams =
-            zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
+        zk::snark::plonk_arithmetization_params<WitnessColumns, PublicInputColumns, ConstantColumns, SelectorColumns>;
     using ArithmetizationType = zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
     using ArithmetizationType = zk::snark::plonk_constraint_system<BlueprintFieldType, ArithmetizationParams>;
     using AssignmentType = zk::blueprint_assignment_table<ArithmetizationType>;
@@ -57,8 +57,8 @@ int main() {
 
     using var = zk::snark::plonk_variable<BlueprintFieldType>;
 
-    using component_type = zk::components::curve_element_unified_addition<ArithmetizationType, curve_type, 0, 1, 2, 3,
-            4, 5, 6, 7, 8, 9, 10>;
+    using component_type = zk::components::
+        curve_element_unified_addition<ArithmetizationType, curve_type, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10>;
 
     auto P = algebra::random_element<curve_type::template g1_type<>>().to_affine();
     auto Q = algebra::random_element<curve_type::template g1_type<>>().to_affine();
@@ -67,8 +67,8 @@ int main() {
     P.X = Q.X;
     P.Y = -Q.Y;
     typename component_type::params_type params = {
-            {var(0, 0, false, var::column_type::public_input), var(0, 1, false, var::column_type::public_input)},
-            {var(0, 2, false, var::column_type::public_input), var(0, 3, false, var::column_type::public_input)}};
+        {var(0, 0, false, var::column_type::public_input), var(0, 1, false, var::column_type::public_input)},
+        {var(0, 2, false, var::column_type::public_input), var(0, 3, false, var::column_type::public_input)}};
 
     std::vector<typename BlueprintFieldType::value_type> public_input = {P.X, P.Y, Q.X, Q.Y};
 

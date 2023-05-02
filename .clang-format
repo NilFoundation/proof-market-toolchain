@@ -92,3 +92,5 @@ TabWidth: 4
 UseTab: Never
 
 ...
+Language: Json
+BasedOnStyle: llvm
