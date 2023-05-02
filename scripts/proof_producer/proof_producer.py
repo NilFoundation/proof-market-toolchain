@@ -70,7 +70,6 @@ def get_my_asks(status="processing"):
 
 def asks_loop():
     while True:
-        time.sleep(ASK_UPDATE_INTERVAL)
         try:
             createdAsks = get_my_asks("created")
             processingAsks = get_my_asks("processing")
@@ -89,6 +88,7 @@ def asks_loop():
             if asksFound < MY_STATEMENTS[st]["asks_limit"]:
                 cost = MY_STATEMENTS[st]["cost"] + round(random.uniform(0, 1), 1)
                 push_ask(AUTH_FILE, st, cost)
+        time.sleep(ASK_UPDATE_INTERVAL)
 
 
 def produce_proof(ask, binary, auth):
