@@ -1,7 +1,7 @@
 # Proof Producer Daemon
 
 Here is PoC for the Proof Producer daemon. 
-Its primary purpose is to automate the Proof Producer routine in creating asks and generating proofs. 
+Its primary purpose is to automate the Proof Producer routine in creating proposals and generating proofs. 
 Please, get familiar with the [step-by-step](../../README.md) guide firstly. 
 
 ## Setup user

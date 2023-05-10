@@ -245,33 +245,33 @@ The proof requester can check their request with
 python3 scripts/request_tools.py get --key <key of the request> 
 ```
 
-## 4. Wait for asks
+## 4. Wait for proposals
 
 Here the proof requester waits for matching engine to either match an existing order or wait for proposals to be submitted against this circuit/statement.
 
-## 5. Submit ask
+## 5. Submit proposal
 
 While the proposal is up, we now view at the marketplace from the perspective of a
 proof producer. In steps 2-4 , the requester put out a request. Now the producer can
-observe them in the marketplace and start replying with an ask.
+observe them in the marketplace and start replying with an proposal.
 
 ```
-python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> 
+python3 scripts/proposal_tools.py push --cost <cost of the proposal> --key <key of the statement> 
 ```
 
-The proof producer can check their ask with
+The proof producer can check their proposal with
 
 ```
-python3 scripts/ask_tools.py get --key <key of the ask> 
+python3 scripts/proposal_tools.py get --key <key of the proposal> 
 ```
 
 ## 6. Order Matching
 
-Proof Market runs a matching algorithm between requests and asks for each new request/ask. It chooses the cheapest ask that fits the requirements of the proof requester.
+Proof Market runs a matching algorithm between requests and proposals for each new request/proposal. It chooses the cheapest proposal that fits the requirements of the proof requester.
 
 ## 7. Proof Generation
 
-Ask's status 'processing' means that the ask was matched with a request.
+Proposal's status 'processing' means that the proposal was matched with a request.
 Now it is time to generate a proof for the proof producer.
 
 First of all, the proof producer needs circuit definition:
@@ -328,7 +328,7 @@ The proof generator can now submit the proof to the marketplace, where if verifi
 get the reward.
 
 ```
-python3 scripts/proof_tools.py push --request_key <key of the request> --ask_key <key of the ask> --file <file with the proof> 
+python3 scripts/proof_tools.py push --request_key <key of the request> --proposal_key <key of the proposal> --file <file with the proof> 
 ```
 
 You can provide only one of two possible keys
