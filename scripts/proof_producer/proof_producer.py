@@ -94,7 +94,7 @@ def asks_loop():
 def produce_proof(ask, binary, auth):
     circuit = "./statements/" + ask["statement_key"] + ".json"
     try:
-        input = get_public_input(ask["bid_key"], auth).json()["input"]
+        input = get_public_input(ask["request_key"], auth).json()["input"]
     except:
         logging.error(f"Get public input error for ask: {ask['_key']}")
         return
@@ -112,7 +112,7 @@ def produce_proof(ask, binary, auth):
     )
     generator.communicate()
     try:
-        push_proof(auth, output, bid_key=ask["bid_key"], ask_key=ask["_key"])
+        push_proof(auth, output, request_key=ask["request_key"], ask_key=ask["_key"])
     except:
         logging.error(f"Push proof error")
     return
