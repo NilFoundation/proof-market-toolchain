@@ -13,13 +13,13 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 
-def push(auth, file, request_key=None, ask_key=None):
+def push(auth, file, request_key=None, proposal_key=None):
     proof = open(file, "r").read()
     data = {"proof": proof}
     if request_key:
         data["request_key"] = request_key
-    if ask_key:
-        data["ask_key"] = ask_key
+    if proposal_key:
+        data["proposal_key"] = proposal_key
 
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/proof"
@@ -31,7 +31,7 @@ def push(auth, file, request_key=None, ask_key=None):
         if request_key:
             logging.info(f"Proof for request {request_key} is pushed")
         else:
-            logging.info(f"Proof for ask {ask_key} is pushed")
+            logging.info(f"Proof for proposal {proposal_key} is pushed")
         return
 
 
@@ -57,7 +57,7 @@ def get(auth, request_key=None, proof_key=None, file=None):
 
 
 def push_parser(args):
-    push(args.auth, args.file, args.request_key, args.ask_key)
+    push(args.auth, args.file, args.request_key, args.proposal_key)
 
 
 def get_parser(args):
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     parser_get = subparsers.add_parser("get", help="get proof")
     parser_get.set_defaults(func=get_parser)
 
-    parser_push.add_argument("-a", "--ask_key", type=str, default=None, help="ask_key")
+    parser_push.add_argument("-a", "--proposal_key", type=str, default=None, help="proposal_key")
     parser_push.add_argument("-b", "--request_key", type=str, default=None, help="request_key")
     parser_push.add_argument(
         "-f", "--file", type=str, required=True, help="file with proof"
