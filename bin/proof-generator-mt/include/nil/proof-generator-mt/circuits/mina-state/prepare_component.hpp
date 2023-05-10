@@ -19,7 +19,8 @@
 #ifndef PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
 #define PROOF_GENERATOR_MT_CIRCUITS_MINA_STATE_PREPARE_COMPONENT_HPP
 
-#include <nil/crypto3/math/algorithms/calculate_domain_set.hpp>
+#include <nil/actor/math/algorithms/calculate_domain_set.hpp>
+#include <nil/actor/math/domains/evaluation_domain.hpp>
 
 #include <nil/crypto3/algebra/curves/pallas.hpp>
 
@@ -58,8 +59,8 @@ namespace nil {
                 constexpr std::size_t expand_factor = 0;
                 std::size_t r = degree_log - 1;
 
-                std::vector<std::shared_ptr<nil::crypto3::math::evaluation_domain<FieldType>>> domain_set =
-                    nil::crypto3::math::calculate_domain_set<FieldType>(degree_log + expand_factor, r);
+                std::vector<std::shared_ptr<nil::actor::math::evaluation_domain<FieldType>>> domain_set =
+                    nil::actor::math::calculate_domain_set<FieldType>(degree_log + expand_factor, r).get();
 
                 params.r = r;
                 params.D = domain_set;
@@ -121,7 +122,7 @@ namespace nil {
                 using fri_type =
                     typename nil::actor::zk::commitments::fri<BlueprintFieldType,
                                                               typename placeholder_params::merkle_hash_type,
-                                                              typename placeholder_params::transcript_hash_type, 2, 1>;
+                                                              typename placeholder_params::transcript_hash_type, 1, 2, 4>;
 
                 std::size_t table_rows_log = std::ceil(std::log2(desc.rows_amount));
 
