@@ -67,12 +67,6 @@ namespace nil {
 
                 params.step_list = generate_step_list(r, max_step);
 
-                std::cout << "r: " << params.r << std::endl;
-                std::cout << "max_degree: " << params.max_degree << std::endl;
-                for (std::size_t i = 0; i < r; i++) {
-                    std::cout << "D[" << i << "]: " << params.D[i]->get_domain_element(1).data << std::endl;
-                }
-
                 return params;
             }
 
@@ -113,11 +107,7 @@ namespace nil {
 
                 result_check(assignment_bp, component_result);
 
-                std::cout << "rows amount: " << desc.rows_amount << std::endl;
-
                 assignment_bp.padding();
-
-                std::cout << "rows amount (padded): " << desc.rows_amount << std::endl;
 
                 nil::crypto3::zk::snark::plonk_assignment_table<BlueprintFieldType, ArithmetizationParams> assignments(
                     private_assignment, public_assignment);
