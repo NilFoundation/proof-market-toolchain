@@ -35,11 +35,13 @@ def push(auth, key, file, cost, verbose=False):
         return res.json()
 
 
-def get(auth, key=None, bid_status=None, verbose=False):
+def get(auth, key=None, bid_status=None, verbose=False, statement_key=None):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/bid/"
     if bid_status:
         url += f'?q=[{{"key" : "status", "value" : "{bid_status}"}}]&limit=100'
+    elif statement_key:
+        url += f'?q=[{{"key" : "statement_key", "value" : "{statement_key}"}}]&limit=100'
     elif key:
         url += key
     else:
@@ -50,9 +52,8 @@ def get(auth, key=None, bid_status=None, verbose=False):
         return
     else:
         log_data = res.json()
-        if not verbose and '_key' in log_data:
-            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
-            log_data = {k: v for k, v in log_data.items() if k in left_keys}
+        if not verbose and 'input' in log_data:
+            log_data.pop('input')
         logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
@@ -61,7 +62,7 @@ def push_parser(args):
 
 
 def get_parser(args):
-    get(args.auth, args.key, args.bid_status, args.verbose)
+    get(args.auth, args.key, args.bid_status, args.verbose, args.statement_key)
 
 
 if __name__ == "__main__":
@@ -79,6 +80,7 @@ if __name__ == "__main__":
     parser_get.set_defaults(func=get_parser)
     parser_get.add_argument("--key", type=str, help="bid key")
     parser_get.add_argument("--bid_status", type=str, help="bid status")
+    parser_get.add_argument("--statement_key", type=str, help="statement key")
     parser_push.add_argument("--cost", type=float, required=True, help="cost")
     parser_push.add_argument(
         "--file", type=str, required=True, help="json file with public input"
