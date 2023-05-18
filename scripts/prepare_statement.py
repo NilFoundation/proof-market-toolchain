@@ -14,6 +14,7 @@ def prepare(circuit_file, output_file, name, statement_type):
             "verification_key": "verification_key",
             "proving_key": "proving_key",
         },
+        "tag": "test"
     }
 
     if not os.path.exists(circuit_file):
