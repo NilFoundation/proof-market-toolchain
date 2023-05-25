@@ -15,7 +15,9 @@ make -C ${ZKLLVM_BUILD:-build} <circuit target name> -j$(nproc)
 Circuits are stored as a _statement_ structure on Proof Market. Statement description example can be found in /example directory
 
 ```
-python3 scripts/prepare_statement.py -c <zkllvm output> -o <statement description file>
+python3 scripts/prepare_statement.py -c <zkllvm output> \
+-o <statement description file> \ 
+-n <statement name> -t <circuit type>
 ```
 
 Provide the necessary information listed in the output statement file
