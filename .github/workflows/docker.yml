@@ -3,7 +3,7 @@ name: Check and build Dockerfile
 on:
   push:
     branches: [ master ]
-  pull_request:
+#  pull_request:
 
 concurrency:
   group: ${{
