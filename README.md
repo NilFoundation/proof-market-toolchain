@@ -6,16 +6,18 @@
 
 # Introduction
 
-This repository serves as a PoC of how a =nil; Foundation built [proof market](https://proof.market/) would operate.
-This repository also provides a set of scripts/tools required to participate in the proof market.
+This repository also provides a set of scripts/tools required to participate in the
+`=nil;` Foundation's [Proof Market](https://proof.market/).
+It also serves as a PoC of how the Proof Market will operate.
 
-The marketplace consists of the following entities.
+There are three primary roles (parties) in the Proof Market:
 
-- Proof Requester : This can be an application like a bridge requesting
-  balance or a user interested in cross cluster operation and/or trust-less data access.
-- Proof Producer : This is an entity who will generate the proofs for the requests/orders
-  made by the Proof Requester.
-- Circuit Developer : This is an entity who prepare circuits for proof market
+- **Proof requesters** are applications that require zero-knowledge proofs,
+  and make requests for them on the Proof Market.
+- **Proof producers** are owners of computational infrastructure, who 
+  generate proofs for the requests made by proof requesters.
+- **Circuit developers** make zero-knowledge circuits, that are used to generate
+  requests and subsequent proofs.
 
 # Pre-requisites
 
@@ -99,7 +101,7 @@ binaries.
 # pull from registry
 docker pull ghcr.io/nilfoundation/proof-market-toolchain:latest
 # or build from scratch
-docker build -t proof-market-toolchain .
+docker build -t proof-market-toolchain:base .
 ```
 
 Next, run a container and build the proof market toolchain in it.
