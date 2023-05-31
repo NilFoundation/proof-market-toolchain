@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1
+
+FROM ghcr.io/nilfoundation/proof-market-toolchain:base AS builder
+WORKDIR /proof-market-toolchain
+
+COPY . /proof-market-toolchain
+
+RUN ./build.sh
+
+FROM ghcr.io/nilfoundation/proof-market-toolchain:base
+
+COPY scripts /proof-market-toolchain
+COPY --from=builder /proof-market-toolchain/build/bin/ /proof-market-toolchain
+WORKDIR /proof-market-toolchain

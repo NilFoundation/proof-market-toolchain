@@ -3,7 +3,7 @@ name: Check and build Dockerfile
 on:
   push:
     branches: [ master ]
-#  pull_request:
+  pull_request:
 
 concurrency:
   group: ${{
@@ -17,25 +17,10 @@ env:
   IMAGE_NAME: ghcr.io/nilfoundation/proof-market-toolchain
 
 jobs:
-  hadolint:
-    runs-on: [ ubuntu-22.04 ]
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: hadolint/hadolint-action@v3.1.0
-        with:
-          recursive: true
-
   build-image:
-    runs-on: [ ubuntu-22.04 ]
+    runs-on: [ self-hosted, aws_autoscaling ]
 
     steps:
-      - name: Log in to GitHub registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
-      - name: Pull ${{ env.IMAGE_NAME }}:latest as build cache
-        run: docker pull ${{ env.IMAGE_NAME }}:latest || true
-
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -44,10 +29,6 @@ jobs:
         run: |
           set -xe
           docker build -t ${{ env.IMAGE_NAME }}:latest .
-
-      - name: Push ${{ env.IMAGE_NAME }}:latest to GitHub registry
-        if: github.ref == 'refs/heads/master'
-        run: docker push ${{ env.IMAGE_NAME }}:latest
 
       - name: Build proof market in a container
         run: |
