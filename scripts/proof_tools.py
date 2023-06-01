@@ -48,6 +48,8 @@ def get(auth, bid_key=None, proof_key=None, file=None):
         exit(1)
     else:
         res_json = res.json()
+        if bid_key is not None:
+            res_json = res.json()[0]
         if file and "proof" in res_json:
             with open(file, "w") as f:
                 f.write(res_json.pop("proof"))

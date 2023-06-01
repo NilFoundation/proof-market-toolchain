@@ -106,5 +106,5 @@ namespace nil {
                 cfg.add(_opts);
             }
         }    // namespace aspects
-    }        // namespace proof
+    }        // namespace proof_generator_mt
 }    // namespace nil

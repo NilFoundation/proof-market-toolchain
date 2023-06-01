@@ -23,7 +23,7 @@
 // SOFTWARE.
 //---------------------------------------------------------------------------//
 #include <nil/crypto3/codec/algorithm/decode.hpp>
-//#include <nil/crypto3/codec/base.hpp>
+// #include <nil/crypto3/codec/base.hpp>
 
 #include <nil/crypto3/pubkey/eddsa.hpp>
 
@@ -34,7 +34,7 @@
 #include <nil/crypto3/algebra/curves/ed25519.hpp>
 #include <nil/crypto3/algebra/fields/arithmetic_params/ed25519.hpp>
 
-//#include <nil/crypto3/hash/sha2.hpp>
+// #include <nil/crypto3/hash/sha2.hpp>
 #include <nil/crypto3/hash/keccak.hpp>
 
 #include <nil/crypto3/zk/snark/arithmetization/plonk/params.hpp>
@@ -51,7 +51,6 @@
 #include <fstream>
 
 using namespace nil::crypto3;
-
 
 template<typename ed25519_type>
 typename ed25519_type::scalar_field_type::value_type
@@ -335,8 +334,6 @@ typename ed25519_type::scalar_field_type::value_type
     return res;
 }
 
-
-
 int main() {
     using curve_type = nil::crypto3::algebra::curves::pallas;
     using ed25519_type = nil::crypto3::algebra::curves::ed25519;
@@ -373,13 +370,17 @@ int main() {
 
     std::array<signature, k> signatures;
     std::array<var_ec_point, k> public_keys;
-    std::array<ed25519_type::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type, k> signatures_point;
+    std::array<ed25519_type::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type, k>
+        signatures_point;
     std::array<ed25519_type::scalar_field_type::value_type, k> signatures_scalar;
-    std::array<ed25519_type::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type, k> public_keys_values;
+    std::array<ed25519_type::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type, k>
+        public_keys_values;
 
     for (std::size_t i = 0; i < k; i++) {
-        ed25519_type::scalar_field_type::value_type r = nil::crypto3::algebra::random_element<ed25519_type::scalar_field_type>();
-        ed25519_type::scalar_field_type::value_type c = nil::crypto3::algebra::random_element<ed25519_type::scalar_field_type>();
+        ed25519_type::scalar_field_type::value_type r =
+            nil::crypto3::algebra::random_element<ed25519_type::scalar_field_type>();
+        ed25519_type::scalar_field_type::value_type c =
+            nil::crypto3::algebra::random_element<ed25519_type::scalar_field_type>();
 
         ed25519_type::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type R = r * B;
         signatures_point[i] = R;
