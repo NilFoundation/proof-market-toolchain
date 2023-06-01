@@ -11,7 +11,9 @@ PROOFS_DIR = "./proofs/statements/"
 WAIT_BEFORE_SEND_PROOF = 30
 ASK_UPDATE_INTERVAL = 20
 MY_STATEMENTS = {
-    "32326": {"cost": 5, "proposals_limit": 10},
+    "32326": {"cost": 5, "asks_limit": 10},
+    "32292": {"cost": 5, "asks_limit": 10},
+    "79169223": {"cost": 5, "asks_limit": 10},
 }
-USER = ""
+USER = "skm"
 REQUEST_TIMEOUT = 100

@@ -34,7 +34,8 @@ namespace nil {
             }
 
             template<typename CurveType>
-            void check_coord(typename CurveType::base_field_type::value_type &x, typename CurveType::base_field_type::value_type &y) {
+            void check_coord(typename CurveType::base_field_type::value_type &x,
+                             typename CurveType::base_field_type::value_type &y) {
                 if (x == 0 && y == 1) {    // circuit uses (0, 0) as point-at-infinity
                     y = 0;
                 }
@@ -49,7 +50,8 @@ namespace nil {
             }
 
             template<typename CurveType>
-            typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type read_point(boost::json::array point) {
+            typename CurveType::template g1_type<nil::crypto3::algebra::curves::coordinates::affine>::value_type
+                read_point(boost::json::array point) {
                 using base_field_type = typename CurveType::base_field_type;
                 auto x = boost::json::value_to<typename base_field_type::value_type>(point[0]);
                 auto y = boost::json::value_to<typename base_field_type::value_type>(point[1]);
@@ -58,8 +60,8 @@ namespace nil {
                 return {x, y};
             }
 
-        } // namespace mina_state
-    } // namespace proof_generator
-}   // namespace nil
+        }    // namespace mina_state
+    }        // namespace proof_generator
+}    // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
+#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_POINT_HPP
