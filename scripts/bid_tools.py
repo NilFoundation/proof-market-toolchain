@@ -37,7 +37,7 @@ def push(auth, key, file, cost, verbose=False):
         return res.json()
 
 
-def get(auth, key=None, bid_status=None):
+def get(auth, key=None, bid_status=None, verbose=False):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/bid/"
     if bid_status:
@@ -51,7 +51,11 @@ def get(auth, key=None, bid_status=None):
         logging.error(f"Error: {res.status_code} {res.text}")
         return
     else:
-        logging.info(f"Bids:\n {json.dumps(res.json(), indent=4)}")
+        log_data = res.json()
+        if not verbose and '_key' in log_data:
+            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
+            log_data = {k: v for k, v in log_data.items() if k in left_keys}
+        logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
 
@@ -60,7 +64,7 @@ def push_parser(args):
 
 
 def get_parser(args):
-    get(args.auth, args.key, args.bid_status)
+    get(args.auth, args.key, args.bid_status, args.verbose)
 
 
 if __name__ == "__main__":
