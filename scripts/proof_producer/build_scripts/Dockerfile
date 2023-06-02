@@ -53,9 +53,10 @@ COPY .secret /proof-market-toolchain/scripts/proof-producer/.secret
 COPY .user /proof-market-toolchain/scripts/proof-producer/.user
 
 WORKDIR /proof-market-toolchain
- RUN sh ./build.sh \
+RUN sh ./build.sh \
  && pip3 install requests
 
 WORKDIR /
 ENTRYPOINT [ "python3", "/proof-market-toolchain/scripts/proof_producer/proof_producer.py", "start", "-p", "/proof-market-toolchain/build/bin/proof-generator/proof-generator" ]
 #COPY proof-producer.service /etc/systemd/system/proof-producer.service
+
