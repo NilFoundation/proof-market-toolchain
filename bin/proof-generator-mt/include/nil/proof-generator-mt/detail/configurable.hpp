@@ -35,7 +35,7 @@ namespace nil {
                 virtual void initialize(configuration_type &options) = 0;
             };
         }    // namespace detail
-    }        // namespace proof_generator
+    }        // namespace proof_generator_mt
 }    // namespace nil
 
 #endif    // PROOF_GENERATOR__DETAIL_CONFIGURABLE_HPP

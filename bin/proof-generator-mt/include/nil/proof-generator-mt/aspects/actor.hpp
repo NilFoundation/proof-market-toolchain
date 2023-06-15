@@ -68,7 +68,7 @@ namespace nil {
             //                config _cfg;
             //            };
         }    // namespace aspects
-    }        // namespace proof
+    }        // namespace proof_generator_mt
 }    // namespace nil
 
 #endif    // DBMS_ARGS_HPP

@@ -25,16 +25,17 @@ namespace nil {
             namespace fields {
                 namespace detail {
                     template<typename T>
-                    nil::crypto3::algebra::fields::detail::element_fp<T> tag_invoke(boost::json::value_to_tag<nil::crypto3::algebra::fields::detail::element_fp<T>>,
-                                                                                    const boost::json::value &jv) {
+                    nil::crypto3::algebra::fields::detail::element_fp<T>
+                        tag_invoke(boost::json::value_to_tag<nil::crypto3::algebra::fields::detail::element_fp<T>>,
+                                   const boost::json::value &jv) {
 
                         multiprecision::cpp_int x(boost::json::value_to<std::string>(jv));
                         return nil::crypto3::algebra::fields::detail::element_fp<T>(x);
                     }
-                } // namespace detail
-            }    // namespace fields
-        }       // namespace algebra
-    }          // namespace crypto3
-} // namespace nil
+                }    // namespace detail
+            }        // namespace fields
+        }            // namespace algebra
+    }                // namespace crypto3
+}    // namespace nil
 
-#endif // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_FP_ELEMENT_HPP
+#endif    // PROOF_GENERATOR_CIRCUITS_MINA_STATE_DESERIALIZATION_FP_ELEMENT_HPP

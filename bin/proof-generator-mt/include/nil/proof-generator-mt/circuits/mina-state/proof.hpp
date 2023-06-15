@@ -82,8 +82,8 @@ namespace nil {
                 nil::actor::zk::snark::proof_type<nil::crypto3::algebra::curves::pallas> proof =
                     make_proof(jv_public_input);
 
-                constexpr const std::size_t eval_rounds_scalar = 15;
-                constexpr const std::size_t eval_rounds_base = 10;
+                constexpr const std::size_t eval_rounds_scalar = 10;
+                constexpr const std::size_t eval_rounds_base = 7;
                 constexpr const std::size_t fri_max_step = 1;
 
                 generate_proof_heterogenous<pallas_verifier_index_type, eval_rounds_scalar, eval_rounds_base>(

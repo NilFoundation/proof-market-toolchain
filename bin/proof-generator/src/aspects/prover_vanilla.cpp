@@ -79,7 +79,8 @@ namespace nil {
                     if (vm["public_input"].as<std::string>().size() < PATH_MAX ||
                         vm["public_input"].as<std::string>().size() < FILENAME_MAX) {
                         if (boost::filesystem::exists(vm["public_input"].as<std::string>())) {
-                            boost::filesystem::load_string_file(vm["public_input"].as<std::string>(), json_public_input);
+                            boost::filesystem::load_string_file(vm["public_input"].as<std::string>(),
+                                                                json_public_input);
                         }
                     } else {
                         json_public_input = vm["public_input"].as<std::string>();
