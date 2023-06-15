@@ -24,7 +24,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 from public_input_get import get as get_public_input
 from auth_tools import update_auth, get_headers
 from statement_tools import get as get_statement
-from ask_tools import push as push_ask
+from proposal_tools import push as push_proposal
 from proof_tools import push as push_proof
 
 secret = open(os.path.dirname(os.path.abspath(__file__)) + "/.secret", "r").read()
@@ -51,52 +51,51 @@ def get_statements(auth):
     return statements
 
 
-def get_my_asks(status="processing"):
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/ask/"
+def get_my_proposals(status="processing"):
+    url = URL + f"_db/{DB_NAME}/{MOUNT}/proposal/"
     url += f'?q=[{{"key" : "sender", "value" : "{USER}"}},{{"key" : "status", "value" : "{status}"}}]'
 
     res = requests.get(url=url, headers=get_headers(AUTH_FILE))
     if res.status_code != 200:
-        logging.error(f"Get my asks error: {res.status_code} {res.text}")
+        logging.error(f"Get my proposals error: {res.status_code} {res.text}")
         sys.exit(1)
     else:
-        asks = res.json()
-        my_statements_asks = []
-        for ask in asks:
-            if ask["statement_key"] in MY_STATEMENTS:
-                my_statements_asks.append(ask)
-        return my_statements_asks
+        proposals = res.json()
+        my_statements_proposals = []
+        for proposal in proposals:
+            if proposal["statement_key"] in MY_STATEMENTS:
+                my_statements_proposals.append(proposal)
+        return my_statements_proposals
 
 
-def asks_loop():
+def proposals_loop():
     while True:
         try:
-            createdAsks = get_my_asks("created")
-            processingAsks = get_my_asks("processing")
+            createdProposals = get_my_proposals("created")
+            processingProposals = get_my_proposals("processing")
         except:
-            logging.error(f"Get asks error")
+            logging.error(f"Get proposals error")
             continue
 
         for st in MY_STATEMENTS:
-            asksFound = 0
-            for ask in createdAsks:
-                if ask["statement_key"] == st:
-                    asksFound += 1
-            for ask in processingAsks:
-                if ask["statement_key"] == st:
-                    asksFound += 1
-            if asksFound < MY_STATEMENTS[st]["asks_limit"]:
+            proposalsFound = 0
+            for proposal in createdProposals:
+                if proposal["statement_key"] == st:
+                    proposalsFound += 1
+            for proposal in processingProposals:
+                if proposal["statement_key"] == st:
+                    proposalsFound += 1
+            if proposalsFound < MY_STATEMENTS[st]["proposals_limit"]:
                 cost = MY_STATEMENTS[st]["cost"] + round(random.uniform(0, 1), 1)
-                push_ask(AUTH_FILE, st, cost)
-        time.sleep(ASK_UPDATE_INTERVAL)
+                push_proposal(AUTH_FILE, st, cost)
 
 
-def produce_proof(ask, binary, auth):
-    circuit = "./statements/" + ask["statement_key"] + ".json"
+def produce_proof(proposal, binary, auth):
+    circuit = "./statements/" + proposal["statement_key"] + ".json"
     try:
-        input = get_public_input(ask["bid_key"], auth).json()["input"]
+        input = get_public_input(proposal["request_key"], auth).json()["input"]
     except:
-        logging.error(f"Get public input error for ask: {ask['_key']}")
+        logging.error(f"Get public input error for proposal: {proposal['_key']}")
         return
     input_file = "input.json"
     with open(input_file, "w") as f:
@@ -112,7 +111,7 @@ def produce_proof(ask, binary, auth):
     )
     generator.communicate()
     try:
-        push_proof(auth, output, bid_key=ask["bid_key"], ask_key=ask["_key"])
+        push_proof(auth, output, request_key=proposal["request_key"], proposal_key=proposal["_key"])
     except:
         logging.error(f"Push proof error")
     return
@@ -122,18 +121,18 @@ def proofs_loop(binary_path):
     while True:
         time.sleep(ASK_UPDATE_INTERVAL)
         try:
-            matchedAsks = get_my_asks("processing")
+            matchedProposals = get_my_proposals("processing")
         except:
-            logging.error(f"Get processing asks error")
+            logging.error(f"Get processing proposals error")
             continue
-        for ask in matchedAsks:
-            produce_proof(ask, binary_path, AUTH_FILE)
+        for proposal in matchedProposals:
+            produce_proof(proposal, binary_path, AUTH_FILE)
 
 
 def start(args):
     Thread(target=auth_loop).start()
     time.sleep(10)
-    Thread(target=asks_loop).start()
+    Thread(target=proposals_loop).start()
     Thread(target=proofs_loop(args.proof_generator)).start()
 
 

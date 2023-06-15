@@ -23,7 +23,7 @@ def push(auth, key, file, cost, verbose=False):
     }
 
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/bid/"
+    url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
@@ -33,15 +33,15 @@ def push(auth, key, file, cost, verbose=False):
         if not verbose:
             left_keys = ["_key", "status", "statement_key", "cost", "sender"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
-        logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
+        logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
 
-def get(auth, key=None, bid_status=None, verbose=False):
+def get(auth, key=None, request_status=None, verbose=False):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/bid/"
-    if bid_status:
-        url += f'?q=[{{"key" : "status", "value" : "{bid_status}"}}]&limit=100'
+    url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
+    if request_status:
+        url += f'?q=[{{"key" : "status", "value" : "{request_status}"}}]&limit=100'
     elif key:
         url += key
     else:
@@ -55,7 +55,7 @@ def get(auth, key=None, bid_status=None, verbose=False):
         if not verbose and '_key' in log_data:
             left_keys = ["_key", "status", "statement_key", "cost", "sender"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
-        logging.info(f"Limit bid:\t {json.dumps(log_data, indent=4)}")
+        logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
         return res.json()
 
 
@@ -64,7 +64,7 @@ def push_parser(args):
 
 
 def get_parser(args):
-    get(args.auth, args.key, args.bid_status, args.verbose)
+    get(args.auth, args.key, args.request_status, args.verbose)
 
 
 if __name__ == "__main__":
@@ -76,12 +76,12 @@ if __name__ == "__main__":
         "-v", "--verbose", action="store_true", help="increase output verbosity"
     )
     subparsers = parser.add_subparsers(help="sub-command help")
-    parser_push = subparsers.add_parser("push", help="push bid")
+    parser_push = subparsers.add_parser("push", help="push request")
     parser_push.set_defaults(func=push_parser)
-    parser_get = subparsers.add_parser("get", help="get bid")
+    parser_get = subparsers.add_parser("get", help="get request")
     parser_get.set_defaults(func=get_parser)
-    parser_get.add_argument("--key", type=str, help="bid key")
-    parser_get.add_argument("--bid_status", type=str, help="bid status")
+    parser_get.add_argument("--key", type=str, help="request key")
+    parser_get.add_argument("--request_status", type=str, help="request status")
     parser_push.add_argument("--cost", type=float, required=True, help="cost")
     parser_push.add_argument(
         "--file", type=str, required=True, help="json file with public input"
