@@ -53,8 +53,8 @@ COPY .secret /proof-market-toolchain/scripts/proof-producer/.secret
 COPY .user /proof-market-toolchain/scripts/proof-producer/.user
 
 WORKDIR /proof-market-toolchain
- RUN sh ./build.sh
- RUN pip3 install requests
+RUN sh ./build.sh \
+ && pip3 install --no-cache-dir requests==2.28.2
 
 WORKDIR /
 ENTRYPOINT [ "python3", "/proof-market-toolchain/scripts/proof_producer/proof_producer.py", "start", "-p", "/proof-market-toolchain/build/bin/proof-generator/proof-generator" ]
