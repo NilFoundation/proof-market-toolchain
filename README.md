@@ -207,7 +207,7 @@ Statement description example can be found in `example/statements/` directory
 Please ensure you have selected the option to create *ll IR files in the [zkLLVM setup](https://github.com/NilFoundation/zkllvm#2-configure-cmake).
 
 ```
-python3 scripts/prepare_statement.py -c <zkllvm output> -o <statement description file> -n <statement name> -t <statement type>
+python3 scripts/statement_tools.py prepare -c <zkllvm output> -o <statement description file> -n <statement name> -t <statement type>
 ```
 
 Provide the necessary information listed in the output statement file
