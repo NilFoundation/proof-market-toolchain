@@ -1,0 +1,5 @@
+---
+# used by dorny/paths-filter@v2
+dockerfile-base:
+  - 'Dockerfile.base'
+  - 'requirements.txt'
