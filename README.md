@@ -4,40 +4,187 @@
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=dark)](https://t.me/nilfoundation)
 [![Twitter](https://img.shields.io/twitter/follow/nil_foundation)](https://twitter.com/nil_foundation)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Introduction](#introduction)
+- [Starting with a ready Docker image](#starting-with-a-ready-docker-image)
+- [Building the toolchain](#building-the-toolchain)
+  - [Cloning the repository](#cloning-the-repository)
+  - [Building with Docker](#building-with-docker)
+  - [Building on host](#building-on-host)
+    - [Dependencies](#dependencies)
+    - [Building](#building)
+- [Proof Market Beta Access](#proof-market-beta-access)
+- [Proof Market Interaction](#proof-market-interaction)
+  - [1. Prepare zkLLVM (for circuit developers)](#1-prepare-zkllvm-for-circuit-developers)
+  - [2. Circuit Generation/Publishing (for circuit developers)](#2-circuit-generationpublishing-for-circuit-developers)
+  - [3. Proof Market Request Creation](#3-proof-market-request-creation)
+  - [4. Wait for proposals](#4-wait-for-proposals)
+  - [5. Submit proposal](#5-submit-proposal)
+  - [6. Order Matching](#6-order-matching)
+  - [7. Proof Generation](#7-proof-generation)
+  - [8. Proof Submission](#8-proof-submission)
+  - [9. Get Proof](#9-get-proof)
+- [Common issues](#common-issues)
+  - [Compilation Errors](#compilation-errors)
+  - [Submodule management](#submodule-management)
+  - [Compilation errors for Proof generator](#compilation-errors-for-proof-generator)
+  - [macOS](#macos)
+- [Community](#community)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Introduction
 
-This repository serves as a PoC of how a =nil; Foundation built [proof market](https://proof.market/) would operate.
-This repository also provides a set of scripts/tools required to participate in the proof market.
+This repository provides a set of scripts and tools required to participate in the
+`=nil;` Foundation's [Proof Market](https://proof.market/).
 
-The marketplace consists of the following entities.
+There are three primary roles (parties) in the Proof Market:
 
-- Proof Requester : This can be an application like a bridge requesting
-  balance or a user interested in cross cluster operation and/or trust-less data access.
-- Proof Producer : This is an entity who will generate the proofs for the requests/orders
-  made by the Proof Requester.
-- Circuit Developer : This is an entity who prepare circuits for proof market
+- **Proof requesters** are applications that require zero-knowledge proofs,
+  and make requests for them on the Proof Market.
+- **Proof producers** are owners of computational infrastructure, who 
+  generate proofs for the requests made by proof requesters.
+- **Circuit developers** make zero-knowledge circuits, that are used to generate
+  requests and subsequent proofs.
 
-# Pre-requisites
+The Proof Market toolchain has tools for proof requesters and producers.
+To learn more about the Proof Market and these roles, read the 
+[Proof Market documentation](https://docs.nil.foundation/proof-market).
 
-Please ensure you have a ssh key [setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-) on [github](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
-) as this project uses submodules which will be recursively cloned via ssh.
+If you're interested in circuit development, check out the
+[zkLLVM compiler](https://github.com/NilFoundation/zkllvm)
+and [zkLLVM template project](https://github.com/NilFoundation/zkllvm-template).
 
-# Dependencies
+# Starting with a ready Docker image
+
+The quickest way to start working with the Proof Market toolchain is to use the
+Docker image `ghcr.io/nilfoundation/proof-market-toolchain:latest`.
+It has all the parts of the toolchain:
+
+* All required dependencies.
+* Scripts for interaction with Proof Market API.
+* The `proof-generator` binary for building proofs.
+
+```bash
+cd /your/zk/project
+docker run -it \
+  --volume $(pwd):/opt/project \
+  --user $(id -u ${USER}):$(id -g ${USER}) \
+  ghcr.io/nilfoundation/proof-market-toolchain:latest
+
+# --volume mounts your project's directory into the container
+# --user solves issues with file permissions
+
+root@abc123:/proof-market-toolchain proof-producer -h
+root@abc123:/proof-market-toolchain python3 scripts/prepare_statement.py --help
+```
+
+Remember to pull the image often to get the latest release:
+```bash
+docker pull ghcr.io/nilfoundation/proof-market-toolchain:latest .
+```
+
+# Building the toolchain
+
+## Cloning the repository
+
+Clone the repo with submodules:
+
+```bash
+git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
+cd proof-market-toolchain
+```
+
+When you pull newer commits, always checkout the submodules as well:
+```bash
+git submodule update --init --recursive
+```
+
+If you have errors on cloning submodules, 
+[setup the SSH keys](
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+and try cloning again.
+
+## Building with Docker
+
+> **Note:** If you just need the latest release version, use the Docker image at
+`ghcr.io/nilfoundation/proof-market-toolchain:latest`.
+
+You can build a Docker image from a particular commit:
+
+
+```bash
+docker build -t ghcr.io/nilfoundation/proof-market-toolchain:latest .
+```
+
+Now you can run a container based on this image:
+
+```bash
+docker run -it \
+  -v $(pwd):/opt/project \
+  --user $(id -u ${USER}):$(id -g ${USER}) \
+  ghcr.io/nilfoundation/proof-market-toolchain:latest
+
+root@abc123:/proof-market-toolchain proof-producer -h
+root@abc123:/proof-market-toolchain python3 scripts/prepare_statement.py --help
+```
+
+When you build the image, tag can be anything.
+For example, you can use the current commit's hash as the tag:
+
+```bash
+docker build -t ghcr.io/nilfoundation/proof-market-toolchain:$(git rev-parse --short HEAD) .
+```
+
+The final image is built from a base image tagged
+`ghcr.io/nilfoundation/proof-market-toolchain:base`.
+It has precompiled Boost and all other required dependencies.
+If you want to update dependencies, change them in the `Dockerfile.base`,
+and then rebuild the base image:
+
+```bash
+docker build -t ghcr.io/nilfoundation/proof-market-toolchain:base --file Dockerfile.base .
+```
+
+To use proof market binaries, run them from the same container.
+
+## Building on host
+
+### Dependencies
 
 On *nix systems, the following dependencies need to be installed:
 
-```
-sudo apt install build-essential libssl-dev cmake clang-12 git autoconf libc-ares-dev libfmt-dev gnutls-dev liblz4-dev libprotobuf-dev libyaml-cpp-dev libhwloc-dev pkg-config xfslibs-dev systemtap-sdt-dev
+```bash
+apt install \
+    build-essential \
+    libssl-dev \
+    cmake \
+    clang-12 \
+    git \
+    autoconf \
+    libc-ares-dev \
+    libfmt-dev \
+    gnutls-dev \
+    liblz4-dev \
+    libprotobuf-dev \
+    libyaml-cpp-dev \
+    libhwloc-dev \
+    pkg-config \
+    xfslibs-dev \
+    systemtap-sdt-dev
 ```
 
-## Boost
-
-Users need to install boost either manually or from their distros' repository. Please ensure you
-are installing the version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
+Install Boost either manually or from your distributive's repository.
+Please make sure you are installing the version 1.76.
+Follow the guide to install
+[version 1.76](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
 manually.
 
-We have tested for the following set of versions of the libraries.
+We have tested for the following set of versions of the libraries:
 
 ```
 clang-12
@@ -59,22 +206,9 @@ ragel >= 6.10
 
 **We are aware of compilation issues with boost > 1.76 and clang > 12.0. Please use the versions recommended above**
 
-# Installation
+### Building
 
-- Clone the repo
-
-```
-git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
-cd proof-market-toolchain
-```
-
-# Building
-
-You need to build the proof generator only if you wish to generate proofs.
-
-## Building on host
-
-```
+```bash
 mkdir build
 cd build
 cmake -G "Unix Makefiles" \
@@ -88,28 +222,6 @@ cmake --build . -t proof-generator
 cmake --build . -t proof-generator-mt
 ```
 
-## Building with Docker
-
-First, build the toolchain image with all required dependencies.
-It can be reused multiple times for building and running proof market
-binaries.
-
-```
-docker build -t proof-market-toolchain .
-```
-
-Next, run a container and build the proof market toolchain in it.
-
-```
-$ docker run -it \
-  -v $(pwd):/proof-market-toolchain \
-  --name proof-market \
-  proof-market-toolchain
-
-root@...:/proof-market-toolchain# ./build.sh
-```
-
-To use proof market binaries, run them from the same container.
 
 # Proof Market Beta Access
 
@@ -378,12 +490,7 @@ On macOS, these dependencies are required for compilation
 fmt gnutls protobuf yaml-cpp ragel hwloc
 ```
 
-# Documentation
+# Community
 
-Documentation portal for proof market is located [here](https://docs.nil.foundation/proof-market).
-Users are encouraged to check [zkLLVM](https://github.com/NilFoundation/zkllvm) project which is tightly coupled to the proof market.
-
-## Support
-
-Additional support can be obtained by contact the team at [Telegram](https://t.me/nilfoundation) and [Discord](https://discord.gg/KmTAEjbmM3).
+Join our community on [Telegram](https://t.me/nilfoundation) and [Discord](https://discord.gg/KmTAEjbmM3).
 

@@ -13,9 +13,12 @@ concurrency:
     format('{0}/{1}', github.workflow, github.ref) }}
   cancel-in-progress: true
 
+env:
+  IMAGE_NAME: ghcr.io/nilfoundation/proof-market-toolchain
+
 jobs:
   hadolint:
-    runs-on: [ ubuntu-22.04 ]
+    runs-on: [ self-hosted, aws_autoscaling ]
     steps:
       - uses: actions/checkout@v3
 
@@ -23,21 +26,28 @@ jobs:
         with:
           recursive: true
 
-  build:
-    runs-on: [ ubuntu-22.04 ]
+  build-image:
+    runs-on: [ self-hosted, aws_autoscaling ]
+
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Build a Docker image
-        run: |
-          set -xe
-          docker build -t proof-market-toolchain .
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/filters.yml
 
-      - name: Build proof market in a container
-        run: |
-          set -xe
-          docker run -t \
-            -v $(pwd):/proof-market-toolchain \
-            proof-market-toolchain sh ./build.sh
+      # If the base image didn't change, use one from registry
+      - name: Pull ${{ env.IMAGE_NAME }}:base
+        if: steps.changes.outputs.dockerfile-base == 'false'
+        run: docker pull ${{ env.IMAGE_NAME }}:base || true
+
+      # If the base image has changed, build it from scratch
+      - name: Rebuild ${{ env.IMAGE_NAME }}:base
+        if: steps.changes.outputs.dockerfile-base == 'true'
+        run: docker build -t ${{ env.IMAGE_NAME }}:base --file Dockerfile.base .
+
+      - name: Rebuild ${{ env.IMAGE_NAME }}:latest
+        run: docker build -t ${{ env.IMAGE_NAME }}:latest .
