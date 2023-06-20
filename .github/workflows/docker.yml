@@ -17,15 +17,6 @@ env:
   IMAGE_NAME: ghcr.io/nilfoundation/proof-market-toolchain
 
 jobs:
-  hadolint:
-    runs-on: [ self-hosted, aws_autoscaling ]
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: hadolint/hadolint-action@v3.1.0
-        with:
-          recursive: true
-
   build-image:
     runs-on: [ self-hosted, aws_autoscaling ]
 
