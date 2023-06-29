@@ -200,7 +200,7 @@ namespace nil {
                 print_hex_byteblob(out, cv.cbegin(), cv.cend(), false);
             }
 
-            void proof_new(std::string bytecode, std::string public_input_str, std::string output_file) {
+            void proof_new(std::string bytecode, boost::json::value public_input_json, std::string output_file) {
                 using curve_type = nil::crypto3::algebra::curves::pallas;
                 using BlueprintFieldType = typename curve_type::base_field_type;
                 constexpr std::size_t WitnessColumns = 15;
@@ -216,13 +216,7 @@ namespace nil {
 
                 std::vector<typename BlueprintFieldType::value_type> public_input;
                 nil::crypto3::multiprecision::cpp_int number;
-                std::stringstream ss;
-                ss << public_input_str;
 
-                while (!ss.eof()) {
-                    ss >> number;
-                    public_input.push_back(number);
-                }
                 nil::blueprint::parser<BlueprintFieldType, ArithmetizationParams> parser_instance;
 
                 const char *llvm_arguments[2] = {"", "-opaque-pointers=0"};
@@ -238,7 +232,7 @@ namespace nil {
                     return;
                 }
 
-                if (!parser_instance.evaluate(*module, public_input)) {
+                if (!parser_instance.evaluate(*module, public_input_json.as_array())) {
                     return;
                 }
 
