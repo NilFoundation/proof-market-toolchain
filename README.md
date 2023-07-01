@@ -8,6 +8,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
+- [=nil; Proof Market Toolchain](#nil-proof-market-toolchain)
 - [Introduction](#introduction)
 - [Starting with a ready Docker image](#starting-with-a-ready-docker-image)
 - [Building the toolchain](#building-the-toolchain)
@@ -218,8 +219,6 @@ cmake -G "Unix Makefiles" \
   ..
 # Single-threaded version (recommended)
 cmake --build . -t proof-generator
-# Multi-threaded version
-cmake --build . -t proof-generator-mt
 ```
 
 
