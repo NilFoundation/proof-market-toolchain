@@ -8,7 +8,7 @@ import numpy as np
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-import bid_tools
+import request_tools
 
 AUTH = None
 ERROR_WAIT_TIME = 3 * 60  # seconds
@@ -68,7 +68,7 @@ def submit_order_for_statement(statement):
             json.dump(data, f)
     
     cost = np.random.normal(statement['bid_cost'], 1.5)
-    result = bid_tools.push(AUTH, statement['statement_key'], input_file, cost, verbose=True)
+    result = request_tools.push(AUTH, statement['statement_key'], input_file, cost, verbose=True)
     statement['logger'].info(f"Successfully pushed bid: {result['_key']}")
 
 
