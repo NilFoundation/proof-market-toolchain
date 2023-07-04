@@ -2,7 +2,7 @@
 description: Command line guide to proof market
 ---
 
-# User Role Guides
+# User Guides
 
 Please see the appropriate guide based on your user role.
 
@@ -12,13 +12,13 @@ Please see the appropriate guide based on your user role.
 
 
 
-****
 
-****
 
-****
 
-****
 
-****
+
+
+
+
+
 

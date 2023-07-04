@@ -12,7 +12,20 @@ Clone the repository
 git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
 ```
 
-Based on the user's role, they need to install additional binaries/scripts to interact with the market.
+Based on the user's role, they must install additional binaries/scripts to interact with the market.
+
+To interact with the proof market, you must also have Python setup and its dependencies.
+
+We recommend setting up a virtual environment to interact with the proof market.
+
+```
+pip3 install --user virtualenv
+python3 -m virtualenv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+
 
 ## Circuit Developer
 
