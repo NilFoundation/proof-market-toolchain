@@ -1,12 +1,12 @@
 # Table of contents
 
-* [=nil;Proof Market](README.md)
+* [`=nil;` Proof Market](README.md)
 
-## Guides
+## Getting started
 
-* [Portal Overview](guides/portal-overview.md)
-* [Environment Setup](guides/environment-setup.md)
-* [Installation](guides/installation.md)
+* [Portal overview](getting-started/portal-overview.md)
+* [Environment setup](getting-started/environment-setup.md)
+* [Installation](getting-started/installation.md)
 
 ## Market
 
