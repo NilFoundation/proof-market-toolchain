@@ -1,33 +1,51 @@
 ---
-description: Environment setup for proof market cli
+description: Environment setup for the Proof Market CLI
 ---
 
-# Environment Setup
+# Environment setup
 
-In this guide, we set up the packages/libraries we require in order to interact with the proof market using command-line utilities.
+This guide describes how to set up packages/libraries required to interact
+with the Proof Market through the command line.
 
 ## Dependencies
 
-On \*nix systems, the following dependencies need to be present & can be installed using the following command.
+You can install the required dependencies for Debian systems via the following command:
 
-```shell
-sudo apt install build-essential libssl-dev cmake clang-12 git autoconf libc-ares-dev libfmt-dev gnutls-dev liblz4-dev libprotobuf-dev libyaml-cpp-dev libhwloc-dev pkg-config xfslibs-dev systemtap-sdt-dev
+```bash
+apt install \
+    build-essential \
+    libssl-dev \
+    cmake \
+    clang-12 \
+    git \
+    autoconf \
+    libc-ares-dev \
+    libfmt-dev \
+    gnutls-dev \
+    liblz4-dev \
+    libprotobuf-dev \
+    libyaml-cpp-dev \
+    libhwloc-dev \
+    pkg-config \
+    xfslibs-dev \
+    systemtap-sdt-dev
 ```
 
 ### Boost
 
-Users need to install boost either manually or from their distros repository. Please ensure you are installing version 1.76. Follow the guide to install [version 1.76](https://www.boost.org/doc/libs/1\_76\_0/more/getting\_started/unix-variants.html) manually
+[Boost](https://www.boost.org) can be installed either manually or from the distributive's repository.
+Make sure you are installing **version 1.76**.
+Follow [this guide](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
+to install this version manually.
 
-{% hint style="danger" %}
-We are aware of compilation issues with boost and clang. Please ensure you have&#x20;
+{% hint style="info" %}
+Use the recommended versions of the libraries to avoid compilation issues:
 
-following versions:
-
-* Boost == 1.76&#x20;
+* Boost == 1.76
 * clang == 12
 {% endhint %}
 
-We have tested the following set of versions of the libraries.
+We've tested the following versions of the libraries:
 
 ```
 clang-12
