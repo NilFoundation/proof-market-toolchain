@@ -2,3 +2,8 @@ root: ./gitbook-docs/
 
 structure:
   readme: ./README.md
+
+redirects:
+  guides/portal-overview: getting-started/portal-overview.md
+  guides/environment-setup: getting-started/environment-setup.md
+  guides/installation: getting-started/installation.md
