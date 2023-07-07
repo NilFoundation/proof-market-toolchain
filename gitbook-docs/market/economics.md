@@ -1,124 +1,177 @@
 # Economics
 
-{% hint style="danger" %}
-### Disclaimer
-
-This is the first version of =nil;Proof Market economics description. The constant values, fees, penalties and rating politics may be changed in the future according to real-life data and community requests.
-{% endhint %}
+This is the first version of `=nil;` Proof Market economics description.
+The constant values, fees, penalties, and rating politics are subject to changes
+in the future according to real-life data and community requests.
 
 Proof Market constants:
 
-| Name       | Value | Meaning                                |
-| ---------- | ----- | -------------------------------------- |
-| _pf_       | 10    | penalty factor                         |
-| _c_        | 0.5   | commission rate                        |
-| _mc_       | 1     | minimal commission value               |
-| _app\_dev_ | 0.7   | application developers part of the fee |
-| _cir\_dev_ | 0.3   | circuit developers part of the fee     |
+| Name       | Value | Meaning                                 |
+| ---------- | ----- | --------------------------------------  |
+| _pf_       | 10    | penalty factor                          |
+| _c_        | 0.5   | commission rate                         |
+| _mc_       | 1     | minimal commission value                |
+| _app\_dev_ | 0.7   | application developer's part of the fee |
+| _cir\_dev_ | 0.3   | circuit developer's part of the fee     |
 
-### Basic Workflow
+## Basic workflow
 
-1. A proof buyer sends a bid order to the market with a cost _c\_b_;
-2. Proof Market locks _c\_b_ tokens of the buyer;
-3. A proof producer sends an ask order to the market with a cost _c\_a <= c\_b_;
-4. Proof Market matches bid and ask order;
-5. The proof producers generate a proof and send it to the market;
-6. Proof Market verifies proof and pays _c\_b - commission_ tokens to the producer;
-7. The proof buyer uses takes their proof and uses it in some way.
+1. A proof requester sends a request with a desired price _c\_r_ to the market.
+2. The Proof Market locks _c\_r_ tokens from the buyer's account.
+3. Proof producers send proposals to the market with a price _c\_p <= c\_r_.
+4. The Proof Market matches the request with the proposal of the proof producer.
+5. The proof producer generates a proof and sends it to the market.
+6. The Proof Market verifies proof and pays _c\_r - commission_ tokens to the producer.
+7. The proof requester takes their proof and uses it.
 
-### Orders status
+## Orders status
 
-Bids (orders for buying proofs) and asks (orders for selling proofs) have the following statuses:
+Requests (orders for buying proofs) and proposals (orders for selling proofs) have the following statuses:
 
-* _Created_: order was sent to the marketplace and was not yet matched (i.e. there is no buyer for an ask or proof producer for a bid);
-* _Processing_: order was matched, and Proof Market is waiting while proof will be generated;
-* _Completed_: the proof was generated and verified by Proof Market;
-* _Withdrawn_: order was cancelled before matching or after a) wrong proof was submitted or b) prof was not submitted in the requested time interval.
+* _Created_: order was sent to the marketplace and was not yet matched,
+  meaning there is no buyer for a proposal or no proof producer for a request.
+* _Processing_: order was matched, and the Proof Market is waiting for the proof generator
+  to provide the proof.
+* _Completed_: the proof was generated and verified by Proof Market.
+* _Withdrawn_: the order was canceled before matching, a wrong proof was submitted, or
+  no proofs were submitted in the requested time interval.
 
-### Bid/Ask Matching process
+## Request/proposal matching process
 
-Proof Market provides more complex behaviour than one-hop trading. Each deal includes a proof generation stage. This stage may result in the completed deal (proof was provided and verified by Proof Market) or a restart of the matching (if the proof has not been provided or verification has failed). Moreover, some applications require generating proofs in some time interval. Thus, in the future additional parameters will influence the matching algorithm:
+The Proof Market provides a more complex behavior than one-hop trading.
+Each deal includes the proof generation stage.
+This stage may result in a completed deal if proof was provided and verified by the Proof Market
+or a restart of the matching if no proof has been provided or proof's verification has failed.
+Moreover, some applications require generating proofs in the specified time interval.
+In the future, the following parameters will influence the matching algorithm:
 
-* Proof generation time. Proof producers provide time bounds _t\_a_ in which they are able to generate proof for the statement. Users can set the desired proof generation time _t\_b_. Only asks with the _t\_a_ ≤ _t\_b_ can be matched with the user’s bid.
-* Proof producers rating. The rating depends on the rate of the completed orders by the proof producers (i.e. the proof producer has provided correct proof in the requested time interval).
+* Proof generation time.
+  Proof producers provide time bounds _t\_p_ in which they can generate proof for the statement.
+  Users can set the desired proof generation time _t\_r_.
+  Only proposals with _t\_p_ ≤ _t\_r_ can be matched with the user's request.
+* Proof producer's rating.
+  Proof producer's rating depends on the rate of completed orders — orders where the proof producer
+  has provided correct proof in the requested time interval.
 
-Here are the basic rules of order matching for bid with desired time _t\_b_ and price _p\_b_:
+Here are the basic rules of order matching for a request with specified time _t\_r_ and price _c\_r_:
 
-1. Choose asks with _t\_a_ ≤ _t\_b_ and _p\_a_ ≤ _p\_b_.
-2. Sort them by price and proof generation time (priority between these parameters is defined by the user’s bid).
+1. Choose proposals with _t\_p_ ≤ _t\_r_ and _c\_p_ ≤ _c\_r_.
+2. Sort them by price and proof generation time.
+   The user's request defines the priority of these parameters.
 3. Apply proof producer's rating to the sorted list.
-4. Choose the top ask from the list.
+4. Choose the top proposal from the list.
 
-### Bids & Asks resale
+## Proof resale
 
-When creating a new bid, there may be situations when there is already an equivalent bid in the database. Two bids are considered equivalent if they match in the **statement** and **public\_input** fields. Therefore, when adding a new bid, the application first tries to find an equivalent bid in the system. If such a bid is found and there is already proof for it, the following happens:
+There may be situations when an equivalent request is already in the database.
+Two requests are considered equivalent if they match in the **statement** and **public\_input** fields.
+Upon receiving a new request, the application tries to find an equivalent request in the system.
+This is what happens if such a request is found and there's already proof for it:
 
-* the new bid immediately goes into the **completed** state;
-* the proof requester pays a commission to the proof market;
-* the proof requester pays a commission to the proof producer who generated the proof for the existing bid;
-* the proof requester pays a commission to the owner of the existing bid;
-* unspent tokens are returned to the proof requester.
+* The new request immediately goes into the **completed** state.
+* The proof requester pays commissions to the Proof Market, the circuit developer,
+  the proof producer who generated the proof for the existing request, and the proof requester
+  of the original request.
+* Unspent tokens are returned to the proof requester.
 
-It is assumed that the total amount of all commissions will be significantly lower than the market price of the bid. This approach allows a proof-requester to recoup its bid costs in the future (if he is the owner of the bid whose result will be reused) and even earn. Similarly, a proof producer can sell his proof more than once, and the proof producer will receive his commission from each such additional sale.
+The total amount of all commissions should be significantly lower than the market price of the request.
+This approach allows the proof requester, whose proof will be reused, to recoup proof costs
+in the future and maybe even earn something on it.
+Similarly, a proof producer can sell their proof more than once and receive a commission
+from each such additional sale.
 
-### Registration
+## Registration
+### Proof requester
 
-#### Proof Requester
+There is no process for proof requesters registration.
+Any `=nil;` cluster account can send a request to the marketplace.
+The only requirement is that the user's account must have enough funds to pay for the order.
 
-There is no process of registration for proof buyers. Any =nil;Cluster account is able to send a bid to the marketplace. The only requirement is that the user's account must have enough funds to pay for the order.
+### Proof producer
 
-#### Proof Producer
+Account has to register as a Proof Producer to put proposals on the marketplace.
+The process includes locking funds (_deposit_).
+The number of locked funds reflects the number of orders that the proof producer can process at the moment.
 
-Account has to register as a Proof Producer to be able to set asks to the marketplace. The process includes locking funds (_deposit_). The number of locked funds reflects the number of orders that the proof producer can process at the moment.
+Let _X_ be the number of locked funds by the proof producer.
+Then they can process requests on the sum of _X/pf_ at once.
+This restriction is related to the penalties policy described in the following sections.
 
-Let _X_ is the number of locked funds by the proof producer. Then they can process bids on the sum of _X/pf_ at once. This restriction is related to the penalties policy described in the next sections.
+## Funds transferring and commissions
 
-### Funds transferring & commissions
+When placing a request, the proof requester sets the cost they are willing to pay for
+the successfully submitted proof.
+If the proof for the request is provided on time, the price indicated in the proposal cost
+is deducted from the proof requester's account and credited to the account of the proof producer.
 
-When placing a bid, the customer sets the cost that he is willing to pay for the successfully submitted proof for the bid. If the proof for the bid is provided on time, the amount indicated in the ask cost is deducted from the customer's account and credited to the account of the proof producer.
-
-_c_% of the bid cost goes as the commission but not less than _mc_ tokens. It is split between two parties
+_c_% of the request cost goes as the commission, but not less than _mc_ tokens.
+It's split between two parties:
 
 * _app\_dev_ part goes to the Proof Market development team;
-* _cir\_dev_ part goes to the Circuit Developer of the ordered statement.
+* _cir\_dev_ part goes to the circuit developer of the ordered statement.
 
-#### Funds withdraw
+### Funds withdrawal
 
-**From the proof requester's perspective:**
+#### From the proof requester's perspective
 
-Each time a new bid is added, an amount equal to the bid cost is locked on the account. The locked amount is debited from the account if the bid is successfully closed. If the bid is not closed within the available time, the customer has the opportunity to withdraw the bid. If the bid is successfully withdrawn, the locked amount will be unlocked.
+Each time a new request is added, an amount equal to the request cost is locked on the account.
+The locked funds are debited from the account once the request is successfully closed.
+If the request is not completed within the specified time interval, the proof requester
+can withdraw the request.
+If the request is successfully withdrawn, the locked funds will be unlocked.
 
-**From the proof producer perspective:**
+#### From the proof producer's perspective
 
-At any moment, a proof producer is able to withdraw funds that are not part of the deposit for their active asks. This means that at each moment, the proof producer has pf∗S locked funds where S is the sum of all their ask orders that are not completed or withdrawn.
+At any moment, a proof producer can withdraw funds that are not part of the deposit
+for their active proposals.
+This means that the proof producer has _pf∗S_ locked funds where _S_ is the sum of all
+their proposal orders that are not completed or withdrawn.
 
-### Ratings
+## Ratings
 
-In the system, each proof producer has a rating. Rating is taken into account in many different processes, for example, in matching, ask placement, etc. For simplicity, the conscientious fulfilment of obligations increases the rating. It increases the likelihood of a bid matching, while the producer’s dishonest work can lead to decreased ratings and various restrictions.
+Each proof producer has a rating in the system.
+Rating impacts many processes, such as matching, proposal placement, and others.
+For simplicity, the conscientious fulfillment of obligations increases the rating.
+It increases the likelihood of a request matching, while the producer's dishonest work
+can lead to decreased ratings and various restrictions.
 
-**The rating System is in the design/development stage; more details on it will be provided soon**
+{% hint style="info" %}
+The rating system is in the design/development stage; more details on it will be provided soon**
+{% endhint %}
 
-### What happens if the proof is not submitted on time
+## What happens if the proof is not submitted on time
 
-The situation when the proof is not provided on time or is not provided at all is considered undesirable. This situation may have a negative impact on the producer's rating in the first place. Regular non-fulfilment of undertaken obligations, in addition to downgrading the rating, may have the following consequences:
-
-* Account blocking
-* Limits on the allowed number of assigned bids
-* Setting a limit on the minimum generation time for the producer
-
-If the proof was not provided on time, the bid can be unmatched and reassigned to another proof producer.
-
-Proof producers do not get the payment for the proofs that were not provided in the requested time interval. However, there is a difference in rating change for the cases when proof was not provided on time and the proof was not provided at all. Remind that proof producer define their minimum proof generation time, and the matching algorithm never matches asks to the bids with tb\<ta.
-
-### The delay between the bid/ask submission and the matching
-
-There is no delay between the bid/ask submitting and running the matching algorithm. It means that as soon as the bid/ask was submitted, Proof Market tries to match it with other existing orders.
+The situation when the proof is not provided on time or is not provided at all
+is considered undesirable.
+Requests may be unmatched and reassigned to another proof producer in such cases.
+Proof producers don't receive payments for proofs not provided in the requested time interval
+and are subject to penalties and restrictions.
+Remember that proof producers define their minimum proof generation time,
+and the matching algorithm never matches proposals to the requests with _t\_r_ < _t\_p_.
 
 ### Penalties
 
-There are two types of penalties to proof producers:
+There are two types of penalties for proof producers:
 
-* Rating decreasing. It happens when proof was not provided on time or was not provided at all.
-* Fine on the locked funds. It happens when verification fails for the provided proof; then the proof producer pays _pf \* c_ tokens as a fine, where _c_ is the order's cost. It is considered malicious behaviour from the proof producer side.
+* If a proof producer provides proof out of time or doesn't provide it at all,
+  their rating will decrease.
+  However, there's a difference in rating change for when proof was not provided on time
+  and when it was not provided at all.
+* If a proof producer provides proof that doesn't verify, a fine of _pf \* c_ tokens
+  will be subtracted from their deposit, where _c_ is the order's cost.
 
-There are no penalties for proof buyers because they use a one-hop pipeline that excludes malicious behaviour from their side.
+In addition to that, regular non-fulfillment of undertaken obligations
+may have the following consequences:
+
+* account blocking;
+* limits on the allowed number of assigned requests;
+* a limit on the minimum generation time for the producer.
+
+There are no penalties for proof requesters because they use a one-hop pipeline that excludes
+malicious behavior from their side.
+
+## The delay between the request/proposal submission and the matching
+
+There is no delay between the request/proposal submitting and running the matching algorithm.
+As soon as the request/proposal is submitted, the Proof Market tries to match it with
+other existing orders.
