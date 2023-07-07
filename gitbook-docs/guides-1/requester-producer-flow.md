@@ -248,7 +248,7 @@ You should now have a `arithmetic_proof.bin` file in your directory, assuming no
 ## Publish Proof
 
 ```
-python3 scripts/proof_tools.py  push -a 16153923 -f arithmetic_proof.bin
+python3 scripts/proof_tools.py  push -p 16153923 -f arithmetic_proof.bin
 ```
 
 Output:
