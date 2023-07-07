@@ -54,3 +54,26 @@ Error #2 — duplicate user:
 ```bash
 Error: 500 {"error":true,"errorNum":1702,"errorMessage":"duplicate user","code":500}
 ```
+## register as a proof producer
+
+If you wish to submit generated proofs to the Proof Market,
+you need to also register as a proof producer:
+
+```console
+foo@bar:~$ python3 signup.py producer --url https://example.com
+```
+
+his will return producer metadata in JSON format:
+
+```json
+{
+  "_key": "...",
+  "_id": "producer/...",
+  "_rev": "_fneT7J2---",
+  "description": "Generic Producer",
+  "url": "https://example.com",
+  "name": "username",
+  "createdOn": 1677588821180,
+  "updatedOn": 1677588821180
+}
+```
