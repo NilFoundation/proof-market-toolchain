@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-# build to ghcr.io/nilfoundation/proof-market-toolchain:base
+# Build:
+# docker build -t ghcr.io/nilfoundation/proof-market-toolchain:base --file Dockerfile.base .
 
 ARG BOOST_VERSION=1.76.0
 ARG BOOST_VERSION_UNDERSCORED=1_76_0
@@ -47,6 +48,7 @@ ARG BOOST_SETUP_DIR
 COPY --from=boost_builder ${BOOST_SETUP_DIR} ${BOOST_SETUP_DIR}
 ENV BOOST_ROOT=${BOOST_SETUP_DIR}
 
+
 RUN DEBIAN_FRONTEND=noninteractive \
     set -xe \
     && apt-get update \
@@ -67,6 +69,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         libssl-dev \
         libyaml-cpp-dev \
         pkg-config \
+        python3 \
+        python3-pip \
         ragel \
         systemtap-sdt-dev \
         wget \
