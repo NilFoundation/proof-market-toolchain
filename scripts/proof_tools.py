@@ -77,13 +77,13 @@ if __name__ == "__main__":
     parser_get = subparsers.add_parser("get", help="get proof")
     parser_get.set_defaults(func=get_parser)
 
-    parser_push.add_argument("-a", "--proposal_key", type=str, default=None, help="proposal_key")
-    parser_push.add_argument("-b", "--request_key", type=str, default=None, help="request_key")
+    parser_push.add_argument("-p", "--proposal_key", type=str, default=None, help="proposal_key")
+    parser_push.add_argument("-r", "--request_key", type=str, default=None, help="request_key")
     parser_push.add_argument(
         "-f", "--file", type=str, required=True, help="file with proof"
     )
     parser_get.add_argument("-p", "--proof_key", type=str, help="key of the proof")
     parser_get.add_argument("-f", "--file", type=str, help="file to write proof")
-    parser_get.add_argument("-b", "--request_key", type=str, help="request_key")
+    parser_get.add_argument("-r", "--request_key", type=str, help="request_key")
     args = parser.parse_args()
     args.func(args=args)

@@ -20,7 +20,7 @@ def signup(user, password, email):
     return response
 
 
-def register_producer(description, url, logo):
+def register_producer(description, url, logo, eth_address):
     headers = get_headers(None)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/producer/register"
     body = {"description": description}
@@ -28,6 +28,8 @@ def register_producer(description, url, logo):
         body["url"] = url
     if logo is not None:
         body["logo"] = logo
+    if eth_address is not None:
+        body["eth_address"] = eth_address
     response = requests.post(url, json=body, headers=headers)
     if response.status_code != 200:
         print(f"Error: {response.status_code} {response.text}")
@@ -43,7 +45,7 @@ def signup_parser(args):
 
 
 def register_producer_parser(args):
-    register_producer(args.description, args.url, args.logo)
+    register_producer(args.description, args.url, args.logo, args.eth_address)
 
 
 if __name__ == "__main__":
@@ -75,6 +77,9 @@ if __name__ == "__main__":
     )
     parser_producer.add_argument(
         "-l", "--logo", action="store", default=None, help="logo of a producer"
+    )
+    parser_producer.add_argument(
+        "-e", "--eth_address", action="store", default=None, help="eth address"
     )
     args = parser.parse_args()
 
