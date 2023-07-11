@@ -58,6 +58,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         build-essential \
         clang-12 \
         cmake \
+        emacs \
         git \
         gnutls-dev \
         libc-ares-dev \
@@ -68,11 +69,14 @@ RUN DEBIAN_FRONTEND=noninteractive \
         libsctp-dev \
         libssl-dev \
         libyaml-cpp-dev \
+        mc \
+        nano \
         pkg-config \
         python3 \
         python3-pip \
         ragel \
         systemtap-sdt-dev \
+        vim \
         wget \
         xfslibs-dev \
     && apt-get clean \
