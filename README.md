@@ -318,9 +318,19 @@ Statement description example can be found in `example/statements/` directory
 
 Please ensure you have selected the option to create *ll IR files in the [zkLLVM setup](https://github.com/NilFoundation/zkllvm#2-configure-cmake).
 
+```bash
+python3 scripts/prepare_statement.py \
+    -c <zkllvm output> \
+    -o <statement description file> \
+    -n <statement name> \
+    -t <statement type> \
+    --private | --public
 ```
-python3 scripts/prepare_statement.py -c <zkllvm output> -o <statement description file> -n <statement name> -t <statement type>
-```
+The `--private` or `--public` parameters are mutually exclusive:
+
+* With `--private`, the statement will be accessible only by its ID.
+  For experiments and development purposes, make your statements private.
+* With `--public`, the statement will be openly listed on the Proof Market.
 
 Provide the necessary information listed in the output statement file
 
