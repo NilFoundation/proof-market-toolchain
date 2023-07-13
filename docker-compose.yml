@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  request_pusher:
+    build: ./scripts/request_pusher
+    environment:
+      RUN_TYPE: test
+      SECRET_FILE: /proof-market-toolchain/scripts/.secret
+      NAME_FILE: /proof-market-toolchain/scripts/.name
+    ports:
+      - "5000:5000"
+    volumes:
+    - ./:/proof-market-toolchain

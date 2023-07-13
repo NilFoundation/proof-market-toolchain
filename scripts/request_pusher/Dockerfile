@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1
-
 FROM ubuntu:22.04
 RUN DEBIAN_FRONTEND=noninteractive \
     set -xe \
@@ -8,8 +7,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
         autoconf \
         automake \
         build-essential \
-        clang-12 \
         cmake \
+        mc \
+        nano \
         git \
         gnutls-dev \
         libc-ares-dev \
@@ -18,6 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         liblz4-dev \
         libprotobuf-dev \
         libsctp-dev \
+        systemctl \
         libssl-dev \
         libyaml-cpp-dev \
         pkg-config \
@@ -25,20 +26,14 @@ RUN DEBIAN_FRONTEND=noninteractive \
         systemtap-sdt-dev \
         wget \
         xfslibs-dev \
+        python3 \
+        python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /tmp
-RUN set -xe \
-    && wget -q --no-check-certificate \
-      https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz \
-    && tar -xvf boost_1_76_0.tar.gz \
-    && rm boost_1_76_0.tar.gz
+RUN pip install numpy 
+RUN pip install requests 
 
-WORKDIR /tmp/boost_1_76_0
-RUN set -xe \
-    && sh ./bootstrap.sh \
-    && ./b2 \
-    && ./b2 install
+WORKDIR /
 
-WORKDIR /proof-market-toolchain
+ENTRYPOINT [ "python3", "/proof-market-toolchain/scripts/request_pusher/request_loop.py" ]
