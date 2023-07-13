@@ -29,7 +29,7 @@
 #include <nil/crypto3/zk/snark/arithmetization/plonk/constraint_system.hpp>
 
 #include <nil/blueprint/parser.hpp>
-#include <nil/blueprint/utils/table_profiling.hpp>
+#include <nil/blueprint/transpiler/table_profiling.hpp>
 #include <nil/blueprint/utils/satisfiability_check.hpp>
 
 #include <nil/marshalling/status_type.hpp>
