@@ -1,9 +1,9 @@
 {   
     "name": "mina-state",
     "type": "placeholder-vanilla",
-    "description": "mina state proof",
+    "description": "Proof for the hashed Mina ledger state. It is a part of Mina => Ethereum zkBridge. You can find more information about the bridge here: https://blog.nil.foundation/2021/11/01/mina-ethereum-bridge-design.html",
     "url": "https://github.com/NilFoundation/mina-state-proof",
-    "input_description": "use mina tools from https://github.com/NilFoundation/lorem-ipsum-cli",
+    "input_description": "How to get public input: https://docs.nil.foundation/proof-market/guides/mina-proof-pipeline-example/3.-proof-request#ledger-state-proof",
     "isPrivate": "False",
     "definition": {
         "proving_key": { "kimchi_const" : {

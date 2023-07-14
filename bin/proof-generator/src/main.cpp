@@ -104,8 +104,7 @@ void proof_new(boost::json::value circuit_description, boost::json::value public
         nil::proof_generator::assigner::proof_new(bytecode, public_input, output_file);
     } else if (statement_type == "placeholder-vanilla") {
         boost::json::value statement = circuit_description.at("definition").at("proving_key");
-        boost::json::value public_input_mina = public_input.at("input");
-        nil::proof_generator::mina_state::proof_new(statement, public_input_mina, output_file);
+        nil::proof_generator::mina_state::proof_new(statement, public_input, output_file);
     } else {
         std::cout << "Unknown statement type: " << statement_type << "\n";
     }
