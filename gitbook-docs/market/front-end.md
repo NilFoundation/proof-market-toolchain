@@ -1,137 +1,135 @@
 ---
-description: Proof Market front end guide
+description: Web interface of the Proof Market
 ---
 
-# Front End
+# Web interface
+
+The web interface of the Proof Market can be accessed at [proof.market](https://proof.market).
 
 {% hint style="info" %}
 Please note this product is in beta and expected to change.
 {% endhint %}
 
-#### Proof Market front end can be accessed at [**proof.market**](https://proof.market)
+## Creating an account 
 
-## New user signup
+To interact with the Proof Market, create an account at [proof.market](https://proof.market/#/register)
+or [through the command-line interface](cmd-reference/user.md).
+Without an account, you can view the exchange, but you won't be able to post orders 
+to buy or sell proofs.
 
-All users who wish to interact with the proof market must create an account.
+To register a new user via the web interface, go to the [Sign up](https://proof.market/#/register)
+page or select **Sign in** > **Sign up** from the main page:
 
-{% hint style="info" %}
-If you do not have the credentials, users can still view the exchange, but they will be unable to post orders to buy/sell proofs.
-{% endhint %}
+<figure><img src="../.gitbook/assets/sign-in.png" alt=""><figcaption><p>Sign in view</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+Enter your username and password and complete the flow by clicking on **Register**.
 
-Click on Sign up
+<figure><img src="../.gitbook/assets/sign-up.png" alt=""><figcaption><p>Registration view</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+## Logging in
 
-Select your username and password and complete the flow by clicking register.
+If you're a registered user, go to the [Sign in](https://proof.market/#/login) page, enter your credentials in the provided fields, and click **Login**.
 
-
-
-## Login&#x20;
-
-<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption><p>Login</p></figcaption></figure>
-
-Authenticated users should enter their credentials in the provided fields. &#x20;
+<figure><img src="../.gitbook/assets/sign-in.png" alt=""><figcaption><p>Sign in view</p></figcaption></figure>
 
 ## Dashboard
 
-<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+The Proof Market dashboard has the following components:
 
-The proof market dashboard can be broken down into the following components
+* [A: Statement list](front-end.md#statement-list);
+* [B: Trades](front-end.md#trades);
+* [C: Last proof producer](front-end.md#last-proof-producer);
+* [D: Statement details](front-end.md#statement-details);
+* [E: Statement dashboard](front-end.md#statement-dashboard);
+* [F: Order book](front-end.md#order-book);
+* [G: Create orders](front-end.md#create-orders);
+* [H: Manage orders](front-end.md#manage-orders).
 
-* [A: Circuit List](front-end.md#circuit-list)
-* [B:  Trades](front-end.md#trades)
-* [C: Last Proof Producer](front-end.md#last-proof-producer)
-* [D: Circuit Details](front-end.md#circuit-details)
-* [E: Circuit Price Dashboard](front-end.md#circuit-price-dashboard)
-* [F: Order Book](front-end.md#order-book)
-* [G: Create Orders](front-end.md#create-orders)
-* [H: Manage Orders](front-end.md#manage-orders)
+<figure><img src="../.gitbook/assets/dashboard-authorized.png" alt=""><figcaption><p>The Proof Market dashboard</p></figcaption></figure>
 
-### Circuit List
+If you're not logged in, **Create orders** and **Manage orders** sections will not be available.
 
-<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+### Statement list
 
-The circuit list shows the circuits (instruments) available on the proof market. Orders can be created to buy or sell proofs for them. A user can search for circuits; the component shows the price change in the last 24 hours. This selection also alters all the other components.
+The statements list shows the [statements](overview.md/#circuits-and-statements) available
+on the Proof Market, like MINA or Solana state-proofs, and their price change in the last 24 hours.
+Here you can search the statements to create an order to buy or sell proofs.
+Selection of a statement in this view also affects all the other components.
 
-
+<figure><img src="../.gitbook/assets/statement-list.png" alt=""><figcaption><p>Circuit list view</p></figcaption></figure>
 
 ### Trades
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+The trades component shows all the orders executed on the marketplace for the selected statement.
 
-The trades component shows all the orders executed on the marketplace for the selected Circuit.
+<figure><img src="../.gitbook/assets/trades.png" alt=""><figcaption><p>Trades view</p></figcaption></figure>
 
-### Last Proof Producer
-
-<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
+### Last proof producer
 
 This section shows the username of the last proof producer on the marketplace.
 
-### Circuit Details
+<figure><img src="../.gitbook/assets/last-proof-producer.png" alt=""><figcaption><p>Last producer view</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+### Statement details
 
-The circuit details component shows more information about the circuit, Aggregated marketplace stats and some description.
+The statement details component shows the statement's description and URL along with its aggregated
+marketplace stats, like average cost and generation time.
 
-### Circuit Price Dashboard
+<figure><img src="../.gitbook/assets/statement-details.png" alt=""><figcaption><p>Statement details view</p></figcaption></figure>
 
-This comprises two views.
+### Statement dashboard
 
-* Proof Cost: The circuit Price dashboard shows a historical view of the price settlement for this circuit.
+This dashboard has two tabs:
 
+* Proof cost — a history of the price settlement and amount of generated proofs for this statement.
 
+<figure><img src="../.gitbook/assets/proof-cost.png" alt=""><figcaption><p>Proof cost</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption><p>Proof Cost</p></figcaption></figure>
+* Proof generation time — a history of how long did proof generation take from the time
+  the order was matched to the time a proof was submitted to the market.
 
-* .Proof Generation Time - This shows a historical view of how long did proof generation take from the time the order was matched to the time a proof was submitted to the market
+<figure><img src="../.gitbook/assets/proof-generation-time.png" alt=""><figcaption><p>Proof generation time</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption><p>Proof Generation time</p></figcaption></figure>
+### Order book
 
+The order book shows the request and proposals on the marketplace for orders
+which have not yet matched.
 
+<figure><img src="../.gitbook/assets/order-book.png" alt=""><figcaption><p>Order book view</p></figcaption></figure>
 
-### Order Book
+You can toggle to see your orders in the book and group them.
 
-The order book shows the bid and asks on the marketplace for orders which have not yet matched.
+### Create orders
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+**Create orders** section is active only for logged-in users.
+Here you can place buy and sell orders.
 
-You can toggle to see your own orders in the book and group them.
+You can learn more about orders and their fields in [Terminology](overview.md/#orders-types).
+Please note that you should provide your inputs for the selected statement
+in the **Public Input** field.
 
-### Create Orders
+All users can post orders for buying proofs:
 
-Create Orders  section can be used to place the following orders
+<figure><img src="../.gitbook/assets/buy-order.png" alt=""><figcaption><p>Buy order</p></figcaption></figure>
 
-1. **Buy Order**: A buy order is posted by a proof requester. Each buy order comprises of the following parameters:
-   1. **Cost**: Amount the user is willing to pay for the proof. This is a number represented in USD.
-   2. **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.
-   3. **Generation Time**:  Once the order is matched, this specifies the maximum time the proof generator has to publish the proof. This is an optional parameter. This is a number expressed in minutes.&#x20;
-   4. **Public Inputs:** This is an optional parameter to add any public inputs if the circuit requires it.
+If you are registered as a proof producer, you will also be able to post sell orders:
 
-<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Buy Order</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/sell-order.png" alt=""><figcaption><p>Sell order</p></figcaption></figure>
 
+Otherwise, you'll see this:
 
-
-2\. **Sell Order**: A proof Generator posts a sell order. Each sell order comprises the following parameters
-
-* **Cost:** Amount the proof generator is willing to accept to create a proof.
-* **Order Time Out**: Once the order enters the marketplace, how long should it stay in the order book. If it times out before being matched, it is purged. This is a number representing   Minutes.
-* **Generation Time:** The upper bound by which the proof will be generated once matched.
-
-<figure><img src="../.gitbook/assets/image (5) (1).png" alt=""><figcaption><p>Sell Order</p></figcaption></figure>
-
-### Manage Orders
-
-Under manage orders, a user can do the following.
-
-* **Active Orders:** This view shows all the users' orders that are currently active and have not been matched yet. A user can cancel an active order from this screen.
-
-<figure><img src="../.gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
-* **History:** This view shows all the historical orders a user has placed.
-
-###
+<figure><img src="../.gitbook/assets/sell-order-register-as-a-producer.png" alt=""><figcaption><p>Sell order view for proof requesters</p></figcaption></figure>
 
 
+### Manage orders
 
+**Manage orders** section is active only for logged-in users.
+This view has two tabs:
+
+* **Active orders** — all your currently [active orders](economics.md/#orders-status),
+  waiting for a match or in processing.
+  Here you can cancel an active order.
+
+<figure><img src="../.gitbook/assets/manage-orders.png" alt=""><figcaption><p>Manage orders view</p></figcaption></figure>
+
+* **History** — all your completed orders.
