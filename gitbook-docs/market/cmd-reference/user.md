@@ -4,7 +4,8 @@ description: Creating and managing accounts
 
 # User account utilities
 
-This page describes the script managing user credentials/account — `signup.py`.
+This page describes the scripts managing user credentials and account,
+`signup.py` and `auth_tools.py`.
 
 ## Creating a new account
 ### Usage
@@ -39,6 +40,9 @@ Success:
 {"user":"helloworld","active":true,"extra":{},"error":false,"code":201}
 ```
 
+If the signup is successful, this command creates `.user` and `.secret` files with your credentials
+in the `./scripts` directory.
+
 Error #1 — invalid username format:
 
 ```bash
@@ -63,3 +67,6 @@ in the `./scripts` folder:
 $ echo '<username>' > .user
 $ echo '<password>' > .secret
 ```
+
+And that's it; the authorization will be performed automatically when you run any of the toolchain's scripts.
+The authorization file (JWT authorization token) will be stored in `./scripts/auth.json`.
