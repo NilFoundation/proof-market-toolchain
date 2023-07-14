@@ -4,12 +4,10 @@ description: Managing circuits and statements
 
 # Statement utilities
 
-`=nil;` prepared a [toolchain](https://github.com/NilFoundation/proof-market-toolchain) for
-interacting with the Proof Market.
 This page describes scripts for circuit developers and proof producers,
 `prepare_statement.py` and `statement_tools.py`.
 
-Make sure you've [signed in or signed up](user.md) before continuing.
+Make sure you've [signed up](user.md) before continuing.
 
 ## Preparing circuit as a statement
 
@@ -23,7 +21,7 @@ before publishing them on the Proof Market.
 To see all parameters that can be passed to the script, run it with the `-h` option:
 
 ```console
-foo@bar:~$ python3 prepare_statement.py -h 
+$ python3 prepare_statement.py -h 
 
 usage: prepare_statement.py [-h] -c CIRCUIT -o output_file_path -n NAME -t \
        statement_type (--private | --public)
@@ -63,7 +61,7 @@ See the [preparing statement](statement.md#preparing-circuit-as-a-statement) sec
 To publish a statement, you'll need to pass its JSON statement description in a file:
 
 ```console
-foo@bar:~$ python3 statement_tools.py push -h
+$ python3 statement_tools.py push -h
 
 usage: statement_tools.py push [-h] --file FILE
 
@@ -99,7 +97,7 @@ options:
 All statements can be retrieved from the Proof Market like this:
 
 ```console
-foo@bar:~$ python3 statement_tools.py get
+$ python3 statement_tools.py get
 
 [    
     {

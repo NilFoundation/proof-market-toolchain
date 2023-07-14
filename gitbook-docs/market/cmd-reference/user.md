@@ -4,16 +4,15 @@ description: Creating and managing accounts
 
 # User account utilities
 
-`=nil;` prepared a [toolchain](https://github.com/NilFoundation/proof-market-toolchain)
-for interacting with the Proof Market.
 This page describes the script managing user credentials/account — `signup.py`.
 
-## Usage
+## Creating a new account
+### Usage
 
 To see all parameters that can be passed to the script, run it with the `-h` option:
 
 ```console
-foo@bar:~$ python3 signup.py -h
+$ python3 signup.py -h
 
 usage: signup.py [-h] -u USER -p PASSWD -e EMAIL
 
@@ -26,13 +25,13 @@ options:
                         email
 ```
 
-## Example
+### Example
 
 ```bash
 python3 signup.py -u helloworld -p password123 -e hello@test.com
 ```
 
-## Possible results
+### Possible results
 
 Success:
 
@@ -53,4 +52,14 @@ Error #2 — duplicate user:
 
 ```bash
 Error: 500 {"error":true,"errorNum":1702,"errorMessage":"duplicate user","code":500}
+```
+
+## Signing in
+
+If you already have an account, store your username and password in files `.user` and `.secret`
+in the `./scripts` folder:
+
+```console
+$ echo '<username>' > .user
+$ echo '<password>' > .secret
 ```

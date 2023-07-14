@@ -4,16 +4,14 @@ description: Managing proof request orders
 
 # Proof request utilities
 
-`=nil;` prepared a [toolchain](https://github.com/NilFoundation/proof-market-toolchain)
-for interacting with the Proof Market.
 This page describes the script with utilities for proof requesters — `request_tools.py`.
 
-Make sure you've [signed in or signed up](user.md) before continuing.
+Make sure you've [signed up](user.md) before continuing.
 
 To see all parameters that can be passed to the script, run it with the `-h` option:
 
 ```console
-foo@bar:~$ python3 request_tools.py -h
+$ python3 request_tools.py -h
 
 usage: request_tools.py [-h] [--auth AUTH] [-v] {push,get} ...
 
@@ -28,11 +26,11 @@ options:
   -v, --verbose  increase output verbosity
 ```
 
-## Submitting proof request
+## Submitting a proof request
 ### Usage
 
 ```console
-foo@bar:~$ python3 request_tools.py push -h
+$ python3 request_tools.py push -h
 
 usage: request_tools.py push [-h] --cost COST --file FILE --key KEY \
        [--generation_time GENERATION_TIME]
@@ -49,7 +47,7 @@ options:
 ### Example
 
 ```console
-foo@bar:~$ python3 request_tools.py push --cost=70 --key=969894
+$ python3 request_tools.py push --cost=70 --key=969894
 
 {
    "_key":"15970719",
@@ -69,10 +67,10 @@ foo@bar:~$ python3 request_tools.py push --cost=70 --key=969894
 ## Retrieving info on proof request
 ### Usage
 
-Proof requesters can check their requests with the following:
+Proof requesters can check their requests with the following command:
  
 ```console
-foo@bar:~$ python3 request_tools.py get -h
+$ python3 request_tools.py get -h
 
 usage: request_tools.py get [-h] [--key KEY] [--request_status REQUEST_STATUS]
 
@@ -86,7 +84,7 @@ options:
 ### Example
 
 ```console
-foo@bar:~$ python3 request_tools.py get --key=15970719
+$ python3 request_tools.py get --key=15970719
 
  {
     "_key": "15970719",

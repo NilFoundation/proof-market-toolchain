@@ -4,16 +4,14 @@ description: Managing submission and retrieval of proofs
 
 # Proof utilities
 
-`=nil;` prepared a [toolchain](https://github.com/NilFoundation/proof-market-toolchain) for
-interacting with the Proof Market.
 This page describes the script with proof utilities — `proof_tools.py`.
 
-Make sure you've [signed in or signed up](user.md) before continuing.
+Make sure you've [signed up](user.md) before continuing.
 
 To see all parameters that can be passed to the script, run it with the `-h` option:
 
 ```console
-foo@bar:~$ python3 proof_tools.py -h
+$ python3 proof_tools.py -h
 usage: proof_tools.py [-h] [--auth AUTH] {push,get} ...
 
 positional arguments:
@@ -34,7 +32,7 @@ You can provide only one of the two possible keys.
 ### Usage
 
 ```console
-foo@bar:~$ python3 proof_tools.py push -h
+$ python3 proof_tools.py push -h
 
 usage: proof_tools.py push [-h] [-p PROPOSAL_KEY] [-r REQUEST_KEY] -f FILE
 
@@ -50,7 +48,7 @@ options:
 ### Example
 
 ```console
-foo@bar:~$ python3 proof_tools.py push --proposal_key=458426 --file=proof.bin
+$ python3 proof_tools.py push --proposal_key=458426 --file=proof.bin
 
 Proof for 458426 is pushed
 ```
@@ -62,7 +60,7 @@ To retrieve proof from the Proof Market, you'll need either the proof key or the
 ### Usage
 
 ```console
-foo@bar:~$ python3 proof_tools.py get -h 
+$ python3 proof_tools.py get -h 
 
 usage: proof_tools.py get [-h] [-k PROOF_KEY] [-f FILE] [-r REQUEST_KEY]
 
