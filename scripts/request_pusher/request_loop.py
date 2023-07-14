@@ -20,6 +20,7 @@ STATEMENTS = [
         "bid_cost": 30,
         "message_wait_time": 2 * 60,  # seconds
         "input_file": "inputs/account_mina.json",
+        "output_file": "inputs/temp_account_mina.json",
         "log_file": "bid_log_account_mina.log"
     },
     {
@@ -28,6 +29,7 @@ STATEMENTS = [
         "bid_cost": 60,
         "message_wait_time": 10 * 60,  # seconds
         "input_file": "inputs/mina_state.json",
+        "output_file": "inputs/temp_mina_state.json",
         "log_file": "bid_log_mina_state.log"
     }
 ]
@@ -46,26 +48,19 @@ def create_logger(log_file):
 
 def submit_order_for_statement(statement):
     input_file = os.path.dirname(os.path.abspath(__file__)) + f"/{statement['input_file']}"
+    output_file = os.path.dirname(os.path.abspath(__file__)) + f"/{statement['output_file']}"
     
+    with open(input_file, 'r') as f:
+        data = json.load(f)
+
     if statement['name'] == "account_mina":
-        with open(input_file, 'r') as f:
-            data = json.load(f)
-
-        input_lines = data["input"].split('\n')
-        input_lines[1] = str(random.randint(1, 2**256))
-        data["input"] = '\n'.join(input_lines)
-
-        with open(input_file, 'w') as f:
-            json.dump(data, f)
+        data[0]['array'][1] = str(random.randint(1, 2**256))
     elif statement['name'] == "mina_state":
-        with open(input_file, 'r') as f:
-            data = json.load(f)
-
         new_hex = '0x' + ''.join([random.choice('0123456789ABCDEF') for _ in range(64)])
-        data["input"]["data"]["blockchainVerificationKey"]["commitments"]["sigma_comm"][0][0] = new_hex
+        data["data"]["blockchainVerificationKey"]["commitments"]["sigma_comm"][0][0] = new_hex
 
-        with open(input_file, 'w') as f:
-            json.dump(data, f)
+    with open(output_file, 'w') as f:
+        json.dump(data, f)
     
     cost = np.random.normal(statement['bid_cost'], 1.5)
     result = request_tools.push(AUTH, statement['statement_key'], input_file, cost, verbose=True)
