@@ -10,6 +10,7 @@
 
 - [=nil; Proof Market Toolchain](#nil-proof-market-toolchain)
 - [Introduction](#introduction)
+- [Proof Systems Compatibility](#proof-systems-compatibility)
 - [Starting with a ready Docker image](#starting-with-a-ready-docker-image)
 - [Building the toolchain](#building-the-toolchain)
   - [Cloning the repository](#cloning-the-repository)
@@ -58,6 +59,14 @@ To learn more about the Proof Market and these roles, read the
 If you're interested in circuit development, check out the
 [zkLLVM compiler](https://github.com/NilFoundation/zkllvm)
 and [zkLLVM template project](https://github.com/NilFoundation/zkllvm-template).
+
+# Proof Systems Compatibility
+
+Proof Maket Toolchain is tested with the following versions of the circuit development instruments:
+
+| Instrument | Version |
+| -----------  | ----------- |
+| zkLLVM       | 0.0.79       |
 
 # Starting with a ready Docker image
 
@@ -404,7 +413,7 @@ cd build
 ./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
 ```
 
-or
+<!-- or
 
 For multithreaded versions, the following flags warrant discussion as the computation of proof requires temporary space. This is always allocated to core0/shard0.
 
@@ -429,7 +438,7 @@ These two variables need to be tuned as per the architecture/circuit for which t
 ```
 cd build
 ./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads> --shard0-mem-scale=<scaling factor>
-```
+``` -->
 
 Readme for Proof Producer daemon in located [here](./proof_producer/README.md).
 
