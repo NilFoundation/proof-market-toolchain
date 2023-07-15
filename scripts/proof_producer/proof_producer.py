@@ -69,6 +69,7 @@ def get_my_proposals(status="processing"):
 
 
 def proposals_loop():
+    time.sleep(ASK_UPDATE_INTERVAL)
     while True:
         try:
             createdProposals = get_my_proposals("created")
