@@ -62,9 +62,9 @@ and [zkLLVM template project](https://github.com/NilFoundation/zkllvm-template).
 
 # Proof Systems Compatibility
 
-Proof Maket Toolchain is tested with the following versions of the circuit development instruments:
+Proof Maket Toolchain is tested with the following versions of the circuit development tools:
 
-| Instrument | Version |
+| Tool | Version |
 | -----------  | ----------- |
 | zkLLVM       | 0.0.79       |
 
