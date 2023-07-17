@@ -17,7 +17,7 @@
   * [Circuit Developer](market/user-guides/circuit-developer.md)
   * [Proof Requester](market/user-guides/proof-requester.md)
   * [Proof Producer](market/user-guides/proof-producer.md)
-* [Front End](market/front-end.md)
+* [Web interface](market/front-end.md)
 * [CMD Reference](market/cmd-reference/README.md)
   * [user](market/cmd-reference/user.md)
   * [statement](market/cmd-reference/statement.md)
