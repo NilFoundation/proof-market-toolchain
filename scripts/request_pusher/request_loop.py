@@ -17,7 +17,7 @@ STATEMENTS = [
     {
         "statement_key": "79169223",
         "name": "account_mina",
-        "bid_cost": 30,
+        "bid_cost": 50,
         "message_wait_time": 2 * 60,  # seconds
         "input_file": "inputs/account_mina.json",
         "output_file": "inputs/temp_account_mina.json",
@@ -63,7 +63,7 @@ def submit_order_for_statement(statement):
         json.dump(data, f)
     
     cost = np.random.normal(statement['bid_cost'], 1.5)
-    result = request_tools.push(AUTH, statement['statement_key'], input_file, cost, verbose=True)
+    result = request_tools.push(AUTH, statement['statement_key'], output_file, cost, verbose=True)
     statement['logger'].info(f"Successfully pushed bid: {result['_key']}")
 
 
@@ -76,7 +76,7 @@ def main():
         T = 60  # seconds
         for statement in STATEMENTS:
             p = T / statement['message_wait_time']
-            if random.random() < p:
+            if random.random() < 1:
                 try:
                     submit_order_for_statement(statement)
                 except Exception as e:
