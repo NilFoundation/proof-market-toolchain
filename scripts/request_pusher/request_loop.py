@@ -76,7 +76,7 @@ def main():
         T = 60  # seconds
         for statement in STATEMENTS:
             p = T / statement['message_wait_time']
-            if random.random() < 1:
+            if random.random() < p:
                 try:
                     submit_order_for_statement(statement)
                 except Exception as e:
