@@ -100,3 +100,6 @@
 [submodule "libs/zkllvm-circifier"]
 	path = libs/zkllvm-circifier
 	url = https://github.com/NilFoundation/zkllvm-circifier
+[submodule "libs/zkllvm-transpiler"]
+	path = libs/zkllvm-transpiler
+	url = https://github.com/NilFoundation/zkllvm-transpiler

@@ -1,5 +1,3 @@
-{   
-"input" :
 {
     "data": {
         "blockchainVerificationKey": {
@@ -2211,6 +2209,4 @@
             }
         ]
     }
-}
-
 }
