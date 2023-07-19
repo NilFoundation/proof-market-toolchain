@@ -9,11 +9,7 @@ from auth_tools import get_headers
 def get_prepared_input(input_file):
     f = open(input_file, "r")
     input = json.load(f)
-    # TODO: check if this structure is necessary
-    if "input" not in input:
-        input = {"input": input}
     return input
-
 
 def push(auth, key, file, cost, verbose=False):
     data = {
@@ -31,7 +27,7 @@ def push(auth, key, file, cost, verbose=False):
     else:
         log_data = res.json()
         if not verbose:
-            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
+            left_keys = ["_key", "status", "statement_key", "cost", "sender", "proof_key"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
         logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
         return res.json()
@@ -53,7 +49,7 @@ def get(auth, key=None, request_status=None, verbose=False):
     else:
         log_data = res.json()
         if not verbose and '_key' in log_data:
-            left_keys = ["_key", "status", "statement_key", "cost", "sender"]
+            left_keys = ["_key", "status", "statement_key", "cost", "sender", "proof_key"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
         logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
         return res.json()
