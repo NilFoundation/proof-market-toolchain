@@ -67,7 +67,11 @@ options:
   --file FILE  file
 ```
 
-You will be returned an object containing a *_key* field — a unique descriptor of the statement.
+If successful, this command will return the following output with your statement's ID (key):
+
+```bash
+Statement from template.json was pushed with key 12345678.
+```
 
 ### Example
 
