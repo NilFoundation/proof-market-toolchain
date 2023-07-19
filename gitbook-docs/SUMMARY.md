@@ -18,12 +18,12 @@
   * [Proof Requester](market/user-guides/proof-requester.md)
   * [Proof Producer](market/user-guides/proof-producer.md)
 * [Front End](market/front-end.md)
-* [CMD Reference](market/cmd-reference/README.md)
-  * [user](market/cmd-reference/user.md)
-  * [statement](market/cmd-reference/statement.md)
-  * [bid](market/cmd-reference/bid.md)
-  * [ask](market/cmd-reference/ask.md)
-  * [proof](market/cmd-reference/proof.md)
+* [CLI Reference](market/cmd-reference/README.md)
+  * [User account utilities](market/cmd-reference/user.md)
+  * [Statement](market/cmd-reference/statement.md)
+  * [Proposal utilities](market/cmd-reference/bid.md)
+  * [Request utilities](market/cmd-reference/ask.md)
+  * [Proof utilities](market/cmd-reference/proof.md)
 * [Terminology](market/overview.md)
 
 ## Guides
