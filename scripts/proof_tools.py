@@ -7,6 +7,7 @@ import inspect
 import json
 from constants import DB_NAME, URL, MOUNT
 from auth_tools import get_headers
+import request_tools
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -39,7 +40,8 @@ def get(auth, request_key=None, proof_key=None, file=None):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/proof/"
     if request_key:
-        url += f'?q=[{{"key" : "request_key", "value" : "{request_key}"}}]&full=true'
+        proof_key = request_tools.get(auth, key=request_key)["proof_key"]
+        url += proof_key + "?full=true"
     elif proof_key:
         url += proof_key + "?full=true"
     res = requests.get(url=url, headers=headers)
@@ -48,8 +50,6 @@ def get(auth, request_key=None, proof_key=None, file=None):
         exit(1)
     else:
         res_json = res.json()
-        if request_key is not None:
-            res_json = res.json()[0]
         if file and "proof" in res_json:
             with open(file, "w") as f:
                 f.write(res_json.pop("proof"))
