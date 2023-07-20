@@ -1,13 +1,40 @@
 ---
-description: Scripts to manage bid orders
+description: Managing proof proposals and retrieving public inputs
 ---
 
-# bid
+# Proposal utilities
 
-## Submit bid
+This page describes two scripts with utilities for proof producers,
+`proposal_tools.py` and `public_input_get.py`.
 
+Make sure you've [signed up](user.md) before continuing, and that you're registered
+as a proof producer.
+
+## Usage
+
+To see all parameters that can be passed to the script, run it with the `-h` option:
+
+```console
+$ python3 proposal_tools.py -h
+
+usage: proposal_tools.py [-h] [--auth AUTH] {push,get} ...
+
+positional arguments:
+  {push,get}   sub-command help
+    push       push proposal
+    get        get proposal
+
+options:
+  -h, --help   show this help message and exit
+  --auth AUTH  auth file
 ```
-usage: bid_tools.py push [-h] --cost COST --file FILE --key KEY [--generation_time GENERATION_TIME]
+
+## Submitting proposal
+
+```console
+$ python3 proposal_tools.py push -h
+
+usage: proposal_tools.py push [-h] --cost COST --file FILE --key KEY [--generation_time GENERATION_TIME]
 
 options:
   -h, --help            show this help message and exit
@@ -18,18 +45,14 @@ options:
                         required proof time generation (in mins)
 ```
 
-Ex:
+### Example
 
-```
-python3 bid_tools.py push --cost=5 --file=public_inputs.json --key=32292
-```
+```console
+$ python3 proposal_tools.py push --cost=5 --file=public_inputs.json --key=32292
 
-Output
-
-```
-"Limit bid":{
+"Limit proposal":{
    "_key":"15970220",
-   "_id":"bid/15970220",
+   "_id":"proposal/15970220",
    "_rev":"_fgwlYTK---",
    "statement_key":"32292",
    "input":{
@@ -46,29 +69,28 @@ Output
 }
 ```
 
-## Retrieve bid
+## Retrieving proposal
 
-```
-usage: bid_tools.py get [-h] [--key KEY] [--bid_status BID_STATUS]
+Proof producers can check their proposals like his:
+
+```console
+$ python3 proposal_tools.py get -h
+
+usage: proposal_tools.py get [-h] [--key KEY] [--proposal_status PROPOSAL_STATUS]
 
 options:
   -h, --help            show this help message and exit
-  --key KEY             bid key
-  --bid_status BID_STATUS
-                        bid status
-
+  --key KEY             proposal key
+  --proposal_status PROPOSAL_STATUS
+                        proposal status
 ```
 
-Ex:
+### Example
 
-```
-python3 bid_tools.py get --key=15077121
-```
+```console
+$ python3 proposal_tools.py get --key=15077121
 
-Output
-
-```
-"Bids":{
+"proposals":{
    "_key":"15077121",
    "cost":5,
    "createdOn":1675377961857,
@@ -85,26 +107,29 @@ Output
 }
 ```
 
-## Retrieve Public inputs
+# Request's public inputs
 
-Proof generators can retrieve and use public inputs for a bid order.&#x20;
+To generate a proof, the proof producer will need statement's definition and public inputs.
 
-```
-python3 public_input_get.py --h
+## Usage
+
+You can retrieve public inputs for a proposal like this:
+
+```console
+$ python3 public_input_get.py -h
+
 usage: public_input_get.py [-h] [-k key] [--auth auth] -o file
 
 options:
   -h, --help            show this help message and exit
-  -k key, --key key     key of the bid
+  -k key, --key key     key of the request
   --auth auth           auth
   -o file, --output file
                         output file
-
 ```
 
-Ex:
+## Example
 
-```
+```bash
 python3 public_input_get.py --key=15077121 -o=tmp_input.json
 ```
-
