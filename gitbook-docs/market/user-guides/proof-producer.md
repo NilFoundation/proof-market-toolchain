@@ -1,82 +1,72 @@
-# Proof Producer
+# Proof producer
 
 {% hint style="info" %}
-Ensure you have done the [Authentication](sign-up.md) setup before progressing
+[Sign up](sign-up.md) and keep the authentication files in order to use
+the following command line tools.
 {% endhint %}
 
-## Submit Ask order
+## Submit a proposal
 
-The Proof producers can submit asks for circuits and specify an accompanying cost.
+Proof producers can submit proposals for statements and specify an accompanying cost like this:
 
-```
-python3 scripts/ask_tools.py push --cost <cost of the ask> --key <key of the statement> 
-```
-
-## Order Status/Fetch Inputs
-
-The proof producer can check their ask with
-
-```
-python3 scripts/ask_tools.py get --key <key of the ask> 
+```bash
+python3 scripts/proposal_tools.py push \
+    --cost <cost of the proposal> \
+    --key <key of the statement>
 ```
 
-Ask's status 'processing' means that the ask was matched with a bid. Now it is time to generate a proof for the proof producer.
+## Check order status and fetch inputs
 
-First of all, the proof producer needs circuit definition:
+Producers can check their proposal using `proposal_tools`:
 
+```bash
+python3 scripts/proposal_tools.py get --key <key of the proposal>
 ```
 
-python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> 
+If the proposal's status is `processing`, it means that the proposal was matched with the request.
+Now it's time for the proof producer to generate the proof.
 
+First of all, the proof producer needs statement definition:
+
+```bash
+python3 scripts/statement_tools.py get \
+    --key <key of the statement>\
+    --output <output file>
 ```
 
-Next, public input of the bid:
+Next, public input of the request:
 
-```
-python3 scripts/public_input_get.py --key <bid key> -o <output file path> 
-```
-
-## Proof Generation
-
-Execute the below to generate proof:
-
+```bash
+python3 scripts/public_input_get.py \
+    --key <request key> \
+    --output <output file path>
 ```
 
+## Generate a proof 
+
+To generate proof execute the following:
+
+```bash
 cd build
-./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
-# Or using the multithreaded version
-./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads> ----shard0-mem-scale=<scale>
-
+./bin/proof-generator/proof-generator \
+    --proof_out <output file> \
+    --circuit_input <statement from Proof Market>
+    --public_input <public input from Proof Market>
 ```
 
-For multithreaded versions, the following flags warrant discussion as the computation of proof requires temporary space. This is always allocated to `core0`/`shard0.`
+## Submit a proof
 
-* `smp` : Number of threads. This is ideally the number of CPU cores on the system. ex: If you have a 16 core CPU &  16 GB RAM & set `smp` to 16. Each core gets access to 1 GB of RAM. Thus `core0`/`shard0` will have access to 1 GB of RAM.
-* `shard0-mem-scale`: Weighted parameter (`weight`) to reserve memory for `shard0.`This is a natural number which allows for `shard0` to have more access to RAM in comparison to others. ex: If you have a 16 core CPU &  16 GB RAM & set `smp` to 8 and set `shard0-mem-scale` to 9.
+The proof producer can now submit the proof to the marketplace, where they will get the reward
+if the proof is verified by Proof Market.
+You can learn more about
+[rewards and commissions](../economics.md#funds-transferring-and-commissions), as well as about
+[penalties](../economics.md#penalties), on the [Economics page](../economics.md).
 
-&#x20;We first compute  `ram_per_shard` variable as follows:
-
-```
-ram_per_shard = TOTAL_RAM / (smp + shard0-mem-scale -1)
-              = 16 / (8 + 8)
-              = 1
-```
-
-This equates to the following:&#x20;
-
-* `shard0` RAM =`shard0-mem-scale` \* `ram_per_shard` = 9 GB
-* `shard1` .... `shard7` = `ram_per_shard` = 1 GB/per core= 7 GB
-
-These two variables need to be tuned per the architecture/circuit for which the proof is generated.
-
-
-
-## Proof Submission
-
-The proof generator can now submit the proof to the marketplace, where they will get the reward if verified.
-
-```
-python3 scripts/proof_tools.py push --bid_key <key of the bid> --ask_key <key of the ask> --file <file with the proof> 
+Submitting a proof via `proof_tools.py`:
+```bash
+python3 scripts/proof_tools.py push \
+    --request_key <key of the request> | --proposal_key <key of the proposal> \
+    --file <file with the proof>
 ```
 
-You can provide only one of two possible keys.&#x20;
+Note that you can provide only one of the two possible keys.

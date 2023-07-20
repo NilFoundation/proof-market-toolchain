@@ -1,29 +1,35 @@
-# Proof Requester
+# Proof requester
 
 {% hint style="info" %}
-Ensure you have done the [Authentication](sign-up.md) setup before progressing
+[Sign up](sign-up.md) and keep the authentication files in order to use
+the following command line tools.
 {% endhint %}
 
-## Submit Bid Order
+## Submit a request
 
-The proof requester can create an order. An order has additional details such as who is requesting the proof and what they are willing to pay for it
+A request order has additional details, such as who requests the proof and what they are willing
+to pay for it.
+The proof requester can create an order like this:
 
-```
-python3 scripts/bid_tools.py push --cost <cost of the bid> --file <json file with public_input> --key <key of the statement> 
-```
-
-## Order Status
-
-The proof requester can check their bid with
-
-```
-python3 scripts/bid_tools.py get --key <key of the bid> 
+```bash
+python3 scripts/request_tools.py push \
+    --cost <cost of the request> \
+    --file <json file with public_input> \
+    --key <key of the statement> 
 ```
 
-## Get Proof
+## Check order status
 
-Now the proof requester can get their proof either by bid key or proof key.
+Proof requesters can check their requests with the following command:
 
+```bash
+python3 scripts/request_tools.py get --key <key of the request>
 ```
-python3 scripts/proof_tools.py get --bid_key <key of the bid> 
+
+## Obtain the proof
+
+The proof requester can get their proof either by request key or proof key:
+
+```bash
+python3 scripts/proof_tools.py get --request_key <key of the request>s
 ```

@@ -1,51 +1,71 @@
-# Circuit Developer
+# Circuit developer
 
-This is an entity that prepares circuits for the proof market. The most efficient way to create a circuit definition for Proof Market is [zkLLVM](https://github.com/NilFoundation/zkllvm). All dependencies and build instructions are inside the [zkLLVM's repository](https://github.com/NilFoundation/zkllvm).
+This is an entity that prepares circuits for Proof Market.
+The most efficient way to create a circuit definition for Proof Market is
+[zkLLVM](https://github.com/NilFoundation/zkllvm) circuit compiler.
+You can find the required dependencies and build instructions in the
+[zkLLVM's repository](https://github.com/NilFoundation/zkllvm).
 
-Anyone can generate circuits. They are serialised & published on the proof market. This allows the reuse of the circuits by all other proof requesters.&#x20;
+Anyone can generate circuits.
+They are serialized & published on Proof Market, allowing reuse of the circuits by
+all proof requesters.
 
-## Create a new circuit (using [zkLLVM](https://github.com/NilFoundation/zkllvm))
+## Create a circuit
 
-```
+Write a circuit and compile it with [zkLLVM](https://github.com/NilFoundation/zkllvm):
+
+```bash
 make -C ${ZKLLVM_BUILD:-build} <circuit target name> -j$(nproc)
 ```
 
+For more information on circuit development, read the [zkLLVM documentation](
+https://docs.nil.foundation/zkllvm/circuit-development/circuit-generation).
+
 ## Prepare a statement with a circuit description for Proof Market
 
-Circuits are stored as a _statement_ structure on Proof Market. Statement description example can be found in /example directory
+Circuits are stored on Proof Market in the form of statements.
+Example statements can be found in the `./example` directory.
 
+```bash
+python3 scripts/prepare_statement.py \
+    --circuit <zkllvm output> \
+    --type <circuit type> \
+    --output <statement description file> \
+    --name <statement name> \
+    --private | --public
 ```
-python3 scripts/prepare_statement.py -c <zkllvm output> \
--o <statement description file> \ 
--n <statement name> -t <circuit type>
-```
 
-Provide the necessary information listed in the output statement file
-
-## Publish to Proof Market
+## Publish a statement on Proof Market
 
 {% hint style="info" %}
-Ensure you have done the [Authentication](sign-up.md) setup before progressing
+[Sign up](sign-up.md) and keep authentication files in order to use
+the following command line tools.
 {% endhint %}
 
+You can find an authentication file example in the `/example` directory.
 
+The statement can be published on Proof Market via the Python script `statement_tools.py`:
 
-This statement can now be pushed to the Proof market via the Python script
+```console
+$ python3 scripts/statement_tools.py push 
+    --file <json file with statement description>
 
+Statement from /opt/zkllvm-template/build/template.json was pushed.
 ```
-python3 scripts/statement_tools.py push --file <json file with statement description> 
-```
 
-Authorisation file examples can be found in `/example` directory.
+## Retrieving statements
 
-You will be returned an object containing a _\_key_ filed -- unique descriptor of the statement
+A list of all available statements can be obtained by this command:
 
-## Published circuit id
-
-A list of all available statements can be obtained by
-
-```
+```bash
 python3 scripts/statement_tools.py get
 ```
 
-\
+To retrieve a selected statement/circuit definition and its metadata
+uploaded upon the statement's publishing:
+
+```bash
+python3 scripts/statement_tools.py get \
+    --key <key of the statement> \
+    --output <output file> 
+```
