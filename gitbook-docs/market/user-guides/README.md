@@ -1,24 +1,14 @@
 ---
-description: Command line guide to proof market
+description: Guides for using Proof Market via CLI
 ---
 
-# User Guides
+# User guides
 
-Please see the appropriate guide based on your user role.
+Prerequisites for these guides are [environment setup](../../getting-started/environment-setup.md),
+[Proof Market toolchain installation](../../getting-started/installation.md),
+and [authentication on Proof Market](sign-up.md).
+Then you can proceed with the appropriate guide based on your role:
 
-* [Circuit Developer](circuit-developer.md)
-* [Proof Requester](proof-requester.md)
-* [Proof Producer](proof-producer.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
+* [Circuit developer](circuit-developer.md)
+* [Proof requester](proof-requester.md)
+* [Proof producer](proof-producer.md)
