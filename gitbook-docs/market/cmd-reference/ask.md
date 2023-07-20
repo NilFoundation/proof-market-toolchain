@@ -1,54 +1,57 @@
 ---
-description: Scripts to manage ask orders
+description: Managing proof request orders
 ---
 
-# ask
+# Proof request utilities
 
-Usage
+This page describes the script with utilities for proof requesters — `request_tools.py`.
 
-```
-python3 ask_tools.py --h    
-usage: ask_tools.py [-h] [--auth AUTH] {push,get} ...
+Make sure you've [signed up](user.md) before continuing.
+
+To see all parameters that can be passed to the script, run it with the `-h` option:
+
+```console
+$ python3 request_tools.py -h
+
+usage: request_tools.py [-h] [--auth AUTH] [-v] {push,get} ...
 
 positional arguments:
-  {push,get}   sub-command help
-    push       push ask
-    get        get ask
+  {push,get}     sub-command help
+    push         push request
+    get          get request
 
 options:
-  -h, --help   show this help message and exit
-  --auth AUTH  auth file
-
-
+  -h, --help     show this help message and exit
+  --auth AUTH    auth file
+  -v, --verbose  increase output verbosity
 ```
 
+## Submitting a proof request
+### Usage
 
+```console
+$ python3 request_tools.py push -h
 
-## Submit ask
-
-```
-python3 ask_tools.py push --h                   
-usage: ask_tools.py push [-h] --cost COST --key KEY
+usage: request_tools.py push [-h] --cost COST --file FILE --key KEY \
+       [--generation_time GENERATION_TIME]
 
 options:
-  -h, --help   show this help message and exit
-  --cost COST  cost
-  --key KEY    key of the statement
-
+  -h, --help            show this help message and exit
+  --cost COST           cost
+  --file FILE           json file with public input
+  --key KEY             statement key
+  --generation_time GENERATION_TIME
+                        required proof time generation (in mins)
 ```
 
-Ex:
+### Example
 
-```
-python3 ask_tools.py push --cost=70 --key=969894
-```
+```console
+$ python3 request_tools.py push --cost=70 --key=969894
 
-Output
-
-```
 {
    "_key":"15970719",
-   "_id":"ask/15970719",
+   "_id":"request/15970719",
    "_rev":"_fgwuuI----",
    "statement_key":"969894",
    "cost":70,
@@ -61,27 +64,28 @@ Output
 }
 ```
 
-## Retrieve Ask
+## Retrieving info on proof request
+### Usage
 
-```
-python3 ask_tools.py get --h
-usage: ask_tools.py get [-h] [--key KEY]
+Proof requesters can check their requests with the following command:
+ 
+```console
+$ python3 request_tools.py get -h
+
+usage: request_tools.py get [-h] [--key KEY] [--request_status REQUEST_STATUS]
 
 options:
-  -h, --help  show this help message and exit
-  --key KEY   key of the ask
-
+  -h, --help            show this help message and exit
+  --key KEY             request key
+  --request_status REQUEST_STATUS
+                        request status
 ```
 
-Ex:
+### Example
 
-```
-python3 ask_tools.py get --key=15970719
-```
+```console
+$ python3 request_tools.py get --key=15970719
 
-Output
-
-```
  {
     "_key": "15970719",
     "cost": 70,
@@ -93,5 +97,4 @@ Output
     "updatedOn": 1675787026591,
     "wait_period": null
 }
-
 ```

@@ -17,7 +17,7 @@ to buy and sell future values of Bitcoin via perpetual contracts.
 These are called derivative markets, as you do not own the underlying instrument
 but are just speculating on its price.
 
-`=nil;` Proof Market belongs to the class of spot markets and is designed
+`\=nil;` Proof Market belongs to the class of spot markets and is designed
 as a decentralized and distributed system.
 
 ## Circuits and statements

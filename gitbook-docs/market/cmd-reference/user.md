@@ -1,22 +1,20 @@
 ---
-description: Scripts to manage user
+description: Creating and managing accounts
 ---
 
-# user
+# User account utilities
 
-User scripts are used to manage user credentials/accounts
+This page describes the scripts managing user credentials and account,
+`signup.py` and `auth_tools.py`.
 
-## New User
+## Creating a new account
+### Usage
 
-To see all parameters which can be passed to the script:
+To see all parameters that can be passed to the script, run it with the `-h` option:
 
-```
-python3 signup.py -h
-```
+```console
+$ python3 signup.py -h
 
-Output
-
-```
 usage: signup.py [-h] -u USER -p PASSWD -e EMAIL
 
 options:
@@ -26,33 +24,50 @@ options:
                         password
   -e EMAIL, --email EMAIL
                         email
-
 ```
 
-Ex:
+### Example
 
-```
+```bash
 python3 signup.py -u helloworld -p password123 -e hello@test.com
 ```
 
-Output:
+### Possible results
 
-### **Success**
+Success:
 
-```
+```json
 {"user":"helloworld","active":true,"extra":{},"error":false,"code":201}
 ```
 
-### **Error#1: Invalid username format**
+If the signup is successful, this command creates `.user` and `.secret` files with your credentials
+in the `./scripts` directory.
 
-```
+Error #1 — invalid username format:
+
+```bash
 Error: 400 {"code":409,"error":true,"errorMessage":"Inavlid format for username"}
 ```
 
-The username does not support special characters and can only be created with a combination of alphabets and numbers.
+The username does not support special characters and can only be a combination of letters
+and numbers.
 
-**Error#2: Duplicate user**
+Error #2 — duplicate user:
 
-```
+```bash
 Error: 500 {"error":true,"errorNum":1702,"errorMessage":"duplicate user","code":500}
 ```
+
+## Signing in
+
+If you already have an account, store your username and password in files `.user` and `.secret`
+in the `./scripts` folder:
+
+```console
+$ echo '<username>' > .user
+$ echo '<password>' > .secret
+```
+
+And that's it; the authorization will be performed automatically when you run
+any of the toolchain's scripts.
+The authorization file (JWT authorization token) will be stored in `./scripts/auth.json`.
