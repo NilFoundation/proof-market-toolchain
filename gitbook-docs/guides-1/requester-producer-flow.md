@@ -1,34 +1,35 @@
-# Requester/Producer Flow
+# Requester/producer flow
 
-In this guide, we will perform an end-to-end flow of interaction on the proof market between a proof requester and a proof producer for the `arithmetic` circuit. We will use the same user login but swap the _personas_ as we progress.
+In this guide, we will perform an end-to-end interaction on Proof Market
+between a proof requester and a proof producer for the `arithmetic-example` circuit.
+We will use the same user but swap roles as we progress.
 
-We do not cover the circuit/statement publishing flow.
+We won't cover circuit/statement publishing here, you can learn about it
+in the [CLI section](../market/cmd-reference/statement.md#publishing-statements).
 
-## Pre-Requisites
+## Prerequisites
 
-Please ensure you have done the following steps:
+Prerequisites for this guide are [environment setup](../getting-started/environment-setup.md),
+[Proof Market toolchain installation](../getting-started/installation.md),
+and [authentication on Proof Market](../market/user-guides/sign-up.md).
 
-* [Environment Setup](../guides/environment-setup.md): Install all dependencies.
-* [Installation](../guides/installation.md):  Install and build `proof-generator-mt` binary.
-* [Authentication](../market/user-guides/sign-up.md): Set up the `proof-market-toolchain` authentication.
+We will execute all the commands from the `proof-market-toolchain` repository's home.
 
-We will execute all the commands from the home of the `proof-market-toolchain` repository.
+## Get all statements
 
-## Get Statements
+Let's start as a proof requester who needs to put in a request for a particular proof
+they are interested in.
+First, they need that proof's id (key) from the market.
 
-Let's start as a Proof Requester. A proof requester needs to put in a bid for a particular proof they are interested in. To do this, they first need to get hold of the key of the proof on the market.
-
-We do this by getting all statements on the proof market.
-
-```
-python3 scripts/statement_tools.py get
-```
+We'll get all statements on Proof Market and find the required one.
 
 {% hint style="info" %}
-Please note all outputs are reduced for brevity, and only relevant attributes are shown here.
+Note that all outputs are reduced for brevity, and only relevant attributes are shown here.
 {% endhint %}
 
-```
+```console
+$ python3 scripts/statement_tools.py get
+
 Statements:
  [
     {
@@ -47,30 +48,24 @@ Statements:
     }
 ```
 
-The key of the arithmetic circuit is `32326`
+The id/key of the arithmetic circuit's statement is `32326`.
+Note that the id might be different when you run this flow.
+In that case, you should substitute it as per your output.
 
-{% hint style="info" %}
-Please note the id might be different when you execute this flow, and you should substitute it as per your output.
-{% endhint %}
+## Send a request
 
-## Send Bid
+The statement id is retrieved, now the proof requester can send a request.
+Request orders can optionally carry public inputs.
+For our example, we'll send two numbers we want to be added on the Pallas curve.
+We will use a sample input from the `proof-market-toolchain` repository:
 
-Proof Requester next sends a bid. Bid orders can optionally carry public inputs. In our case, we will send two numbers which we would like to be added on the Pallas curve. We will use a sample input stored in the `proof-market-toolchain` repository.
+```console
+$ python3 scripts/request_tools.py push \
+    --cost 2 \
+    --file ./example/input/arithmetic_example/input.json \
+    --key 32326
 
-```
-python3 scripts/bid_tools.py push --cost=2 --file=./example/input/arithmetic_example/input.json --key=32326
-```
-
-Where:
-
-* _cost:_ Amount the requester is willing to pay in tokens/usd
-* _file_: The path to the public input file.
-* _key_: Identifier of the arithmetic circuit on the proof market.&#x20;
-
-Output:
-
-```
-"Limit bid":{
+"Limit request":{
    "_key":"16153352",
    "statement_key":"32326",
    "input":{
@@ -81,27 +76,34 @@ Output:
 }
 ```
 
-The important attributes in response are:
+Attributes of the request are:
+   * `key` — the key (id) of the statement for which this order is placed;
+   * `cost` (in USD/tokens) — the amount that the proof requester is willing to pay for the proof;
+   * `file` (file path) — the path to the public input file.
 
-* _\_key_: Identifier of the order on the market. This identifier will be used to retrieve the order status and the proof once it is fulfilled.
-* _status_: Status of the order. All orders start with the “_created_” state. It updates to the “_processing_” state when the order is matched & to “_completed_” when the proof is submitted. If the circuit/key combination already has the proof, the status will directly go to the _“completed”_ state.
+The attributes we're interested in this response are:
+   * `_key` — the id of the placed order, we will need it to check the order's status
+     and get the proof once it's ready;
+   * `status` — the order's status.
+     All orders start in the `created` state, which updates to the `processing` state
+     when the order is matched to a proof producer.
+     Once the proof is submitted to the market, order's state changes to `completed`.
+     If proof for this combination of statement and public input already exists on the market,
+     the order's status will directly go to the `completed` state.
 
-The key of the bid order here is `16153352.`
+The key of the request order here is `16153352`.
+This order is now visible in the order book, and any proof producer can offer
+to pick up this job.
 
-This is now visible in the order book, and any Proof Producers can offer to pick this job.
+### Check request status
 
-### Check Bid Status
+You can check your request status as follows.
+Remember to substitute the order key to reflect your order.
 
-You can check your bid order status as follows. Please substitute the bid order key to reflect your order.
+```console
+$ python3 scripts/request_tools.py get --key 16153352
 
-```
-python3 scripts/bid_tools.py get --key=16153352
-```
-
-Output:
-
-```
-Bids:
+Requests:
  {
     "_key": "16153352",
     "cost": 2,
@@ -113,26 +115,19 @@ Bids:
     "statement_key": "32326",
     "status": "created",
 }
-
 ```
 
-## Send Ask
+## Send a proposal
 
-We will now send an Ask order as a proof producer for the same statement id.&#x20;
+We will now change the role and send a proposal order in response to the request
+as a proof producer.
 
-```
-python3 scripts/ask_tools.py push --cost=2 --key=32326
-```
+```console
+$ python3 scripts/proposal_tools.py push \
+    --cost 2 \
+    --key 32326
 
-Where&#x20;
-
-* _cost_: Amount for which the proof producer can create a proof
-* _key_: circuit/statement id (Arithmetic circuit id retrieved above)
-
-Output:
-
-```
-"Limit ask":{
+"Limit proposal":{
    "_key":"16153923",
    "statement_key":"32326",
    "cost":2,
@@ -140,21 +135,21 @@ Output:
 }
 ```
 
-The important attributes in response are:
+Attributes of the proposal are:
+   * `key` — the key (id) of the statement for which this order is placed;
+   * `cost` (in USD/tokens) — the amount that the proof producer is willing to create a proof for.
 
-* _\_key_: Identifier of the order on the market. This identifier will be used to retrieve the order status and the proof once it is fulfilled.
-* _status_: Status of the order. All orders start with the “_created_” state. It updates to the “_processing_” state when the order is matched & to “_completed_” when the proof is submitted. If the circuit/key combination already has the proof, the status will directly go to the _“completed”_ state.
+The attributes of the response are the same as for [request orders](#send-a-request).
 
-### Check Ask Status
+### Check proposal status
 
-```
-python3 scripts/ask_tools.py get --key=16153923
-```
+You can check your proposal status the same way as with request orders,
+only with the `proposal_tools.py` script:
 
-Output:
+```console
+$ python3 scripts/proposal_tools.py get --key 16153923
 
-```
-Ask:
+Proposal:
  {
     "_key": "16153923",
     "cost": 2,
@@ -162,114 +157,100 @@ Ask:
     "statement_key": "32326",
     "status": "created",
 }
-
 ```
 
+## Wait for matching
 
+The matching engine of Proof Market will try to match orders based on price
+and generation time if provided.
 
-## Wait for Matching
+Previously we've placed request and proposal orders with the same cost,
+so these orders should be matched.
+Your orders could get matched to different IDs and not the ones you posted,
+as it's decided by the matching engine based on several parameters.
+For the time being, let's assume the match was for the orders we posted.
 
-The matching engine of the proof market will try to match orders based on price (and generation time if provided).
+To check this, we need to get their statuses once again:
 
-Above we put the bid at 2 Tokens & ask at 2 Tokens. Hence these orders should be matched. We need to poll our orders to see if they have been matched. i.e. you need to retrieve the bid or ask orders and check the `status` field.&#x20;
+```console
+$ python3 scripts/request_tools.py get --key 16153352
 
-{% hint style="info" %}
-Your orders could get matched to different IDs and not the ones you posted, as it's decided by the matching engine on a number of parameters. For the time being, we assume the match was for the orders we posted.
-{% endhint %}
-
-### Check Bid Status
-
-```
-python3 scripts/bid_tools.py get --key=16153352
-```
-
-Output
-
-```
- {
+{
     "_key": "16153352",
-    "ask_key": "16153923",
+    "proposal_key": "16153923",
     "cost": 2,
     "statement_key": "32326",
     "status": "processing",
 }
-
 ```
 
-We see that `status` has changed to `processing` (the order has been matched). We also see `ask_key` populated to the matched ask order.
+We see that request's `status` changed to `processing`, so the order is matched.
+We also see `proposal_key` populated to the matched proposal order.
 
-### Check Ask Status
+```console
+$ python3 scripts/proposal_tools.py get --key 16153923
 
-```
-python3 scripts/ask_tools.py get --key=16153923
-```
-
-Output:
-
-```
-Ask:
+Proposal:
  {
     "_key": "16153923",
-    "bid_key": "16153352",
+    "request_key": "16153352",
     "cost": 2,
     "matched_time": 1675938454814,
     "statement_key": "32326",
     "status": "processing",
 }
-
 ```
 
-We see that `status` has  changed to `processing` (the order has been matched). We also see `bid_key` populated to the matched bid order.
+We see that proposal's `status` has also changed to `processing`, and `request_key`
+was populated to the matched request order.
 
-## Generate Proof
+## Generate a proof
 
-Once the orders have matched, as a proof producer, you should now begin the process of creating the proof for the circuit.
+Once the orders are matched, the proof producer should create a proof for the circuit.
+They're going to need the following parameters:
+  * `circuit_input` — circuit statement from Proof Market;
+  * `public_input` — public inputs for the statement used in the request;
+  * `proof_out` — location to store the output proof file.
 
-```
-./build/bin/proof-generator-mt/proof-generator-mt --proof_out=arithmetic_proof.bin --circuit_input=example/statements/arithmetic_example_statement.json --public_input=example/input/arithmetic_example/input.json --smp=2
-```
+Ideally, you should retrieve both the `circuit_input` and `public_input` from Proof Market.
+See the corresponding part
+of the [proof producer's guide](../market/user-guides/proof-producer.md#order-status-fetch-inputs).
 
-* _proof\_out_: Location to store output proof file
-* _circuit\_input:_ Circuit statement from proof market
-* _public\_input:_ Public inputs of the MINA state used in the bid.
-* _smp : (Multi-threaded only) Number of threads to spawn_
+```console
+$ ./build/bin/proof-generator-mt/proof-generator-mt \
+    --circuit_input example/statements/arithmetic_example_statement.json \
+    --public_input example/input/arithmetic_example/input.json \
+    --proof_out arithmetic_proof.bin
 
-Ideally, you should retrieve the `circuit_input` and `public_input` from the proof market. See [here](../market/user-guides/proof-producer.md#order-status-fetch-inputs).
-
-Output:
-
-```
 Inner verification passed
 0
 ```
 
-You should now have a `arithmetic_proof.bin` file in your directory, assuming no errors were encountered.&#x20;
+If no errors were encountered, you should now have `arithmetic_proof.bin` file
+in your directory.
 
-## Publish Proof
+## Publish a proof
 
-```
-python3 scripts/proof_tools.py  push -p 16153923 -f arithmetic_proof.bin
-```
+You can publish a proof like this:
 
-Output:
+```console
+$ python3 scripts/proof_tools.py push \
+    --proposal_key 16153923 \
+    --file arithmetic_proof.bin
 
-```
 Proof is pushed
 ```
 
-### Check Bid Status
+If you check the request's or proposal's status once again,
+you will see that they now have the proof's key, and order's status changed to `completed`.
 
-```
-python3 scripts/bid_tools.py get --key=16153352
-```
+```console
+$ python3 scripts/request_tools.py get --key 16153352
 
-Output:
-
-```
-Bids:
+Requests:
  {
     "_key": "16153352",
-    "ask_key": "16153923",
+    "proposal_key": "16153923",
     "cost": 2,
     "proof_key": "16158141",
     "statement_key": "32326",
@@ -278,29 +259,13 @@ Bids:
  }
 ```
 
-### Check Ask Status
+To retrieve proof from the Proof Market, you'll need either the proof key or the request key.
 
-```
-python3 scripts/ask_tools.py get --key=16153923
-```
-
-Output
-
-```
-Ask:
- {
-    "_key": "16153923",
-    "bid_key": "16153352",
-    "cost": 2,
-    "proof_key": "16158141",
-    "statement_key": "32326",
-    "status": "completed",
-}
+```bash
+python3 scripts/proof_tools.py get \
+    --proof_key 16158141 | --request_key 16153352
 ```
 
-In both bid/ask orders, we can now see the following.
-
-* `status` updated from `processing` to `completed` : This implies the proof is submitted
-* `proof_key` : This attribute has the `key` of the proof that the proof requester can use to retrieve the submitted proof by the proof producer.
-
-Congratulations! If you have made it this far, you have managed a full interaction between the proof producer and a proof requester.
+Congratulations!
+If you have made it this far, you've performed a full interaction between a proof producer
+and a proof requester.
