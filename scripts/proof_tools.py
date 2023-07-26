@@ -40,8 +40,14 @@ def get(auth, request_key=None, proof_key=None, file=None):
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/proof/"
     if request_key:
-        proof_key = request_tools.get(auth, key=request_key)["proof_key"]
-        url += proof_key + "?full=true"
+        request=request_tools.get(auth, key=request_key)
+        if request:
+            proof_key = request_tools.get(auth, key=request_key)["proof_key"]
+            url += proof_key + "?full=true"
+        else:
+            logging.error(f"Proof was not found")
+            exit(0)
+        
     elif proof_key:
         url += proof_key + "?full=true"
     res = requests.get(url=url, headers=headers)

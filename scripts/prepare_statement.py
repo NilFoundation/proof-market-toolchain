@@ -27,8 +27,7 @@ def prepare(circuit_file, output_file, name, statement_type, private):
     with open(output_file, "w") as f:
         json.dump(data, f, indent=4)
 
-
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-c", "--circuit", type=str, required=True, help="Path to a zkLLVM circuit (*.ll)"
@@ -58,3 +57,6 @@ if __name__ == "__main__":
                          help="Make a statement public: visible on the Proof Market")
     args = parser.parse_args()
     prepare(args.circuit, args.output, args.name, args.type, args.private)
+
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,7 @@
 """Proposal get and push functionality"""
 import requests
 import json
+import sys
 import logging
 import argparse
 from constants import DB_NAME, URL, MOUNT, REQUEST_TIMEOUT
@@ -46,8 +47,7 @@ def push_parser(push_args):
 def get_parser(get_args):
     return get(get_args.auth, get_args.key)
 
-
-if __name__ == "__main__":
+def main(argv=None):
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
     parser = argparse.ArgumentParser()
@@ -64,3 +64,8 @@ if __name__ == "__main__":
     parser_get.add_argument("--key", type=str, help="key of the proposal")
     args = parser.parse_args()
     args.func(args)
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+    sys.exit(0)
