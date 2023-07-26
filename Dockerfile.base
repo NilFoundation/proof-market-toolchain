@@ -1,0 +1,85 @@
+# syntax=docker/dockerfile:1
+# Build:
+# docker build -t ghcr.io/nilfoundation/proof-market-toolchain:base --file Dockerfile.base .
+
+ARG BOOST_VERSION=1.76.0
+ARG BOOST_VERSION_UNDERSCORED=1_76_0
+ARG BOOST_SETUP_DIR=/opt/boost_${BOOST_VERSION_UNDERSCORED}
+ARG BOOST_BUILD_DIRECTORY=/tmp/boost_${BOOST_VERSION_UNDERSCORED}
+
+FROM ubuntu:22.04 as boost_builder
+RUN DEBIAN_FRONTEND=noninteractive \
+    set -xe \
+    && apt-get update \
+    && apt-get -y --no-install-recommends --no-install-suggests install \
+        autoconf \
+        automake \
+        build-essential \
+        wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# using global args with their default versions
+ARG BOOST_VERSION
+ARG BOOST_VERSION_UNDERSCORED
+ARG BOOST_SETUP_DIR
+ARG BOOST_BUILD_DIRECTORY
+
+WORKDIR /tmp
+RUN set -xe \
+    && wget -q --no-check-certificate \
+      https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION_UNDERSCORED}.tar.gz \
+    && mkdir ${BOOST_BUILD_DIRECTORY} \
+    && tar -xvf boost_${BOOST_VERSION_UNDERSCORED}.tar.gz \
+    && rm boost_${BOOST_VERSION_UNDERSCORED}.tar.gz
+
+WORKDIR ${BOOST_BUILD_DIRECTORY}
+RUN set -xe \
+    && sh ./bootstrap.sh --prefix=${BOOST_SETUP_DIR} \
+    && ./b2 --prefix=${BOOST_SETUP_DIR} \
+    && ./b2 install --prefix=${BOOST_SETUP_DIR}
+
+
+FROM ubuntu:22.04
+LABEL Name=build-base Version=1.76.0
+# using global args with their default versions
+ARG BOOST_SETUP_DIR
+
+COPY --from=boost_builder ${BOOST_SETUP_DIR} ${BOOST_SETUP_DIR}
+ENV BOOST_ROOT=${BOOST_SETUP_DIR}
+
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    set -xe \
+    && apt-get update \
+    && apt-get -y --no-install-recommends --no-install-suggests install \
+        autoconf \
+        automake \
+        build-essential \
+        clang-12 \
+        cmake \
+        emacs \
+        git \
+        gnutls-dev \
+        libc-ares-dev \
+        libfmt-dev \
+        libhwloc-dev \
+        liblz4-dev \
+        libprotobuf-dev \
+        libsctp-dev \
+        libssl-dev \
+        libyaml-cpp-dev \
+        mc \
+        nano \
+        pkg-config \
+        python3 \
+        python3-pip \
+        ragel \
+        systemtap-sdt-dev \
+        vim \
+        wget \
+        xfslibs-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /proof-market-toolchain
