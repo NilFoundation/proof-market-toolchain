@@ -17,11 +17,11 @@ Proof Market constants:
 ## Basic workflow
 
 1. A proof requester sends a request with a desired price _c\_r_ to the market.
-2. The Proof Market locks _c\_r_ tokens from the buyer's account.
+2. Proof Market locks _c\_r_ tokens from the buyer's account.
 3. Proof producers send proposals to the market with a price _c\_p <= c\_r_.
-4. The Proof Market matches the request with the proposal of the proof producer.
+4. Proof Market matches the request with the proposal of the proof producer.
 5. The proof producer generates a proof and sends it to the market.
-6. The Proof Market verifies proof and pays _c\_r - commission_ tokens to the producer.
+6. Proof Market verifies proof and pays _c\_r - commission_ tokens to the producer.
 7. The proof requester takes their proof and uses it.
 
 ## Orders status
@@ -30,7 +30,7 @@ Requests (orders for buying proofs) and proposals (orders for selling proofs) ha
 
 * _Created_: order was sent to the marketplace and was not yet matched,
   meaning there is no buyer for a proposal or no proof producer for a request.
-* _Processing_: order was matched, and the Proof Market is waiting for the proof generator
+* _Processing_: order was matched, and Proof Market is waiting for the proof producer
   to provide the proof.
 * _Completed_: the proof was generated and verified by Proof Market.
 * _Withdrawn_: the order was canceled before matching, a wrong proof was submitted, or
@@ -38,9 +38,9 @@ Requests (orders for buying proofs) and proposals (orders for selling proofs) ha
 
 ## Request/proposal matching process
 
-The Proof Market provides a more complex behavior than one-hop trading.
+Proof Market provides a more complex behavior than one-hop trading.
 Each deal includes the proof generation stage.
-This stage may result in a completed deal if proof was provided and verified by the Proof Market
+This stage may result in a completed deal if proof was provided and verified by Proof Market
 or a restart of the matching if no proof has been provided or proof's verification has failed.
 Moreover, some applications require generating proofs in the specified time interval.
 In the future, the following parameters will influence the matching algorithm:
@@ -69,7 +69,7 @@ Upon receiving a new request, the application tries to find an equivalent reques
 This is what happens if such a request is found and there's already proof for it:
 
 * The new request immediately goes into the **completed** state.
-* The proof requester pays commissions to the Proof Market, the circuit developer,
+* The proof requester pays commissions to Proof Market, the circuit developer,
   the proof producer who generated the proof for the existing request, and the proof requester
   of the original request.
 * Unspent tokens are returned to the proof requester.
@@ -149,7 +149,7 @@ and are subject to penalties and restrictions.
 Remember that proof producers define their minimum proof generation time,
 and the matching algorithm never matches proposals to the requests with _t\_r_ < _t\_p_.
 
-### Penalties
+## Penalties
 
 There are two types of penalties for proof producers:
 
@@ -173,5 +173,5 @@ malicious behavior from their side.
 ## The delay between the request/proposal submission and the matching
 
 There is no delay between the request/proposal submitting and running the matching algorithm.
-As soon as the request/proposal is submitted, the Proof Market tries to match it with
+As soon as the request/proposal is submitted, Proof Market tries to match it with
 other existing orders.

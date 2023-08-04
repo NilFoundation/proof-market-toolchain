@@ -59,7 +59,7 @@ Request orders can optionally carry public inputs.
 For our example, we'll send two numbers we want to be added on the Pallas curve.
 We will use a sample input from the `proof-market-toolchain` repository:
 
-```console
+```bash
 $ python3 scripts/request_tools.py push \
     --cost 2 \
     --file ./example/input/arithmetic_example/input.json \
@@ -217,7 +217,7 @@ See the corresponding part
 of the [proof producer's guide](../market/user-guides/proof-producer.md#order-status-fetch-inputs).
 
 ```console
-$ ./build/bin/proof-generator-mt/proof-generator-mt \
+$ ./build/bin/proof-generator/proof-generator \
     --circuit_input example/statements/arithmetic_example_statement.json \
     --public_input example/input/arithmetic_example/input.json \
     --proof_out arithmetic_proof.bin
@@ -259,7 +259,7 @@ Requests:
  }
 ```
 
-To retrieve proof from the Proof Market, you'll need either the proof key or the request key.
+To retrieve proof from Proof Market, you'll need either the proof key or the request key.
 
 ```bash
 python3 scripts/proof_tools.py get \

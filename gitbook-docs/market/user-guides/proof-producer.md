@@ -63,6 +63,7 @@ You can learn more about
 [penalties](../economics.md#penalties), on the [Economics page](../economics.md).
 
 Submitting a proof via `proof_tools.py`:
+
 ```bash
 python3 scripts/proof_tools.py push \
     --request_key <key of the request> | --proposal_key <key of the proposal> \

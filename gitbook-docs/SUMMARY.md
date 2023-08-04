@@ -6,21 +6,21 @@
 
 * [Portal overview](getting-started/portal-overview.md)
 * [Environment setup](getting-started/environment-setup.md)
-* [Installation](getting-started/installation.md)
+* [Toolchain installation](getting-started/installation.md)
 
 ## Market
 
 * [Economics](market/economics.md)
 * [Supported proof systems](market/supported-proof-systems.md)
-* [User Guides](market/user-guides/README.md)
+* [User guides](market/user-guides/README.md)
   * [Sign up](market/user-guides/sign-up.md)
-  * [Circuit Developer](market/user-guides/circuit-developer.md)
-  * [Proof Requester](market/user-guides/proof-requester.md)
-  * [Proof Producer](market/user-guides/proof-producer.md)
+  * [Circuit developer](market/user-guides/circuit-developer.md)
+  * [Proof requester](market/user-guides/proof-requester.md)
+  * [Proof producer](market/user-guides/proof-producer.md)
 * [Web interface](market/front-end.md)
-* [CLI Reference](market/cmd-reference/README.md)
+* [CLI reference](market/cmd-reference/README.md)
   * [User account utilities](market/cmd-reference/user.md)
-  * [Statement](market/cmd-reference/statement.md)
+  * [Statement utilities](market/cmd-reference/statement.md)
   * [Proposal utilities](market/cmd-reference/bid.md)
   * [Request utilities](market/cmd-reference/ask.md)
   * [Proof utilities](market/cmd-reference/proof.md)
@@ -28,15 +28,15 @@
 
 ## Guides
 
-* [Requester/Producer Flow](guides-1/requester-producer-flow.md)
-* [Mina Proof pipeline - Example](guides-1/mina-proof-pipeline-example/README.md)
-  * [1. Setup](guides-1/mina-proof-pipeline-example/1.-setup.md)
-  * [2. Deploy zkApp](guides-1/mina-proof-pipeline-example/2.-deploy-zkapp.md)
-  * [3. Proof Request](guides-1/mina-proof-pipeline-example/3.-proof-request.md)
-  * [4. Validate Proof](guides-1/mina-proof-pipeline-example/4.-validate-proof.md)
+* [Requester/producer flow](guides-1/requester-producer-flow.md)
+* [Mina proof pipeline example](guides-1/mina-proof-pipeline-example/README.md)
+  * [Part 1. Setup](guides-1/mina-proof-pipeline-example/1.-setup.md)
+  * [Part 2. Deploying zkApp](guides-1/mina-proof-pipeline-example/2.-deploy-zkapp.md)
+  * [Part 3. Requesting a proof](guides-1/mina-proof-pipeline-example/3.-proof-request.md)
+  * [Part 4. Proof validation](guides-1/mina-proof-pipeline-example/4.-validate-proof.md)
 
 ## Misc
 
 * [Contributing](misc/contributing.md)
-* [Code Of Conduct](misc/code-of-conduct.md)
-* [Contact](misc/contact.md)
+* [Code of conduct](misc/code-of-conduct.md)
+* [Contact us](misc/contact.md)

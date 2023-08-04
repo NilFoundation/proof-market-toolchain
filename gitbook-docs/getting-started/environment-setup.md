@@ -1,11 +1,11 @@
 ---
-description: Environment setup for the Proof Market CLI
+description: Environment setup for Proof Market CLI
 ---
 
 # Environment setup
 
 This guide describes how to set up packages/libraries required to interact
-with the Proof Market through the command line.
+with Proof Market through the command line.
 
 ## Dependencies
 
@@ -47,7 +47,7 @@ Use the recommended versions of the libraries to avoid compilation issues:
 
 We've tested the following versions of the libraries:
 
-```
+```bash
 clang-12
 clang++12
 boost == 1.76
