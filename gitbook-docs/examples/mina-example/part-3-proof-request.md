@@ -33,7 +33,11 @@ that identifies the ledger:
 
 ### Get account state
 
-If you haven't already, [get the zkApp's state](part-2-deploy-zkapp.md#step-4-check-the-account-state).
+[Get the current zkApp state](part-2-deploy-zkapp.md#step-4-check-the-account-state).
+Also note, that the ledger state might change while you do that.
+We recommend obtaining the ledger state once again,
+and if you see that the hash in the output has changed,
+you might need to obtain the ledger state and the account state once again. 
 
 ## Step 2: send proof requests
 
@@ -63,7 +67,7 @@ Look for the following keys in the statement list:
   which we'll use for Ledger state proof;
 * `_key` **79169223** is the key for Mina account state proof.
 
-That's the two proofs we want to be validated in EVM.
+That's the two proofs we want to be validated in-EVM.
 For that, we're going to use the [`request_tools.py` script](../../toolchain/cli-reference/request.md)
 from Proof Market toolchain:
 
