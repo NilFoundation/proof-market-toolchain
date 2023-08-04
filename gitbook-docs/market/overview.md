@@ -1,7 +1,7 @@
 # Terminology
 
 {% hint style="warning" %}
-The Proof Market is currently in its beta version.
+Proof Market is currently in beta version.
 We expect there will be continuous changes in it following the feedback we receive from the customers.
 {% endhint %}
 
@@ -17,24 +17,24 @@ to buy and sell future values of Bitcoin via perpetual contracts.
 These are called derivative markets, as you do not own the underlying instrument
 but are just speculating on its price.
 
-`\=nil;` Proof Market belongs to the class of spot markets and is designed
+`=nil;` Proof Market belongs to the class of spot markets and is designed
 as a decentralized and distributed system.
 
 ## Circuits and statements
 
 Markets tend to arrive at a fair price through interactions between buyers and sellers.
-In the Proof Market, the object of trade are statements — circuits 
+In Proof Market, the object of trade are statements — circuits 
 prepared for publishing on the market.
 Circuits are algebraic representations of an algorithm, created by the proof system
 and compiled with the zkLLVM compiler.
 For example, it can be MINA or Solana state-proofs.
-To publish a circuit to the Proof Market, you should prepare a statement and attach
-all additional metadata to it.
+To publish a circuit to Proof Market, you should build a statement by attaching
+all additional metadata to the circuit.
 See the [prepare statement](cmd-reference/statement.md/#prepare-statement)
 section for more information.
 
 {% hint style="info" %}
-To be traded on the Proof Market, the statements will require approval by `=nil;` Foundation.
+To be traded on Proof Market, the statements will require approval by `=nil;` Foundation.
 {% endhint %}
 
 ## Entities
@@ -72,7 +72,7 @@ The marketplace consists of the following entities:
 
 ## Order matching
 
-In this beta version of the Proof Market, a matching engine matches the orders
+In this beta version of Proof Market, a matching engine matches the orders
 when the following parameters are met:
 
 * cost;

@@ -26,7 +26,7 @@ options:
 
 ## Submitting proof
 
-You'll need the proof file and request or proposal key to submit proof to the Proof Market.
+You'll need the proof file and request or proposal key to submit proof to Proof Market.
 You can provide only one of the two possible keys.
 
 ### Usage
@@ -55,7 +55,7 @@ Proof for 458426 is pushed
 
 ## Retrieving proof
 
-To retrieve proof from the Proof Market, you'll need either the proof key or the request key.
+To retrieve proof from Proof Market, you'll need either the proof key or the request key.
 
 ### Usage
 

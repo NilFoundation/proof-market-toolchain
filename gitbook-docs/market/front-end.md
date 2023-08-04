@@ -1,10 +1,10 @@
 ---
-description: Web interface of the Proof Market
+description: Web interface of Proof Market
 ---
 
 # Web interface
 
-The web interface of the Proof Market can be accessed at [proof.market](https://proof.market).
+The web interface of Proof Market can be accessed at [proof.market](https://proof.market).
 
 {% hint style="info" %}
 Please note this product is in beta and expected to change.
@@ -12,7 +12,7 @@ Please note this product is in beta and expected to change.
 
 ## Creating an account 
 
-To interact with the Proof Market, create an account at [proof.market](https://proof.market/#/register)
+To interact with Proof Market, create an account at [proof.market](https://proof.market/#/register)
 or [through the command-line interface](cmd-reference/user.md).
 Without an account, you can view the exchange, but you won't be able to post orders 
 to buy or sell proofs.
@@ -52,7 +52,7 @@ If you're not logged in, **Create orders** and **Manage orders** sections will n
 ### Statement list
 
 The statements list shows the [statements](overview.md/#circuits-and-statements) available
-on the Proof Market, like MINA or Solana state-proofs, and their price change in the last 24 hours.
+on Proof Market, like MINA or Solana state-proofs, and their price change in the last 24 hours.
 Here you can search the statements to create an order to buy or sell proofs.
 Selection of a statement in this view also affects all the other components.
 
@@ -119,7 +119,6 @@ If you are registered as a proof producer, you will also be able to post sell or
 Otherwise, you'll see this:
 
 <figure><img src="../.gitbook/assets/sell-order-register-as-a-producer.png" alt=""><figcaption><p>Sell order view for proof requesters</p></figcaption></figure>
-
 
 ### Manage orders
 
