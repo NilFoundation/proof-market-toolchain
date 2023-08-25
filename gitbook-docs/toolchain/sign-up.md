@@ -1,11 +1,10 @@
 # Sign up
 
-Access to the market requires authentication.
+Access to Proof Market requires authentication.
 Make sure you have a valid username and password.
 If you have not registered, please look at the instructions on how to do so
-[via the web interface](../front-end.md#new-user-signup).
-
-Or, you can use the following command in the `proof-market-toolchain` repository.
+[via the web interface](../market/web-interface.md#creating-an-account).
+Or use the following commands from the `proof-market-toolchain` repository.
 
 ## User
 
@@ -19,15 +18,15 @@ python3 scripts/signup.py user \
 ```
 
 If the signup is successful, this command creates `.user` and `.secret` files with your credentials
-in the `./scripts` directory.
+in the `scripts` directory.
 
 All users can submit and retrieve orders on Proof Market, but only proof producers
 can generate and submit proofs.
 
 ## Proof producer
 
-First, you should sign up or [sign in](../cmd-reference/user.md#signing-in) as a regular user,
-and then you can register yourself as a proof producer:
+First, you should [sign up](#user) or [sign in](../toolchain/cli-reference/user.md#signing-in)
+as a regular user, and then you can register yourself as a proof producer:
 
 ```bash
 python3 scripts/signup.py producer \
@@ -37,4 +36,4 @@ python3 scripts/signup.py producer \
     [--logo <logo>]
 ```
 
-Note that only Ethereum address is a required parameter, the others are optional.
+Note that only the Ethereum address is a required parameter, the others are optional.

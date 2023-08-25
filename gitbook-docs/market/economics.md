@@ -111,7 +111,6 @@ It's split between two parties:
 * _cir\_dev_ part goes to the circuit developer of the ordered statement.
 
 ### Funds withdrawal
-
 #### From the proof requester's perspective
 
 Each time a new request is added, an amount equal to the request cost is locked on the account.

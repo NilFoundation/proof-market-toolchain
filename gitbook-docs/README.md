@@ -19,7 +19,10 @@ and create a free, open, and self-sustaining market.
 {% hint style="info" %}
 Currently, Proof Market accepts circuits generated using our zkLLVM compiler
 and based on the [Placeholder](https://github.com/NilFoundation/evm-placeholder-verification) proof system.
-However, the ultimate goal is to enable validation of any proofs from any system.
+However, the ultimate goal is to enable validation of any proofs from any system,
+for instance, AIR, R1CS-based, and other PLONK-based proofs.
+If you wish to use Proof Market for your needs, please get in touch with the team
+on our [contacts](misc/contact.md) page.
 {% endhint %}
 
 {% hint style="warning" %}

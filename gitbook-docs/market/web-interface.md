@@ -13,7 +13,7 @@ Please note this product is in beta and expected to change.
 ## Creating an account 
 
 To interact with Proof Market, create an account at [proof.market](https://proof.market/#/register)
-or [through the command-line interface](cmd-reference/user.md).
+or [through the command-line interface](../toolchain/cli-reference/user.md).
 Without an account, you can view the exchange, but you won't be able to post orders 
 to buy or sell proofs.
 
@@ -36,14 +36,14 @@ If you're a registered user, go to the [Sign in](https://proof.market/#/login) p
 
 The Proof Market dashboard has the following components:
 
-* [A: Statement list](front-end.md#statement-list);
-* [B: Trades](front-end.md#trades);
-* [C: Last proof producer](front-end.md#last-proof-producer);
-* [D: Statement details](front-end.md#statement-details);
-* [E: Statement dashboard](front-end.md#statement-dashboard);
-* [F: Order book](front-end.md#order-book);
-* [G: Create orders](front-end.md#create-orders);
-* [H: Manage orders](front-end.md#manage-orders).
+* [A: Statement list](#statement-list);
+* [B: Trades](#trades);
+* [C: Last proof producer](#last-proof-producer);
+* [D: Statement details](#statement-details);
+* [E: Statement dashboard](#statement-dashboard);
+* [F: Order book](#order-book);
+* [G: Create orders](#create-orders);
+* [H: Manage orders](#manage-orders).
 
 <figure><img src="../.gitbook/assets/dashboard-authorized.png" alt=""><figcaption><p>The Proof Market dashboard</p></figcaption></figure>
 
@@ -51,7 +51,7 @@ If you're not logged in, **Create orders** and **Manage orders** sections will n
 
 ### Statement list
 
-The statements list shows the [statements](overview.md/#circuits-and-statements) available
+The statements list shows the [statements](mechanics.md#circuits-and-statements) available
 on Proof Market, like MINA or Solana state-proofs, and their price change in the last 24 hours.
 Here you can search the statements to create an order to buy or sell proofs.
 Selection of a statement in this view also affects all the other components.
@@ -104,7 +104,7 @@ You can toggle to see your orders in the book and group them.
 **Create orders** section is active only for logged-in users.
 Here you can place buy and sell orders.
 
-You can learn more about orders and their fields in [Terminology](overview.md/#orders-types).
+You can learn more about orders and their fields on the [market mechanics page](mechanics.md#orders-types).
 Please note that you should provide your inputs for the selected statement
 in the **Public Input** field.
 
@@ -125,7 +125,7 @@ Otherwise, you'll see this:
 **Manage orders** section is active only for logged-in users.
 This view has two tabs:
 
-* **Active orders** — all your currently [active orders](economics.md/#orders-status),
+* **Active orders** — all your currently [active orders](economics.md#orders-status),
   waiting for a match or in processing.
   Here you can cancel an active order.
 
