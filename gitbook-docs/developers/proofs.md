@@ -1,8 +1,8 @@
-# Proof requester
+# Requesting and obtaining proofs
 
 {% hint style="info" %}
-[Sign up](sign-up.md) and keep the authentication files in order to use
-the following command line tools.
+[Sign up or sign in to Proof Market](../market/web-interface.md#creating-an-account)
+and keep the authentication files to use the following command line tools.
 {% endhint %}
 
 ## Submit a request

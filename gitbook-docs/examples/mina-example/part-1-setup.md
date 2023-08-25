@@ -9,12 +9,11 @@ You're going to need the following environments ready for this guide.
 
 Prerequisites from Proof Market side are:
 
-* [Environment setup](../getting-started/environment-setup.md).
-* [Proof Market toolchain installation and setup](../../getting-started/installation.md).
+* [Proof Market toolchain installation and setup](../../toolchain/installation.md).
   You don't need to set up a virtual environment for Proof Market toolchain,
   we will only be using its Python scripts.
   This directory will be referred to as `proof-market-toolchain` home in the guide.
-* [Authentication on Proof Market](../../market/user-guides/sign-up.md).
+* [Authentication on Proof Market](../../toolchain/sign-up.md).
   There's no need to register as a producer, any account will suffice.
 
 ## Step 2: Mina state proof
@@ -36,7 +35,7 @@ with 8 state variables that are updated on each interaction.
 This directory will be referred to as `mina-add-zkApp` home in the guide.
 
 Follow the steps from
-[`mina-add-zkapp/README.md`](https://github.com/NilFoundation/mina-state-proof/tree/master/examples/mina-add-zkapp)
+[mina-add-zkapp's README](https://github.com/NilFoundation/mina-state-proof/tree/master/examples/mina-add-zkapp)
 to install the project dependencies.
 
 After that, you should have the following three directories ready:

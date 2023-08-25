@@ -53,7 +53,7 @@ Statement examples can be found in `./example/statements/` directory.
 
 ## Publishing statements
 To publish a statement on Proof Market, use the `statement_tools.py` script.
-See the [preparing statement](statement.md#preparing-circuit-as-a-statement) section above.
+See the [building statements](#building-statements-from-circuits) section above.
 
 ### Usage
 

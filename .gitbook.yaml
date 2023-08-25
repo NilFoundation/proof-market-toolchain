@@ -4,6 +4,29 @@ structure:
   readme: ./README.md
 
 redirects:
-  guides/portal-overview: getting-started/portal-overview.md
-  guides/environment-setup: getting-started/environment-setup.md
-  guides/installation: getting-started/installation.md
+  getting-started/portal-overview: README.md
+  getting-started/environment-setup: toolchain/installation.md
+  getting-started/installation: toolchain/installation.md
+  market/supported-proof-systems: README.md
+  market/user-guides/README: README.md
+  market/user-guides/sign-up: toolchain/sign-up.md
+  market/user-guides/circuit-developer: developers/statements.md
+  market/user-guides/proof-requester: developers/proofs.md
+  market/user-guides/proof-producer: producers/proof-producer.md
+  market/overview: market/mechanics.md
+  market/front-end: market/web-interface.md
+  market/cmd-reference/README: toolchain/cli-reference/README.md
+  market/cmd-reference/user: toolchain/cli-reference/user.md
+  market/cmd-reference/statement: toolchain/cli-reference/statement.md
+  market/cmd-reference/bid: toolchain/cli-reference/request.md
+  market/cmd-reference/ask: toolchain/cli-reference/proposal.md
+  market/cmd-reference/proof: toolchain/cli-reference/proof.md
+  guides-1/requester-producer-flow: examples/toolchain
+  guides-1/mina-proof-pipeline-example/README: examples/mina-example/README
+  guides-1/mina-proof-pipeline-example/1.-setup: examples/mina-example/part-1-setup
+  guides-1/mina-proof-pipeline-example/2.-deploy-zkapp: examples/mina-example/part-2-deploy-zkapp
+  guides-1/mina-proof-pipeline-example/3.-proof-request: examples/mina-example/part-3-proof-request
+  guides-1/mina-proof-pipeline-example/4.-validate-proof: examples/mina-example/part-4-validate-proof
+  misc/contributing: README.md
+  misc/code-of-conduct: README.md
+  

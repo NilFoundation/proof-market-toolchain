@@ -1,14 +1,12 @@
-# Circuit developer
+# Circuits and statements
 
-This is an entity that prepares circuits for Proof Market.
+Anyone can generate circuits.
+Circuits are serialized & published on Proof Market, allowing their reuse
+by all market participants.
 The most efficient way to create a circuit definition for Proof Market is
 [zkLLVM](https://github.com/NilFoundation/zkllvm) circuit compiler.
 You can find the required dependencies and build instructions in the
 [zkLLVM's repository](https://github.com/NilFoundation/zkllvm).
-
-Anyone can generate circuits.
-They are serialized & published on Proof Market, allowing reuse of the circuits by
-all proof requesters.
 
 ## Create a circuit
 
@@ -24,7 +22,7 @@ https://docs.nil.foundation/zkllvm/circuit-development/circuit-generation).
 ## Prepare a statement with a circuit description for Proof Market
 
 Circuits are stored on Proof Market in the form of statements.
-Example statements can be found in the `./example` directory.
+Example statements can be found in the `example` directory.
 
 ```bash
 python3 scripts/prepare_statement.py \
@@ -38,11 +36,11 @@ python3 scripts/prepare_statement.py \
 ## Publish a statement on Proof Market
 
 {% hint style="info" %}
-[Sign up](sign-up.md) and keep authentication files in order to use
-the following command line tools.
+[Sign up or sign in to Proof Market](../market/web-interface.md#creating-an-account)
+and keep the authentication files to use the following command line tools.
 {% endhint %}
 
-You can find an authentication file example in the `/example` directory.
+You can find an authentication file example in the `example` directory.
 
 The statement can be published on Proof Market via the Python script `statement_tools.py`:
 

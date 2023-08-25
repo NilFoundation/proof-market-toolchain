@@ -30,7 +30,7 @@ and compiled with the zkLLVM compiler.
 For example, it can be MINA or Solana state-proofs.
 To publish a circuit to Proof Market, you should build a statement by attaching
 all additional metadata to the circuit.
-See the [prepare statement](cmd-reference/statement.md/#prepare-statement)
+See the [building statements](../toolchain/cli-reference/statement.md#building-statements-from-circuits)
 section for more information.
 
 {% hint style="info" %}

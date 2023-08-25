@@ -1,17 +1,17 @@
-# Requester/producer flow
+# Interacting with Proof Market toolchain
 
 In this guide, we will perform an end-to-end interaction on Proof Market
 between a proof requester and a proof producer for the `arithmetic-example` circuit.
 We will use the same user but swap roles as we progress.
 
 We won't cover circuit/statement publishing here, you can learn about it
-in the [CLI section](../market/cmd-reference/statement.md#publishing-statements).
+in the [CLI section](../toolchain/cli-reference/statement.md#building-statements-from-circuits).
 
 ## Prerequisites
 
-Prerequisites for this guide are [environment setup](../getting-started/environment-setup.md),
-[Proof Market toolchain installation](../getting-started/installation.md),
-and [authentication on Proof Market](../market/user-guides/sign-up.md).
+Prerequisites for this guide are
+[Proof Market toolchain installation](../toolchain/installation.md)
+and [authentication on Proof Market](../toolchain/sign-up.md).
 
 We will execute all the commands from the `proof-market-toolchain` repository's home.
 
@@ -214,7 +214,7 @@ They're going to need the following parameters:
 
 Ideally, you should retrieve both the `circuit_input` and `public_input` from Proof Market.
 See the corresponding part
-of the [proof producer's guide](../market/user-guides/proof-producer.md#order-status-fetch-inputs).
+of the [proof producer's guide](../producers/proof-producer.md#check-order-status-and-fetch-inputs).
 
 ```console
 $ ./build/bin/proof-generator/proof-generator \

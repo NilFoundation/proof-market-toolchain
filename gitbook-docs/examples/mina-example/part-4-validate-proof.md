@@ -103,7 +103,7 @@ jwYPLbRQa4X86tSJs1aTzusf3TNdVTj58oyWJQB132sEGUtKHcB
 
 ### Validating account state
 
-Upon [checking the account state](2.-deploy-zkapp.md#step-4-check-the-account-state),
+Upon [checking the account state](part-2-deploy-zkapp.md#step-4-check-the-account-state),
 it was saved to `mina_zkapp_state.json` in the `mina-state-proof` home.
 There's also an example of account data at `examples/data/account_data.json`.
 Basically, it should look like this:
