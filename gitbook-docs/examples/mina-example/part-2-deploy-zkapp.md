@@ -1,7 +1,7 @@
-# Part 2. Deploying zkApp
+# Part 2. Deploying a zk app
 
 The following steps, performed from `mina-add-zkapp` home directory,
-deploy the test zkApp to the `Berkeley` test net.
+deploy the test zk app to the `Berkeley` test net.
 
 ## Step 1: generate a key pair
 
@@ -51,7 +51,7 @@ npm run build
 
 ## Step 3: deploy the project
 
-Upon deployment, zkApp's 8 state variables will be initialized to `1,2,3,4,5,6,7,8`.
+Upon deployment, zk app's 8 state variables will be initialized to `1,2,3,4,5,6,7,8`.
 
 ```bash
 zk deploy berkeley
@@ -63,18 +63,20 @@ Note that state values are represented in the hexadecimal numeral system.
 
 ## Step 4: check the account state
 
-To fetch zkApp or user data, you're going to need the `get_mina_state.py` script
+To fetch zk app or user data, you're going to need the `get_mina_state.py` script
 located in `mina-state-proof/scripts`.
-You can either navigate to the `mina-state-proof` home or add `../../` before `scripts/get_mina_state.py`.
+Navigate to the `mina-state-proof` home and run:
 
-```bash
+```console
 $ python3 scripts/get_mina_state.py \
     --output mina_zkapp_state.json \
     account --address YOUR_PUBLIC_KEY
+
+Ledger hash: xxx
 ```
 
 The output file you provided will be populated with JSON
-detailing the account/zkApp state:
+detailing the account or app state:
 
 ```json
 {
@@ -96,7 +98,7 @@ detailing the account/zkApp state:
 }
 ```
 
-## Step 5: interacting with zkApp
+## Step 5: interacting with zk app
 
 This step is performed from `mina-add-zkapp` home.
 It will compile the contract and call its method `update`.

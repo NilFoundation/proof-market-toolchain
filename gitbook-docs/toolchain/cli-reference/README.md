@@ -5,7 +5,7 @@ to interact with Proof Market:
 
 * [Make a new account](user.md).
 * [Push your statement as a circuit developer](statement.md).
-* [Order proofs for a zkApp](request.md).
+* [Order proofs for a zk app](request.md).
 * [Propose to sell proofs](proposal.md).
 * [Upload and download proofs](proof.md).
 
