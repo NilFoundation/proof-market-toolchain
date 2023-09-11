@@ -18,26 +18,25 @@ $ python3 scripts/get_mina_state.py \
     ledger
 
 Fetching data for block height: 5612
-Hash: jwkscPfXvGVVvgm92wroiXBJXE8bRt18S2ue1Uk9k5awGSFCfSM
+Ledger hash: jwkscPfXvGVVvgm92wroiXBJXE8bRt18S2ue1Uk9k5awGSFCfSM
 ```
 
-Both the output of the command and the output file contain the `Hash`/`snarkedLedgerHash` attribute
+Both the output of the command and the output file contain the `Ledger hash`/`stagedLedgerHash` attribute
 that identifies the ledger:
 
 ```json
       "blockchainState": {
         ...
-        "snarkedLedgerHash": "jwkscPfXvGVVvgm92wroiXBJXE8bRt18S2ue1Uk9k5awGSFCfSM",
+        "stagedLedgerHash": "jwkscPfXvGVVvgm92wroiXBJXE8bRt18S2ue1Uk9k5awGSFCfSM",
       }
 ```
 
 ### Get account state
 
-[Get the current zkApp state](part-2-deploy-zkapp.md#step-4-check-the-account-state).
+[Get the current app state](part-2-deploy-zkapp.md#step-4-check-the-account-state).
 Also note, that the ledger state might change while you do that.
-We recommend obtaining the ledger state once again,
-and if you see that the hash in the output has changed,
-you might need to obtain the ledger state and the account state once again. 
+If you see that the ledger hash in the output is different from the ledger hash
+in ledger's state, [get the current ledger state](#get-ledger-state).
 
 ## Step 2: send proof requests
 
@@ -74,7 +73,7 @@ from Proof Market toolchain:
 ```bash
 python3 scripts/request_tools.py push \
     --cost <cost of the request> \
-    --file <file scr/path> \
+    --file <filepath> \
     --key <key of the statement> 
 ```
 
@@ -87,7 +86,7 @@ This proof should validate the full ledger state:
 
 ```bash
 python3 scripts/request_tools.py push \
-    --cost 16 \
+    --cost 17 \
     --file ../mina-state-proof/mina_ledger_state.json \
     --key 32292
 ```
@@ -108,11 +107,11 @@ The key of this order is `65017881`, and the status for now is `created`.
 
 ### Request an account state proof
 
-This proof validates the Merkle path of zkApp's state to the ledger state hash:
+This proof validates the Merkle path of zk app's state to the ledger state hash:
 
 ```console
 $ python3 scripts/request_tools.py push \
-    --cost 16 \
+    --cost 17 \
     --file ../mina-state-proof/mina_zkapp_state.json \
     --key 79169223
 
