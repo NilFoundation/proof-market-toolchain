@@ -6,6 +6,7 @@ import argparse
 import json
 import time
 import os
+import configparser
 import random
 from threading import Thread
 from constants import (
@@ -17,6 +18,7 @@ from constants import (
     AUTH_FILE,
     PROOFS_DIR,
     ASK_UPDATE_INTERVAL,
+    PROOF_GEN_CONFIG_FILE
 )
 import subprocess
 
@@ -91,8 +93,15 @@ def proposals_loop():
                 push_proposal(AUTH_FILE, st, cost)
 
 
-def produce_proof(proposal, binary, auth):
-    circuit = "./statements/" + proposal["statement_key"] + ".json"
+def produce_proof(proposal, auth):
+    logging.info(f"Produce proof for proposal:"+proposal["_key"])
+    config = configparser.ConfigParser()
+    config.readfp(open(PROOF_GEN_CONFIG_FILE))
+    circuit_file = "./statements/" + proposal["statement_key"] + ".json"
+    circuit= get_statement(auth,proposal["statement_key"],None)
+
+    with open(circuit_file, "w") as f:
+        json.dump(circuit, f, indent=4)
     try:
         input = get_public_input(proposal["request_key"], auth).json()["input"]
     except:
@@ -102,10 +111,22 @@ def produce_proof(proposal, binary, auth):
     with open(input_file, "w") as f:
         json.dump(input, f, indent=4)
     output = "proof"
+    assigner_binary= config.get(circuit["type"], 'assigner')
+    proof_generator_binary= config.get(circuit["type"], 'proof_generator')
+
+    if len(assigner_binary) != 0:
+        assigner = subprocess.Popen(
+            [
+                assigner_binary
+            ]
+        )
+        assigner.wait()
+
+    
     generator = subprocess.Popen(
         [
-            binary,
-            "--circuit_input=" + circuit,
+            proof_generator_binary,
+            "--circuit_input=" + circuit_file,
             "--public_input=" + input_file,
             "--proof_out=" + output,
         ]
@@ -118,7 +139,7 @@ def produce_proof(proposal, binary, auth):
     return
 
 
-def proofs_loop(binary_path):
+def proofs_loop():
     while True:
         time.sleep(ASK_UPDATE_INTERVAL)
         try:
@@ -127,14 +148,14 @@ def proofs_loop(binary_path):
             logging.error(f"Get processing proposals error")
             continue
         for proposal in matchedProposals:
-            produce_proof(proposal, binary_path, AUTH_FILE)
+            produce_proof(proposal, AUTH_FILE)
 
 
 def start(args):
     Thread(target=auth_loop).start()
     time.sleep(10)
     Thread(target=proposals_loop).start()
-    Thread(target=proofs_loop(args.proof_generator)).start()
+    Thread(target=proofs_loop()).start()
 
 
 def prepare(args):
@@ -158,9 +179,7 @@ if __name__ == "__main__":
     parser_start.add_argument(
         "-s", "--statements", help="directory with statements", default="./statements/"
     )
-    parser_start.add_argument(
-        "-p", "--proof-generator", help="path to proof generator binary", required=True
-    )
+
     parser_start.set_defaults(func=start)
     parser_prepare = subparsers.add_parser(
         "prepare",
