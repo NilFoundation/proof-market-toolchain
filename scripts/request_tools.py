@@ -30,6 +30,7 @@ def push(auth, key, file, cost, verbose=False):
             left_keys = ["_key", "status", "statement_key", "cost", "sender", "proof_key"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
         logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
+        print(json.dumps(log_data, indent=4))
         return res.json()
 
 
@@ -52,6 +53,7 @@ def get(auth, key=None, request_status=None, verbose=False):
             left_keys = ["_key", "status", "statement_key", "cost", "sender", "proof_key"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
         logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
+        print (json.dumps(log_data, indent=4))
         return res.json()
 
 
