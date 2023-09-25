@@ -219,9 +219,6 @@ namespace nil {
 
                 nil::blueprint::parser<BlueprintFieldType, ArithmetizationParams> parser_instance;
 
-                const char *llvm_arguments[2] = {"", "-opaque-pointers=0"};
-                llvm::cl::ParseCommandLineOptions(2, llvm_arguments);
-
                 std::string bytecode_file_name = output_file + "_tmp.ll";
                 std::ofstream out(bytecode_file_name);
                 out << bytecode;
