@@ -14,6 +14,10 @@
 * [Toolchain installation](toolchain/installation.md)
 * [Circuits and statements](developers/statements.md)
 * [Requesting and obtaining proofs](developers/proofs.md)
+* EVM development
+	* [Placeholder verifier](evm/verifier.md)
+	<!-- * [Endpoint](evm/endpoint.md)
+	* Lorem Ipsum -->
 
 ## Proof producers
 
@@ -39,8 +43,5 @@
   * [Proposal utilities](toolchain/cli-reference/request.md)
   * [Request utilities](toolchain/cli-reference/proposal.md)
   * [Proof utilities](toolchain/cli-reference/proof.md)
-
-
-## Misc
 
 * [Contact us](misc/contact.md)
