@@ -23,6 +23,7 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/string_file.hpp>
 
 namespace std {
     template<typename CharT, typename TraitsT>
