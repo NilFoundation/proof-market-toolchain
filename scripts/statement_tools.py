@@ -22,6 +22,8 @@ def push(auth, file):
         return
     else:
         logging.info(f"Statement from {file} was pushed")
+        result = res.json()[0] if isinstance(res.json(), list) else res.json()
+        logging.info(f"Statement key: {result.get('_key', None)}")
         return res
 
 
