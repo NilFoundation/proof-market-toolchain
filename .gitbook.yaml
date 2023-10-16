@@ -2,6 +2,7 @@ root: ./gitbook-docs/
 
 structure:
   readme: ./README.md
+  summary: ./SUMMARY.md
 
 redirects:
   getting-started/portal-overview: README.md
@@ -21,12 +22,11 @@ redirects:
   market/cmd-reference/bid: toolchain/cli-reference/request.md
   market/cmd-reference/ask: toolchain/cli-reference/proposal.md
   market/cmd-reference/proof: toolchain/cli-reference/proof.md
-  guides-1/requester-producer-flow: examples/toolchain
-  guides-1/mina-proof-pipeline-example/README: examples/mina-example/README
-  guides-1/mina-proof-pipeline-example/1.-setup: examples/mina-example/part-1-setup
-  guides-1/mina-proof-pipeline-example/2.-deploy-zkapp: examples/mina-example/part-2-deploy-zkapp
-  guides-1/mina-proof-pipeline-example/3.-proof-request: examples/mina-example/part-3-proof-request
-  guides-1/mina-proof-pipeline-example/4.-validate-proof: examples/mina-example/part-4-validate-proof
+  guides-1/requester-producer-flow: examples/toolchain.md
+  guides-1/mina-proof-pipeline-example/README: examples/mina-example/README.md
+  guides-1/mina-proof-pipeline-example/1.-setup: examples/mina-example/part-1-setup.md
+  guides-1/mina-proof-pipeline-example/2.-deploy-zkapp: examples/mina-example/part-2-deploy-zkapp.md
+  guides-1/mina-proof-pipeline-example/3.-proof-request: examples/mina-example/part-3-proof-request.md
+  guides-1/mina-proof-pipeline-example/4.-validate-proof: examples/mina-example/part-4-validate-proof.md
   misc/contributing: README.md
   misc/code-of-conduct: README.md
-  
