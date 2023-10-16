@@ -41,4 +41,6 @@
   * [Proof utilities](toolchain/cli-reference/proof.md)
 
 
+## Misc
+
 * [Contact us](misc/contact.md)
