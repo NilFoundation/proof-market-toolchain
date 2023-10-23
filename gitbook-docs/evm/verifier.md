@@ -1,141 +1,182 @@
-# Placeholder verifier 
+# Placeholder verifier
+
+Placeholder proof system and its associated verifier offer an efficient solution
+for zero-knowledge proof verification.
+Whether you are building complex decentralized applications or need to verify
+the correctness of computations in a trustless manner, Placeholder provides
+flexibility and modularity to meet your specific requirements.
+This documentation serves as a guide to help you make the most of this powerful tool.
+
+## What is Placeholder
 
 [Placeholder proof system](https://nil.foundation/blog/post/placeholder-proofsystem)
-is `=nil;` Foundation's proof system with IVC and custom gates, designed specifically for
-in-EVM verification.
-It's a zero-knowledge succinct non-interactive argument of knowledge (zkSNARK)
+is a cutting-edge proof system with IVC (Incrementally Verifiable Computations)
+and custom gates developed by `=nil;` Foundation.
+It's built to enable zero-knowledge functionality and secure interactions
+on the Ethereum blockchain and other blockchain networks.
+It serves a zero-knowledge succinct non-interactive argument of knowledge (zkSNARK)
 based on PlonK-style arithmetization.
-Its modularity allows to recompile the proof system setup for reusing in different applications
-with different security assumptions.
+Its modularity allows configuring and adapting it for various use cases,
+each with distinct security requirements.
 
-You can check its implementation in the [GitHub repo](https://github.com/nilfoundation/crypto3).
+For technical details and implementation insights, you can explore the source code
+in [Crypto3's GitHub repository](https://github.com/nilfoundation/crypto3).
 
-[Placeholder verifier](https://github.com/alexandra-mara/evm-placeholder-verification)
-is an application for in-EVM validation of zero-knowledge proofs
-generated with the Placeholder proof system.
-It's a smart contract deployed on [Sepolia](https://sepolia.etherscan.io/address/0x489dbc0762b3d9bd9843db11eecd2a177d84ba2b)
-and it can be deployed on your local network or any test or main net.
+## What is Placeholder verifier
 
-## Installation
-### Installing verifier as a dependency
+[Placeholder verifier](https://github.com/NilFoundation/evm-placeholder-verification/)
+is an essential component that enables the in-EVM verification of zero-knowledge proofs
+generated using the Placeholder proof system.
+It's a smart contract application that can be deployed on different Ethereum networks,
+including local, test, and main networks.
 
-You can install the package via `npm` from the command line:
+Currently, it's deployed on the Sepolia network
+([contract](https://sepolia.etherscan.io/address/0x489dbc0762b3d9bd9843db11eecd2a177d84ba2b)).
+You can check the full code and tests
+[on GitHub](https://github.com/NilFoundation/evm-placeholder-verification/).
+
+## Installing verifier as a dependency
+
+You can install the verifier package as a dependency using `npm`.
+Open your terminal and run the following command:
 
 ```bash
 npm install @nilfoundation/evm-placeholder-verification@1.1.1
 ```
 
-or add it to the `package.json` file manually:
+Alternatively, you can manually add it to your project's `package.json` file
+by including the following line:
 
 ```json
 "@nilfoundation/evm-placeholder-verification": "1.1.1"
 ```
 
-### Building from sources
+## Building from sources
 
-Clone the project from GitHub:
+You can follow these steps if you prefer to build the verifier from sources.
+
+1. Clone the project from GitHub:
 
 ```bash
 git clone git@github.com:NilFoundation/evm-placeholder-verification.git
 ```
 
-After that, navigate to the `evm-placeholder-verification` directory:
+2. Navigate to the `evm-placeholder-verification` directory:
 
 ```bash
 cd evm-placeholder-verification
 ```
 
-Install the dependency packages:
+3. Install the necessary dependency packages:
 
 ```bash
 npm i
 ```
 
-## Usage
-
-You can call the verifier contract and use it on chain by importing it like this:
-
-```
-import '@nilfoundation/evm-placeholder-verification/contracts/verifier.sol';
-```
-
-Example of contracts using the verifier:
-https://github.com/NilFoundation/evm-proof-market/blob/master/contracts/verifiers/unified_addition_verifier.sol
-Mina example https://github.com/NilFoundation/mina-state-proof/blob/master/contracts/state_proof/mina_state_proof.sol
-
-## Compile contracts
+4. Run the following command in your terminal to compile the verifier's contracts:
 
 ```bash
 npx hardhat compile
 ```
 
-## Deploy
-
-To launch a local network using the following command:
-
-```bash
-npx hardhat node
-```
-
-Don't close the terminal and don't finish this process, the Hardhat node should be
-running for the next steps.
-
-To deploy to a test environment (Ganache, for example), run the following
-from another terminal:
-
-```bash
-npx hardhat deploy --network localhost
-```
-
-Hardhat reuses old deployments by default; to force re-deploy,
-add the `--reset` flag to the command.
-
-If you want to deploy to Sepolia or any other live net, follow
-the [Hardhat's instructions](https://hardhat.org/tutorial/deploying-to-a-live-network).
-
-### Testing
-
-Tests are located in the `test` directory.
-To run tests:
+5. The tests for this application are located in the `test` directory.
+You can execute tests using the following commands:
 
 ```bash
 npx hardhat test # Execute tests
 REPORT_GAS=true npx hardhat test # Test with gas reporting
 ```
 
+### Deploying the verifier
+#### Local network
+
+First, launch a Hardhat node using the following command:
+
+```bash
+npx hardhat node
+```
+
+Keep the terminal open and the network running for the subsequent deployment steps.
+
+To deploy to a test environment (Ganache, for example), run the following command in another terminal window:
+
+```bash
+npx hardhat deploy --network localhost
+```
+
+By default, Hardhat reuses old deployments.
+Add the `--reset` flag to force a fresh deployment.
+
+#### Live networks
+
+For deployments to live Ethereum networks like Sepolia, follow
+the [Hardhat's deployment guide](https://hardhat.org/tutorial/deploying-to-a-live-network)
+for specific instructions.
+
+## On-chain verification
+
+You can use Placeholder verifier in your smart contracts for on-chain verification
+of zero-knowledge proofs.
+To do so, import the verifier contract in your Solidity code as shown below:
+
+```
+import '@nilfoundation/evm-placeholder-verification/contracts/verifier.sol';
+```
+
+To use the verifier contract, you're going to need the following parameters:
+```
+    * address for the deployed verifier contracts
+    * address for the deployed gate arguments
+```
+
+For examples of contracts that utilize the verifier, you can refer
+to the following repositories:
+[Basic example of a verifier](https://github.com/NilFoundation/evm-proof-market/blob/master/contracts/verifiers/unified_addition_verifier.sol);
+[Mina state verification](https://github.com/NilFoundation/mina-state-proof/blob/master/contracts/state_proof/mina_state_proof.sol).
+
 ## Local verification of zkLLVM circuit compiler output
 
-[zkLLVM compiler](https://github.com/NilFoundation/zkllvm) prepares circuits
+You can use Placeholder verifier for local verification of zero-knowledge proofs
+generated by the zkLLVM compiler.
+This is a powerful feature that allows you to validate proofs without relying
+on external parties.
+
+1. Follow the steps from [Building from sources section](#building-from-sources).
+
+2. Use the [zkLLVM compiler](https://github.com/NilFoundation/zkllvm) to prepare circuits
 as instantiated contracts that can be deployed to a blockchain.
 
-Once you get zkLLVM output, create a circuit directory under `contracts/zkllvm` for your output.
+3. Once you get zkLLVM output, create a circuit directory under `contracts/zkllvm`
+for your output.
 That directory should contain the following files:
 
 ```
-* proof.bin — Placeholder proof file
-* circuit_params.json — parameters file
-* public_input.json — file with public input
-* linked_libs_list.json — list of external libraries that have to be deployed for gate argument computation
-* gate_argument.sol, gate0.sol, ... gateN.sol — Solidity files with gate argument computation
+    * proof.bin — Placeholder proof file
+    * circuit_params.json — parameters file
+    * public_input.json — file with public input
+    * linked_libs_list.json — list of external libraries to be deployed for gate argument computation
+    * gate_argument.sol, gate0.sol, ... gateN.sol — Solidity files with gate argument computation
 ```
 
-If all these files are in place, you can deploy the verifier app and verify the proofs.
-You only need to deploy the verifier once, and then you can verify as many proofs as you want.
+4. With all these files in place, you can deploy the verifier application
+and start verifying proofs.
+You only need to deploy the verifier once, and then you can verify as many proofs
+as you need.
 
-Deploying the contracts:
+To deploy the verifier contracts, run:
 
 ```bash
 npx hardhat deploy
 ```
 
-If you've put the files under, let's say, `contracts/zkllvm/circuit-name` directory,
-you can verify the proofs with the following:
+Assuming you've placed your zkLLVM output files in a directory like
+`contracts/zkllvm/circuit-name`, you can verify the proofs with this command:
 
 ```bash
 npx hardhat verify-circuit-proof --test circuit-name
 ```
 
-To verify all circuits from `contracts/zkllvm` directory, run:
+To verify all circuits from the `contracts/zkllvm` directory, run:
 
 ```bash
 npx hardhat verify-circuit-proof-all
