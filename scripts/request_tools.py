@@ -11,12 +11,14 @@ def get_prepared_input(input_file):
     input = json.load(f)
     return input
 
-def push(auth, key, file, cost, verbose=False):
+def push(auth, key, file, cost, subkey=None, verbose=False):
     data = {
         "statement_key": key,
         "input": get_prepared_input(file),
         "cost": cost,
     }
+    if subkey is not None:
+        data["statement_subkey"] = subkey
 
     headers = get_headers(auth)
     url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
@@ -56,7 +58,7 @@ def get(auth, key=None, request_status=None, verbose=False):
 
 
 def push_parser(args):
-    push(args.auth, args.key, args.file, args.cost, args.verbose)
+    push(args.auth, args.key, args.file, args.cost, args.subkey, args.verbose)
 
 
 def get_parser(args):
@@ -83,6 +85,7 @@ if __name__ == "__main__":
         "--file", type=str, required=True, help="json file with public input"
     )
     parser_push.add_argument("--key", type=str, required=True, help="statement key")
+    parser_push.add_argument("--subkey", type=str, help="statement key")
     parser_push.add_argument(
         "--generation_time",
         default=30,
