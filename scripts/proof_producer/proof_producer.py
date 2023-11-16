@@ -114,21 +114,29 @@ def produce_proof(proposal, auth):
     assigner_binary= config.get(circuit["type"], 'assigner')
     proof_generator_binary= config.get(circuit["type"], 'proof_generator')
 
+
+# ./build/bin/assigner/assigner -b build/examples/cpp/sha2_512.ll -i examples/inputs/sha2_512.inp -t sha2_512_assignment.tbl -c sha2_512_circuit.crct -e pallas
+    assignment_table_file="assignment_table_file.txt"
+    circuit_for_proof_generator="assignment_table_file.txt"
+    proof_file="proof.txt"
     if len(assigner_binary) != 0:
         assigner = subprocess.Popen(
             [
-                assigner_binary
+                assigner_binary,
+                " -b " + circuit_file,
+                " -i " + input_file,
+                " -t " + assignment_table_file,
+                " -c " + circuit_for_proof_generator
             ]
         )
         assigner.wait()
 
-    
     generator = subprocess.Popen(
         [
             proof_generator_binary,
-            "--circuit_input=" + circuit_file,
-            "--public_input=" + input_file,
-            "--proof_out=" + output,
+            "--circuit=" + circuit_file,
+            "--assignment-table=" + assignment_table_file,
+            "--proof=" + output,
         ]
     )
     generator.communicate()
