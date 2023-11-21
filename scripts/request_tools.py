@@ -52,6 +52,10 @@ def get(auth, key=None, request_status=None, verbose=False):
             left_keys = ["_key", "status", "statement_key", "cost", "sender", "proof_key"]
             log_data = {k: v for k, v in log_data.items() if k in left_keys}
         logging.info(f"Limit request:\t {json.dumps(log_data, indent=4)}")
+        if res.input_url:
+            response = requests.get(res.input_url)
+            if response.status_code == 200:
+                res.input_file = response.text
         return res.json()
 
 
