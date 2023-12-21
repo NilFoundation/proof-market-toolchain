@@ -91,7 +91,7 @@ def proposals_loop():
                 push_proposal(AUTH_FILE, st, cost)
 
 
-def produce_proof(proposal, binary, auth):
+def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, auth):
     circuit = "./statements/" + proposal["statement_key"] + ".json"
     try:
         input = get_public_input(proposal["request_key"], auth).json()["input"]
@@ -101,24 +101,42 @@ def produce_proof(proposal, binary, auth):
     input_file = "input.json"
     with open(input_file, "w") as f:
         json.dump(input, f, indent=4)
-    output = "proof"
-    generator = subprocess.Popen(
+
+    print(circuit)
+
+    assignment_table_path = "assignment.tbl"
+    circuit_path = "circuit.crct"
+    assigner = subprocess.Popen(
         [
-            binary,
-            "--circuit_input=" + circuit,
+            assigner_binary_path,
+            "--bytecode=" + circuit,
             "--public_input=" + input_file,
-            "--proof_out=" + output,
+            "--circuit=" + circuit_path,
+            "--assignment-table=" + assignment_table_path,
+            "--log-level=info",
         ]
     )
-    generator.communicate()
+    assigner.communicate()
+
+    proof_path = "proof.bin"
+    proof_generator = subprocess.Popen(
+        [
+            proof_generator_binary_path,
+            "--circuit=" + circuit_path,
+            "--assignment-table=" + assignment_table_path,
+            "--proof=" + proof_path,
+            "--log-level=info",
+        ]
+    )
+    proof_generator.communicate()
     try:
-        push_proof(auth, output, request_key=proposal["request_key"], proposal_key=proposal["_key"])
+        push_proof(auth, proof_path, request_key=proposal["request_key"], proposal_key=proposal["_key"])
     except:
         logging.error(f"Push proof error")
     return
 
 
-def proofs_loop(binary_path):
+def proofs_loop(proof_generator_binary_path, assigner_binary_path):
     while True:
         time.sleep(ASK_UPDATE_INTERVAL)
         try:
@@ -127,14 +145,14 @@ def proofs_loop(binary_path):
             logging.error(f"Get processing proposals error")
             continue
         for proposal in matchedProposals:
-            produce_proof(proposal, binary_path, AUTH_FILE)
+            produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, AUTH_FILE)
 
 
 def start(args):
     Thread(target=auth_loop).start()
     time.sleep(10)
     Thread(target=proposals_loop).start()
-    Thread(target=proofs_loop(args.proof_generator)).start()
+    Thread(target=proofs_loop(args.proof_generator, args.assigner)).start()
 
 
 def prepare(args):
@@ -159,7 +177,10 @@ if __name__ == "__main__":
         "-s", "--statements", help="directory with statements", default="./statements/"
     )
     parser_start.add_argument(
-        "-p", "--proof-generator", help="path to proof generator binary", required=True
+        "--proof-generator", help="path to proof generator binary", required=True
+    )
+    parser_start.add_argument(
+        "--assigner", help="path to assigner binary", required=True
     )
     parser_start.set_defaults(func=start)
     parser_prepare = subparsers.add_parser(
@@ -167,7 +188,7 @@ if __name__ == "__main__":
         help="download statements from Proof Market (do not forget to setup constants.py first)",
     )
     parser_prepare.add_argument(
-        "-d", "--directory", help="directory with statements", default="./statements/"
+        "-s", "--statements", help="directory with statements", default="./statements/"
     )
 
     parser_prepare.set_defaults(func=prepare)
