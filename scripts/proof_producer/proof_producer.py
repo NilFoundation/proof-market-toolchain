@@ -89,31 +89,34 @@ def proposals_loop():
                 cost = MY_STATEMENTS[st]["cost"] + round(random.uniform(0, 1), 1)
                 push_proposal(AUTH_FILE, st, cost)
 
-
-def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, log_level, auth):
-    circuit = "./statements/" + proposal["statement_key"] + ".json"
+def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, db_path, log_level, auth):
     try:
         public_input_data = get_public_input(proposal["request_key"], auth).json()["input"]
     except:
-        logging.error(f"Get public input error for proposal: {proposal['_key']}")
+        logging.error(f"Get public input parsing error for proposal with key: {proposal['_key']}")
         return
-    pulic_input_file = "public_input.json"
+
+    request_dir = db_path + "/requests/" + proposal["request_key"] + "/"
+    os.makedirs(request_dir, exist_ok=True)
+
+    pulic_input_file = request_dir + "public_input.json"
     with open(pulic_input_file, "w") as f:
         json.dump(public_input_data, f, indent=4)
 
+    statement_file = db_path + "/statements/" + proposal["statement_key"] + ".json"
     try:
-        with open(circuit, 'r') as file:
+        with open(statement_file, 'r') as file:
             data = json.load(file)
-        bytecode_data = data['definition']['proving_key'] 
+        bytecode_data = data['definition']['proving_key']
     except:
-        logging.error(f"Get bytecode error for proposal: {proposal['_key']}")
+        logging.error(f"Get bytecode parsing error for proposal with key: {proposal['_key']}")
         return
-    bytecode_file = "bytecode.ll"
+    bytecode_file = request_dir + "bytecode.ll"
     with open(bytecode_file, "w") as f:
-        json.dump(bytecode_data, f, indent=4)
+        f.write(bytecode_data)
 
-    assignment_table_path = "assignment.tbl"
-    circuit_path = "circuit.crct"
+    assignment_table_path = request_dir + "assignment.tbl"
+    circuit_path = request_dir + "circuit.crct"
     assigner = subprocess.Popen(
         [
             assigner_binary_path,
@@ -127,7 +130,7 @@ def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, l
     )
     assigner.communicate()
 
-    proof_path = "proof.bin"
+    proof_path = request_dir + "proof.bin"
     proof_generator = subprocess.Popen(
         [
             proof_generator_binary_path,
@@ -145,7 +148,7 @@ def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, l
     return
 
 
-def proofs_loop(proof_generator_binary_path, assigner_binary_path, log_level):
+def proofs_loop(proof_generator_binary_path, assigner_binary_path, db_path, log_level):
     while True:
         time.sleep(ASK_UPDATE_INTERVAL)
         try:
@@ -154,21 +157,26 @@ def proofs_loop(proof_generator_binary_path, assigner_binary_path, log_level):
             logging.error(f"Get processing proposals error")
             continue
         for proposal in matchedProposals:
-            produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, log_level, AUTH_FILE)
+            produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, db_path, log_level, AUTH_FILE)
 
 
 def start(args):
     Thread(target=auth_loop).start()
     time.sleep(10)
     Thread(target=proposals_loop).start()
-    Thread(target=proofs_loop(args.proof_generator, args.assigner, args.log_level)).start()
+    Thread(target=proofs_loop(args.proof_generator, args.assigner, args.db_path, args.log_level)).start()
 
 
 def prepare(args):
     update_auth(AUTH_FILE)
     statements = get_statements(AUTH_FILE)
+
+    statements_dir = args.db_path + "/statements/"
+
+    os.makedirs(statements_dir, exist_ok=True)
+
     for key in statements:
-        with open(args.statements + key + ".json", "w") as f:
+        with open(statements_dir + key + ".json", "w") as f:
             json.dump(statements[key], f, indent=4)
     logging.info(f"Statements prepared")
 
@@ -183,9 +191,6 @@ if __name__ == "__main__":
         help="start Proof Producer daemon  (do not forget to prepare statements first)",
     )
     parser_start.add_argument(
-        "-s", "--statements", help="directory with statements", default="./statements/"
-    )
-    parser_start.add_argument(
         "--proof-generator", help="path to proof generator binary", required=True
     )
     parser_start.add_argument(
@@ -194,13 +199,16 @@ if __name__ == "__main__":
     parser_start.add_argument(
         "--log-level", help="log level", choices=['trace', 'debug', 'info', 'warning', 'error', 'fatal'], default="info"
     )
+    parser_start.add_argument(
+        "--db-path", help="directory with producer's data", default="/tmp/proof-producer/"
+    )
     parser_start.set_defaults(func=start)
     parser_prepare = subparsers.add_parser(
         "prepare",
         help="download statements from Proof Market (do not forget to setup constants.py first)",
     )
     parser_prepare.add_argument(
-        "-s", "--statements", help="directory with statements", default="./statements/"
+        "--db-path", help="directory with producer's data", default="/tmp/proof-producer/"
     )
 
     parser_prepare.set_defaults(func=prepare)
