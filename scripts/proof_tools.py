@@ -59,11 +59,11 @@ def get(auth, request_key=None, proof_key=None, file=None):
 
 
 def push_parser(args):
-    push(args.auth, args.file, args.request_key, args.proposal_key)
+    push(args.auth, args.proof, args.request_key, args.proposal_key)
 
 
 def get_parser(args):
-    get(args.auth, args.request_key, args.proof_key, args.file)
+    get(args.auth, args.request_key, args.proof_key, args.proof)
 
 
 if __name__ == "__main__":
@@ -77,13 +77,13 @@ if __name__ == "__main__":
     parser_get = subparsers.add_parser("get", help="get proof")
     parser_get.set_defaults(func=get_parser)
 
-    parser_push.add_argument("-p", "--proposal_key", type=str, default=None, help="proposal_key")
-    parser_push.add_argument("-r", "--request_key", type=str, default=None, help="request_key")
+    parser_push.add_argument("--proposal_key", type=str, default=None, help="proposal_key")
+    parser_push.add_argument("--request_key", type=str, default=None, help="request_key")
     parser_push.add_argument(
-        "-f", "--file", type=str, required=True, help="file with proof"
+        "-p", "--proof", type=str, required=True, help="path to read the proof"
     )
-    parser_get.add_argument("-k", "--proof_key", type=str, help="key of the proof")
-    parser_get.add_argument("-f", "--file", type=str, help="file to write proof")
-    parser_get.add_argument("-r", "--request_key", type=str, help="request_key")
+    parser_get.add_argument("--proof_key", type=str, help="key of the proof")
+    parser_get.add_argument("-p", "--proof", type=str, help="path to store the proof", default="proof.bin")
+    parser_get.add_argument("--request_key", type=str, help="request_key")
     args = parser.parse_args()
     args.func(args=args)
