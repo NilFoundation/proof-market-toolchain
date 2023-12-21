@@ -10,7 +10,7 @@ from auth_tools import get_headers
 
 def get(key, auth):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
+    url = URL + f"/request/"
     if key:
         url += key
     res = requests.get(url=url, headers=headers, timeout=REQUEST_TIMEOUT)

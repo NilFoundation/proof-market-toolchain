@@ -37,7 +37,7 @@ def push(auth, key, file, cost, subkey=None, verbose=False):
 
 def get(auth, key=None, request_status=None, verbose=False):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
+    url = URL + f"/request/"
     if request_status:
         url += f'?q=[{{"key" : "status", "value" : "{request_status}"}}]&limit=100'
     elif key:

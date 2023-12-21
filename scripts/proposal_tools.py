@@ -13,7 +13,7 @@ def push(auth, key, cost):
         "cost": cost,
     }
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/proposal/"
+    url = URL + f"/proposal/"
     res = requests.post(url=url, json=data, headers=headers, timeout=REQUEST_TIMEOUT)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
@@ -25,7 +25,7 @@ def push(auth, key, cost):
 
 def get(auth, key):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/proposal/"
+    url = URL + f"/proposal/"
     if key:
         url += key
     else:

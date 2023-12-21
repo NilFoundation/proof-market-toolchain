@@ -52,9 +52,8 @@ def get_statements(auth):
 
 
 def get_my_proposals(status="processing"):
-    url = URL + "/proposal/"
+    url = URL + "/proposal"
     url += f'?status={status}'
-
     res = requests.get(url=url, headers=get_headers(AUTH_FILE))
     if res.status_code != 200:
         logging.error(f"Get my proposals error: {res.status_code} {res.text}")
@@ -91,29 +90,39 @@ def proposals_loop():
                 push_proposal(AUTH_FILE, st, cost)
 
 
-def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, auth):
+def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, log_level, auth):
     circuit = "./statements/" + proposal["statement_key"] + ".json"
     try:
-        input = get_public_input(proposal["request_key"], auth).json()["input"]
+        public_input_data = get_public_input(proposal["request_key"], auth).json()["input"]
     except:
         logging.error(f"Get public input error for proposal: {proposal['_key']}")
         return
-    input_file = "input.json"
-    with open(input_file, "w") as f:
-        json.dump(input, f, indent=4)
+    pulic_input_file = "public_input.json"
+    with open(pulic_input_file, "w") as f:
+        json.dump(public_input_data, f, indent=4)
 
-    print(circuit)
+    try:
+        with open(circuit, 'r') as file:
+            data = json.load(file)
+        bytecode_data = data['definition']['proving_key'] 
+    except:
+        logging.error(f"Get bytecode error for proposal: {proposal['_key']}")
+        return
+    bytecode_file = "bytecode.ll"
+    with open(bytecode_file, "w") as f:
+        json.dump(bytecode_data, f, indent=4)
 
     assignment_table_path = "assignment.tbl"
     circuit_path = "circuit.crct"
     assigner = subprocess.Popen(
         [
             assigner_binary_path,
-            "--bytecode=" + circuit,
-            "--public_input=" + input_file,
+            "--bytecode=" + bytecode_file,
+            "--public-input=" + pulic_input_file,
             "--circuit=" + circuit_path,
             "--assignment-table=" + assignment_table_path,
-            "--log-level=info",
+            "--elliptic-curve-type=" + "pallas",
+            "--log-level=" + log_level,
         ]
     )
     assigner.communicate()
@@ -125,7 +134,7 @@ def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, a
             "--circuit=" + circuit_path,
             "--assignment-table=" + assignment_table_path,
             "--proof=" + proof_path,
-            "--log-level=info",
+            "--log-level=" + log_level,
         ]
     )
     proof_generator.communicate()
@@ -136,7 +145,7 @@ def produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, a
     return
 
 
-def proofs_loop(proof_generator_binary_path, assigner_binary_path):
+def proofs_loop(proof_generator_binary_path, assigner_binary_path, log_level):
     while True:
         time.sleep(ASK_UPDATE_INTERVAL)
         try:
@@ -145,21 +154,21 @@ def proofs_loop(proof_generator_binary_path, assigner_binary_path):
             logging.error(f"Get processing proposals error")
             continue
         for proposal in matchedProposals:
-            produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, AUTH_FILE)
+            produce_proof(proposal, proof_generator_binary_path, assigner_binary_path, log_level, AUTH_FILE)
 
 
 def start(args):
     Thread(target=auth_loop).start()
     time.sleep(10)
     Thread(target=proposals_loop).start()
-    Thread(target=proofs_loop(args.proof_generator, args.assigner)).start()
+    Thread(target=proofs_loop(args.proof_generator, args.assigner, args.log_level)).start()
 
 
 def prepare(args):
     update_auth(AUTH_FILE)
     statements = get_statements(AUTH_FILE)
     for key in statements:
-        with open(args.directory + key + ".json", "w") as f:
+        with open(args.statements + key + ".json", "w") as f:
             json.dump(statements[key], f, indent=4)
     logging.info(f"Statements prepared")
 
@@ -181,6 +190,9 @@ if __name__ == "__main__":
     )
     parser_start.add_argument(
         "--assigner", help="path to assigner binary", required=True
+    )
+    parser_start.add_argument(
+        "--log-level", help="log level", choices=['trace', 'debug', 'info', 'warning', 'error', 'fatal'], default="info"
     )
     parser_start.set_defaults(func=start)
     parser_prepare = subparsers.add_parser(
