@@ -15,7 +15,7 @@ def push(auth, file):
         return
 
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/statement/"
+    url = URL + "/statement"
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
@@ -31,7 +31,7 @@ def push_parser(args):
 
 def get(auth, key, output):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/statement/"
+    url = URL + "/statement"
     if key:
         url += key
     res = requests.get(url=url, headers=headers)

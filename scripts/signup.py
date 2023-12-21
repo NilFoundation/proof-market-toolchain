@@ -3,9 +3,8 @@ from constants import URL, DB_NAME, MOUNT
 import requests
 from auth_tools import get_headers, create_credentials_file
 
-
 def signup(user, password, email):
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/user/signup"
+    url = URL + f"/user/signup"
     body = {
         "user": user,
         "passwd": password,
@@ -22,7 +21,7 @@ def signup(user, password, email):
 
 def register_producer(description, url, logo, eth_address):
     headers = get_headers(None)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/producer/register"
+    url = URL + "/producer"
     body = {"description": description}
     if url is not None:
         body["url"] = url

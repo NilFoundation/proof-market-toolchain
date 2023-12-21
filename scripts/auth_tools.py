@@ -27,7 +27,7 @@ user = read_credentials_file("user")
 
 def update_auth(auth):
 
-    url = URL + "_open/auth"
+    url = URL + "/user/signin"
     body = {"username": user, "password": secret}
 
     response = requests.post(url, json=body)

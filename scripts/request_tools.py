@@ -21,7 +21,7 @@ def push(auth, key, file, cost, subkey=None, verbose=False):
         data["statement_subkey"] = subkey
 
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/request/"
+    url = URL + "/request"
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
