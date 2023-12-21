@@ -52,8 +52,8 @@ def get_statements(auth):
 
 
 def get_my_proposals(status="processing"):
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/proposal/"
-    url += f'?q=[{{"key" : "sender", "value" : "{USER}"}},{{"key" : "status", "value" : "{status}"}}]'
+    url = URL + "/proposal/"
+    url += f'?status={status}'
 
     res = requests.get(url=url, headers=get_headers(AUTH_FILE))
     if res.status_code != 200:

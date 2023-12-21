@@ -31,7 +31,7 @@ def push_parser(args):
 
 def get(auth, key, output):
     headers = get_headers(auth)
-    url = URL + "/statement"
+    url = URL + "/statement/"
     if key:
         url += key
     res = requests.get(url=url, headers=headers)

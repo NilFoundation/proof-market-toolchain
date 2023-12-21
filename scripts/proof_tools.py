@@ -23,7 +23,7 @@ def push(auth, file, request_key=None, proposal_key=None):
         data["proposal_key"] = proposal_key
 
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/proof"
+    url = URL + f"/proof"
     res = requests.post(url=url, json=data, headers=headers)
     if res.status_code != 200:
         logging.error(f"Error: {res.status_code} {res.text}")
@@ -38,7 +38,7 @@ def push(auth, file, request_key=None, proposal_key=None):
 
 def get(auth, request_key=None, proof_key=None, file=None):
     headers = get_headers(auth)
-    url = URL + f"_db/{DB_NAME}/{MOUNT}/proof/"
+    url = URL + "/proof/"
     if request_key:
         proof_key = request_tools.get(auth, key=request_key)["proof_key"]
         url += proof_key + "?full=true"
