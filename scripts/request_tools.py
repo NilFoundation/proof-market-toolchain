@@ -11,14 +11,14 @@ def get_prepared_input(input_file):
     input = json.load(f)
     return input
 
-def push(auth, key, file, cost, subkey=None, verbose=False):
+def push(auth, key, file, cost, aggregated_mode_id=None, verbose=False):
     data = {
         "statement_key": key,
         "input": get_prepared_input(file),
         "cost": cost,
     }
-    if subkey is not None:
-        data["statement_subkey"] = subkey
+    if aggregated_mode_id is not None:
+        data["aggregated_mode_id"] = aggregated_mode_id
 
     headers = get_headers(auth)
     url = URL + "/request"
@@ -41,7 +41,7 @@ def get(auth, key=None, request_status=None, verbose=False):
     if request_status:
         url += f'?q=[{{"key" : "status", "value" : "{request_status}"}}]&limit=100'
     elif key:
-        url += key
+        url += str(key)
     else:
         url += "?limit=100"
     res = requests.get(url=url, headers=headers)
@@ -58,11 +58,11 @@ def get(auth, key=None, request_status=None, verbose=False):
 
 
 def push_parser(args):
-    push(args.auth, args.key, args.file, args.cost, args.subkey, args.verbose)
+    push(args.auth, args.statement_key, args.input, args.cost, verbose=args.verbose)
 
 
 def get_parser(args):
-    get(args.auth, args.key, args.request_status, args.verbose)
+    get(args.auth, args.request_key, args.request_status, args.verbose)
 
 
 if __name__ == "__main__":
@@ -74,20 +74,20 @@ if __name__ == "__main__":
         "-v", "--verbose", action="store_true", help="increase output verbosity"
     )
     subparsers = parser.add_subparsers(help="sub-command help")
-    parser_push = subparsers.add_parser("push", help="push request")
-    parser_push.set_defaults(func=push_parser)
     parser_get = subparsers.add_parser("get", help="get request")
     parser_get.set_defaults(func=get_parser)
-    parser_get.add_argument("--key", type=str, help="request key")
-    parser_get.add_argument("--request_status", type=str, help="request status")
+    parser_get.add_argument("--request-key", type=str, help="request key")
+    parser_get.add_argument("--request-status", type=str, help="request status")
+
+    parser_push = subparsers.add_parser("push", help="push request")
+    parser_push.set_defaults(func=push_parser)
     parser_push.add_argument("--cost", type=float, required=True, help="cost")
     parser_push.add_argument(
-        "--file", type=str, required=True, help="json file with public input"
+        "--input", type=str, required=True, help="json file with public input"
     )
-    parser_push.add_argument("--key", type=str, required=True, help="statement key")
-    parser_push.add_argument("--subkey", type=str, help="statement key")
+    parser_push.add_argument("--statement-key", type=str, required=True, help="statement key")
     parser_push.add_argument(
-        "--generation_time",
+        "--generation-time",
         default=30,
         type=int,
         help="required proof time generation (in mins)",
