@@ -31,7 +31,11 @@
 # Introduction
 
 This repository provides a set of scripts and tools required to participate in the
-`=nil;` Foundation's [Proof Market](https://proof.market/).
+`=nil;` Foundation's [Proof Market](https://proof.market/). This is a new version of the proof market. 
+It is backward compatible with the old version, but the API is slightly different.
+If you are looking for the old version, please go to the [vanilla branch](https://github.com/NilFoundation/proof-market-toolchain/tree/vanilla).
+
+
 
 There are three primary roles (parties) in the Proof Market:
 
@@ -253,6 +257,17 @@ The proof requester can check their request with
 
 ```
 python3 scripts/request_tools.py get --request-key <key of the request> 
+```
+
+### Requesting a proof in an aggregated manner
+
+For some circuits it makes sense to request proofs in an aggregated manner. 
+More on this can be found in the [zkLLVM hints on circuits writing](https://docs.nil.foundation/zkllvm).
+
+To request a proof in an aggregated manner, you need to use slightly different command:
+
+```bash
+python3 aggregated_request.py --cost <cost of the request> --input <json file with public_input> --statement-key <key of the statement> --aggregation-ratio 4
 ```
 
 ## 4. Awaiting for Proposals
