@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c++,vim,cmake,latex,macos,jetbrains+all,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,vim,cmake,latex,macos,jetbrains+all,python,visualstudiocode
 
+### Proof-producer data ###
+scripts/proof_producer/db
+
+
 ### C++ ###
 # Prerequisites
 *.d

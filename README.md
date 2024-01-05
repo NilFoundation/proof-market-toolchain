@@ -1,4 +1,4 @@
-# =nil; Proof Market Toolchain
+# CLI repository for =nil; Proof Market
 
 [![Discord](https://img.shields.io/discord/969303013749579846.svg?logo=discord&style=flat-square)](https://discord.gg/KmTAEjbmM3)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=dark)](https://t.me/nilfoundation)
@@ -8,31 +8,21 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [=nil; Proof Market Toolchain](#nil-proof-market-toolchain)
 - [Introduction](#introduction)
-- [Proof Systems Compatibility](#proof-systems-compatibility)
-- [Starting with a ready Docker image](#starting-with-a-ready-docker-image)
-- [Building the toolchain](#building-the-toolchain)
-  - [Cloning the repository](#cloning-the-repository)
-  - [Building with Docker](#building-with-docker)
-  - [Building on host](#building-on-host)
-    - [Dependencies](#dependencies)
-    - [Building](#building)
-- [Proof Market Beta Access](#proof-market-beta-access)
+- [Prerequisites](#prerequisites)
+- [Signing up on the Proof Market](#signing-up-on-the-proof-market)
 - [Proof Market Interaction](#proof-market-interaction)
   - [1. Prepare zkLLVM (for circuit developers)](#1-prepare-zkllvm-for-circuit-developers)
   - [2. Circuit Generation/Publishing (for circuit developers)](#2-circuit-generationpublishing-for-circuit-developers)
-  - [3. Proof Market Request Creation](#3-proof-market-request-creation)
-  - [4. Wait for proposals](#4-wait-for-proposals)
+  - [3. Requesting the proof](#3-requesting-the-proof)
+  - [4. Awaiting for Proposals](#4-awaiting-for-proposals)
   - [5. Submit proposal](#5-submit-proposal)
   - [6. Order Matching](#6-order-matching)
   - [7. Proof Generation](#7-proof-generation)
   - [8. Proof Submission](#8-proof-submission)
-  - [9. Get Proof](#9-get-proof)
+  - [9. Obtaining the Proof](#9-obtaining-the-proof)
+  - [10. Verifying the Proof](#10-verifying-the-proof)
 - [Common issues](#common-issues)
-  - [Compilation Errors](#compilation-errors)
-  - [Submodule management](#submodule-management)
-  - [Compilation errors for Proof generator](#compilation-errors-for-proof-generator)
   - [macOS](#macos)
 - [Community](#community)
 
@@ -41,7 +31,11 @@
 # Introduction
 
 This repository provides a set of scripts and tools required to participate in the
-`=nil;` Foundation's [Proof Market](https://proof.market/).
+`=nil;` Foundation's [Proof Market](https://proof.market/). This is a new version of the proof market. 
+It is backward compatible with the old version, but the API is slightly different.
+If you are looking for the old version, please go to the [vanilla branch](https://github.com/NilFoundation/proof-market-toolchain/tree/vanilla).
+
+
 
 There are three primary roles (parties) in the Proof Market:
 
@@ -57,184 +51,74 @@ To learn more about the Proof Market and these roles, read the
 [Proof Market documentation](https://docs.nil.foundation/proof-market).
 
 If you're interested in circuit development, check out the
-[zkLLVM compiler](https://github.com/NilFoundation/zkllvm)
-and [zkLLVM template project](https://github.com/NilFoundation/zkllvm-template).
+[zkLLVM template project](https://github.com/NilFoundation/zkllvm-template) and
+[zkLLVM toolchain docs and tutorials](https://docs.nil.foundation/zkllvm).
 
-# Proof Systems Compatibility
+# Prerequisites
 
-Proof Maket Toolchain is tested with the following versions of the circuit development tools:
+The CLI is written in `Python 3.8`. Depending on the role in which you want to participate, 
+you will also need to have the toolchain binaries installed
+on your system.
 
-| Tool | Version |
-| -----------  | ----------- |
-| zkLLVM       | 0.0.79       |
+## Environment setup for proof requesters
 
-# Starting with a ready Docker image
+As a proof requester, you will order proofs of the existing circuits from the Proof Market. 
+The proofs are being verified on the Proof Market as part of the protocol, but you can also
+verify them locally or on EVM.
 
-The quickest way to start working with the Proof Market toolchain is to use the
-Docker image `ghcr.io/nilfoundation/proof-market-toolchain:latest`.
-It has all the parts of the toolchain:
+To verify proofs locally, you will need to install the following dependencies:
+* proof-verifier
 
-* All required dependencies.
-* Scripts for interaction with Proof Market API.
-* The `proof-generator` binary for building proofs.
+To verify proofs on EVM, you can use our [EVM verifier](https://github.com/NilFoundation/evm-placeholder-verification/).
 
-```bash
-cd /your/zk/project
-docker run -it \
-  --volume $(pwd):/opt/project \
-  --user $(id -u ${USER}):$(id -g ${USER}) \
-  ghcr.io/nilfoundation/proof-market-toolchain:latest
+## Environment setup for proof producers
 
-# --volume mounts your project's directory into the container
-# --user solves issues with file permissions
+As a proof producer, you will generate proofs for the requests made by proof requesters. 
+You can use the default proof producer service, or implement your own.
 
-root@abc123:/proof-market-toolchain proof-producer -h
-root@abc123:/proof-market-toolchain python3 scripts/prepare_statement.py --help
-```
-
-Remember to pull the image often to get the latest release:
-```bash
-docker pull ghcr.io/nilfoundation/proof-market-toolchain:latest .
-```
-
-# Building the toolchain
-
-## Cloning the repository
-
-Clone the repo with submodules:
+To use the default proof generator, you will need to install it from the deb package:
 
 ```bash
-git clone --recurse-submodules git@github.com:NilFoundation/proof-market-toolchain.git
-cd proof-market-toolchain
+echo 'deb [trusted=yes]  http://deb.nil.foundation/ubuntu/ all main' >>/etc/apt/sources.list
+apt update
+apt install -y proof-generator zkllvm
 ```
 
-When you pull newer commits, always checkout the submodules as well:
-```bash
-git submodule update --init --recursive
-```
+This will install the proof generator service with dependencies and allow you to participate in the proof 
+generation process.
 
-If you have errors on cloning submodules, 
-[setup the SSH keys](
-https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
-and try cloning again.
+## Environment setup for circuit developers
 
-## Building with Docker
+Circuit developers play a crucial role in the Proof Market. They create zero-knowledge circuits, 
+that can be used privately or publicly by zk-enabled applications.
 
-> **Note:** If you just need the latest release version, use the Docker image at
-`ghcr.io/nilfoundation/proof-market-toolchain:latest`.
+If you're interested in circuit development, check out the
+[zkLLVM template project](https://github.com/NilFoundation/zkllvm-template) and
+[zkLLVM toolchain docs and tutorials](https://docs.nil.foundation/zkllvm).
 
-You can build a Docker image from a particular commit:
-
+Environment setup for circuit developers is described in the [zkLLVM repository](https://github.com/NilFoundation/zkLLVM). 
+In the case of binary distribution, you can install everything from the deb package:
 
 ```bash
-docker build -t ghcr.io/nilfoundation/proof-market-toolchain:latest .
+echo 'deb [trusted=yes]  http://deb.nil.foundation/ubuntu/ all main' >>/etc/apt/sources.list
+apt update
+apt install -y zkllvm
 ```
 
-Now you can run a container based on this image:
+If you want to use our [template repository](https://github.com/NilFoundation/zkllvm-template) to start
+your circuit development, you will also need to install the following dependencies:
 
 ```bash
-docker run -it \
-  -v $(pwd):/opt/project \
-  --user $(id -u ${USER}):$(id -g ${USER}) \
-  ghcr.io/nilfoundation/proof-market-toolchain:latest
-
-root@abc123:/proof-market-toolchain proof-producer -h
-root@abc123:/proof-market-toolchain python3 scripts/prepare_statement.py --help
-```
-
-When you build the image, tag can be anything.
-For example, you can use the current commit's hash as the tag:
-
-```bash
-docker build -t ghcr.io/nilfoundation/proof-market-toolchain:$(git rev-parse --short HEAD) .
-```
-
-The final image is built from a base image tagged
-`ghcr.io/nilfoundation/proof-market-toolchain:base`.
-It has precompiled Boost and all other required dependencies.
-If you want to update dependencies, change them in the `Dockerfile.base`,
-and then rebuild the base image:
-
-```bash
-docker build -t ghcr.io/nilfoundation/proof-market-toolchain:base --file Dockerfile.base .
-```
-
-To use proof market binaries, run them from the same container.
-
-## Building on host
-
-### Dependencies
-
-On *nix systems, the following dependencies need to be installed:
-
-```bash
-apt install \
-    build-essential \
-    libssl-dev \
-    cmake \
-    clang-12 \
-    git \
-    autoconf \
-    libc-ares-dev \
-    libfmt-dev \
-    gnutls-dev \
-    liblz4-dev \
-    libprotobuf-dev \
-    libyaml-cpp-dev \
-    libhwloc-dev \
-    pkg-config \
-    xfslibs-dev \
-    systemtap-sdt-dev
-```
-
-Install Boost either manually or from your distributive's repository.
-Please make sure you are installing the version 1.76.
-Follow the guide to install
-[version 1.76](https://www.boost.org/doc/libs/1_76_0/more/getting_started/unix-variants.html)
-manually.
-
-We have tested for the following set of versions of the libraries:
-
-```
-clang-12
-clang++12
-boost == 1.76
-cmake >= 3.22.1
-autoconf >= 2.71
-automake >=  1.16.5
-libc-ares-dev >= 1.18.1
-libfmt-dev >= 8.1.1
-liblz4-dev >= 1.9.3
-gnutls-dev >= 7.81
-libprotobuf-dev >= 3.12.4
-libyaml-cpp-dev >= 0.2.2
-libhwloc-dev >= 2.7.0
-libsctp-dev >= 1.0.19
-ragel >= 6.10
-```
-
-**We are aware of compilation issues with boost > 1.76 and clang > 12.0. Please use the versions recommended above**
-
-### Building
-
-```bash
-mkdir build
-cd build
-cmake -G "Unix Makefiles" \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_COMPILER=/usr/bin/clang-12 \
-  -DCMAKE_CXX_COMPILER=/usr/bin/clang++-12 \
-  ..
-# Single-threaded version (recommended)
-cmake --build . -t proof-generator
+apt install -y zkllvm cmake libboost-all-dev
 ```
 
 
-# Proof Market Beta Access
+# Signing up on the Proof Market
 
-Start with installing requirements.
-We recommend using virtualenv:
+Before proceeding with the Proof Market interaction, make sure you have installed the dependencies 
+required for the role you want to participate in.
+
+We recommend using virtualenv when using the scripts:
 
 ```bash 
 pip3 install --user virtualenv
@@ -360,22 +244,33 @@ A list of all available statements can be obtained by
 python3 scripts/statement_tools.py get
 ```
 
-## 3. Proof Market Request Creation
+## 3. Requesting the proof
 
 The proof requester can create a request order. It
 has additional details such as what are they willing to pay for it and public inputs.
 
 ```
-python3 scripts/request_tools.py push --cost <cost of the request> --file <json file with public_input> --key <key of the statement> 
+python3 scripts/request_tools.py push --cost <cost of the request> --input <json file with public_input> --statement-key <key of the statement> 
 ```
 
 The proof requester can check their request with
 
 ```
-python3 scripts/request_tools.py get --key <key of the request> 
+python3 scripts/request_tools.py get --request-key <key of the request> 
 ```
 
-## 4. Wait for proposals
+### Requesting a proof in an aggregated manner
+
+For some circuits it makes sense to request proofs in an aggregated manner. 
+More on this can be found in the [zkLLVM hints on circuits writing](https://docs.nil.foundation/zkllvm).
+
+To request a proof in an aggregated manner, you need to use slightly different command:
+
+```bash
+python3 aggregated_request.py --cost <cost of the request> --input <json file with public_input> --statement-key <key of the statement> --aggregation-ratio 4
+```
+
+## 4. Awaiting for Proposals
 
 Here the proof requester waits for matching engine to either match an existing order or wait for proposals to be submitted against this circuit/statement.
 
@@ -404,51 +299,22 @@ Proof Market runs a matching algorithm between requests and proposals for each n
 Proposal's status 'processing' means that the proposal was matched with a request.
 Now it is time to generate a proof for the proof producer.
 
-First of all, the proof producer needs circuit definition:
+First of all, the proof producer needs to obtain assigned requests:
 
-```
-python3 scripts/statement_tools.py get --key <key of the statement> -o <output file> 
-```
-
-Next, public input of the request:
-
-```
-python3 scripts/public_input_get.py --key <request key> -o <output file path> 
+```bash
+python3 proof_producer.py prepare --db-path ./db
 ```
 
-Execute the below to generate a proof:
+After that, execute the below to generate a proof:
 
-```
-cd build
-./bin/proof-generator/proof-generator --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market>
-```
-
-<!-- or
-
-For multithreaded versions, the following flags warrant discussion as the computation of proof requires temporary space. This is always allocated to core0/shard0.
-
-- smp : Number of threads. This is ideally the number of CPU cores on the system. ex: If you have a 16 core CPU & 16 GB RAM & set smp to 16. Each core gets access to 1 GB of RAM. Thus core0/shard0 will have access to 1 GB of RAM.
-- shard0-mem-scale: Weighted parameter (weight) to reserve memory for shard0.This is a natural number which allows for shard0 to have more access to RAM in comparison to others. ex: If you have a 16 core CPU & 16 GB RAM & set smp to 8 and set shard0-mem-scale to 9.
-
-We first compute ram_per_shard variable as follows:
-
-```
-ram_per_shard = TOTAL_RAM / (smp + shard0-mem-scale -1)
-= 16 / (8 + 8)
-= 1
+```bash
+python3 proof_producer.py start --proof-generator /path/to/proof-generator --assigner /path/to/assigner --db-path ./db --log-level info
 ```
 
-This equates to:
-
-- `shard0` =`shard0-mem-scale` * `ram_per_shard` = 9 GB
-- `shard1 .... shard7` = `ram_per_shard` = 1 GB = 7 GB
-
-These two variables need to be tuned as per the architecture/circuit for which the proof is being generated.
-
+If you have the directory with the proof generator in your PATH, you can use:
+```bash
+python3 proof_producer.py start --proof-generator proof-generator --assigner assigner --db-path ./db --log-level info
 ```
-cd build
-./bin/proof-generator/proof-generator-mt --proof_out=<output file> --circuit_input=<statement from Proof Market> --public_input=<public input from Proof Market> --smp=<number of threads> --shard0-mem-scale=<scaling factor>
-``` -->
 
 Readme for Proof Producer daemon in located [here](./proof_producer/README.md).
 
@@ -463,7 +329,7 @@ python3 scripts/proof_tools.py push --request_key <key of the request> --proposa
 
 You can provide only one of two possible keys
 
-## 9. Get Proof
+## 9. Obtaining the Proof
 
 Now the proof requester is able to get their proof either by request key or proof key.
 
@@ -474,39 +340,26 @@ python3 scripts/proof_tools.py get --request_key <key of the request>
 Validation of the proof is not part of the tool chain. Validation flow is implemented in the
 lorem ipsum cli repository [here](https://github.com/NilFoundation/lorem-ipsum-cli).
 
+## 10. Verifying the Proof
+
+The proof requester can verify the proof locally with the following command:
+
+```bash
+/path/to/proof-verifier --proof <proof file> --statement <statement file> --public-input <public input file>
+```
+
+You can also verify the proof on EVM with our [EVM verifier](https://github.com/NilFoundation/evm-placeholder-verification/) by following the instructions in the repository.
+
 # Common issues
-
-## Compilation Errors
-
-If you have more than one compiler installed i.e g++ & clang++. The make system might pick up the former. You can explicitly force usage of
-clang++ by finding the path and passing it in the variable below.
-
-```
-`which clang++`  
-cmake .. -DCMAKE_CXX_COMPILER=<path to clang++ from above>
-```
-
-## Submodule management
-
-Git maintains a few places where submodule details are cached. Sometimes updates do not come through. ex: Deletion , updating
-a url of a previously checked out submodule.It is advisable to check these locations for remains or try a new checkout.
-
-- .gitmodules
-- .git/config
-- .git/modules/*
-
-## Compilation errors for Proof generator
-
-Please ensure you are using 1.76 version of boost as the higher versions have an incompatible API which will
-be updated in due course.
 
 ## macOS
 
-On macOS, these dependencies are required for compilation
+On macOS, we currently have only the experimental support for both proof generator and zkllvm. If you want to interact 
+with the Proof Market on macOS in any role apart from proof requester, you will need to build the required tools from source.
 
-```
-fmt gnutls protobuf yaml-cpp ragel hwloc
-```
+For zkllvm you can follow the [zkllvm repository](https://github.com/NilFoundation/zkLLVM#building) instructions.
+
+For proof generator you can follow the instructions in the [proof generator repository](https://github.com/NilFoundation/proof-producer/) to build it from source.
 
 # Community
 
