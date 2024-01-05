@@ -1,10 +1,14 @@
 import argparse
+import logging
 import requests
 import sys
 from urllib.parse import urljoin
 
-from auth_tools import get_headers, create_credentials_file
-from constants import URL
+import constants
+from auth_tools import get_headers, Authenticator
+
+
+logger = logging.getLogger(__name__)
 
 
 def signup(user, password, email, url):
@@ -16,15 +20,11 @@ def signup(user, password, email, url):
     }
 
     response = requests.post(url, json=body)
-    if response.status_code != 200:
-        print(f"Error: {response.status_code} {response.text}")
-    else:
-        print(response.text)
     return response
 
 
 def register_producer(description, url, logo, eth_address):
-    headers = get_headers(None)
+    headers = get_headers(url=url)
     url = urljoin(url, "/producer")
     body = {"description": description}
     if url is not None:
@@ -36,21 +36,20 @@ def register_producer(description, url, logo, eth_address):
 
     response = requests.post(url, json=body, headers=headers)
     if response.status_code == 200:
-        pass
+        logger.info("Producer registered.")
     else:
-        print(f"Error: {response.status_code} {response.text}")
+        logger.error(f"{response.status_code} {response.text}")
 
-    print(response.text)
+    logger.debug(response.text)
     return response.status_code in [200]
 
 
 def signup_parser(args) -> bool:
     response = signup(args.user, args.password, args.email, args.url)
     if response.status_code == 200:
-        create_credentials_file("secret", args.password)
-        create_credentials_file("user", args.user)
+        Authenticator.create_credentials_file(args.user, args.password)
     else:
-        print(f"Error: {response.status_code} {response.text}")
+        logger.error(f"Error during signup API call: {response.status_code} {response.text}")
 
     return response.status_code in [200]
 
@@ -62,12 +61,11 @@ def register_producer_parser(args) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parent_parser = argparse.ArgumentParser(add_help=False)
-    parent_parser.add_argument(
-        "--url", action="store", default=URL, help="url of a producer"
-    )
+    parent_parser.add_argument("--url", action="store", default=constants.URL, help="URL of a producer")
 
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help="sub-command help")
 
     parser_user = subparsers.add_parser(
@@ -101,12 +99,12 @@ def main():
     parser_producer.set_defaults(func=register_producer_parser)
 
     args = parser.parse_args()
-    if hasattr(args, 'func'):
-        # valid submodules
-        sys.exit(0 if args.func(args) else 1)
+    if not hasattr(args, 'func'):
+        # invalid subparser
+        parser.print_help()
+        sys.exit(1)
 
-    parser.print_help()
-    sys.exit(1)
+    sys.exit(0 if args.func(args) else 1)
 
 
 if __name__ == "__main__":
